@@ -202,5 +202,5 @@ return Key<3>(m_x/h,m_y/h,m_z/h);
 }
 
 Key<2> physvector<2>::ToKey(double h){
-return Key<2>(m_x/h,m_y/h);
+return Key<2>(m_x/h,m_y/h,m_z/h);
 }

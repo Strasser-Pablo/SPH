@@ -1,0 +1,23 @@
+#include "particles_list.h"
+#include "particle.h"
+#include "particles.h"
+#include <list>
+void Particles_List::Add(Particle& part)
+{
+    Key<DIM> key=part->GetPos().ToKey();
+    if (m_list.count(key)==0) {
+        list<Key<DIM> > l=key.GetNeighbour();
+        m_list.insert(l.begin(),l.end());
+        list<Particles> n;
+        for (list<Key<DIM> >::iterator it=l.begin();it!=l.end();it++) {
+            n.push_front(m_list[*it]);
+        }
+        m_list[key].SetNeighbour(n);
+    }
+    m_list[key].push_back(part);
+}
+
+Particles_List::Particles_List()
+{
+
+}

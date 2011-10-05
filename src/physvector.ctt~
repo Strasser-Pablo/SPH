@@ -1,0 +1,16 @@
+#include "physvector.h"
+
+template<>
+physvector<3>::physvector():m_x(0),m_y(0),m_z(0) {
+
+}
+template<>
+physvector<3>::physvector(double x,double y,double z):m_x(x),m_y(y),m_z(z) {
+
+}
+
+template<>
+double physvector<3>::Distance(physvector<3> A) {
+    return sqrt(pow(A.m_x-m_x,2)+pow(A.m_x-m_x,2)+pow(A.m_x-m_x,2));
+}
+

@@ -73,7 +73,7 @@ void Particles::ComputeMove(double dt)
 void Particles::Update(map< Key< DIM >, Particles > listparticles)
 {
     for (list<Particle>::iterator it=begin();it!=end();it++) {
-        Particles parts=listparticles[(*it)->GetPos().ToKey(h)];
+        Particles parts=listparticles[(*it)->GetPos().ToKey()];
         parts.splice(parts.begin(),*this,it);
     }
 }

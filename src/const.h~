@@ -1,6 +1,4 @@
-/** \file const.h Contain constant
- *  
- **/
+
 
 
 #ifndef CONST_H
@@ -21,9 +19,6 @@ const int DIM=DIM_DEF;
  **/
 const double h=1.0;
 
-/**
- * @brief Time step size.
- **/
 const double DT=0.1;
 #endif // CONST_H
 
@@ -34,16 +29,10 @@ const double DT=0.1;
 
 
 #if DIM_DEF==3
-/**
- * @brief Vector G for gravity
- **/
 const  physvector<DIM> G=physvector<DIM>(0,-9.81,0);
 #endif
 
 #if DIM_DEF==2
-/**
- * @brief Vector G for gravity
- **/
 const  physvector<DIM> G=physvector<DIM>(0,-9.81);
 #endif 
 #endif //POSITION_H

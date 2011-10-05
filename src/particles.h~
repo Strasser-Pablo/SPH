@@ -75,13 +75,6 @@ public:
      **/
     void SetNeighbour(list<Particles> list);
     
-    
-    /**
-     * @brief Update in wish container is the particle for every particle in container
-     *
-     * @param list map to all particles.
-     * @return void
-     **/
     void Update(map<Key<DIM>,Particles> list);
 };
 

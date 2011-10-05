@@ -5,10 +5,6 @@
 #include "physvector.h"
 #include "const.h"
 #include <cmath>
-/** \file kernel.h Contain all the kernel function used
- * 
- **/
-
 /**
  * @brief Sign function
  *

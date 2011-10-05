@@ -1,0 +1,25 @@
+/*
+Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplinaire
+*/
+
+#include "particle.h"
+
+ParticleReals ParticleReal::FindNeighbour(list< ParticleReals > Neighbour, double h)
+{
+  if(!Neighbour.empty()){
+    ParticleReals out(*Neighbour.begin());
+for(list<ParticleReals>::iterator it=Neighbour.begin();it!=Neighbour.end();it++){
+ for(list<ParticleReal>::iterator it2=it->begin();it2!=it->end();it2++){
+  if( Distance2(*it2)<h){
+   out.push_back(*it2); 
+  }
+ }
+  
+}
+return out;
+}
+ ParticleReals temp;
+ return temp;
+}
+
+

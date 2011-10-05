@@ -1,0 +1,71 @@
+#include "particle.h"
+#include "particle_real.h"
+#include "kernel.h"
+#include "particles.h"
+
+ParticleReal::ParticleReal()
+{
+
+}
+
+ParticleReal::ParticleReal(physvector< 3 > pos, ParticleType type, double m, double rho, double p):m_pos(),m_type(type),m_m(m),m_rho(rho),m_p(p)
+{
+
+}
+
+
+double ParticleReal::GetM() const
+{
+    return m_m;
+}
+
+double ParticleReal::GetP() const
+{
+    return m_p;
+}
+
+
+double ParticleReal::GetRho() const
+{
+    return m_rho;
+}
+
+void ParticleReal::SetM(double m)
+{
+    m_m=m;
+}
+
+void ParticleReal::SetP(double p)
+{
+    m_p=p;
+}
+
+void ParticleReal::SetRho(double rho)
+{
+    m_rho=rho;
+}
+
+double ParticleReal::Distance2(Particle& A)
+{
+    return m_pos.Distance2(A->m_pos);
+}
+
+void ParticleReal::SetPos(physvector< DIM > pos)
+{
+    m_pos=pos;
+}
+
+physvector< DIM > ParticleReal::GetPos() const
+{
+    return m_pos;
+}
+
+void ParticleReal::ComputePressure_Density(const Particles & FindVoisin)
+{
+    double rho=0;
+    for (list<Particle>::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++) {
+        rho+=(*it)->GetM()*Kernel_Density(GetPos(),h);
+    }
+    SetRho(rho);
+    SetP((rho-WaterConst.rho0)*WaterConst.k);
+}

@@ -1,70 +1,56 @@
 #include "particle.h"
-#include "kernel.h"
-#include "particles.h"
 
-Particle::Particle()
+
+
+
+
+Particle::Particle(ParticleReal* part):m_data(part)
 {
 
 }
 
-Particle::Particle(physvector< 3 > pos, ParticleType type, double m, double rho, double p):m_pos(),m_type(type),m_m(m),m_rho(rho),m_p(p)
-{
 
+
+
+ParticleReal* Particle::Get()
+{
+return m_data;
+}
+
+const ParticleReal* Particle::Get() const
+{
+return m_data;
+}
+
+ParticleReal& Particle::operator*()
+{
+return *m_data;
 }
 
 
-double Particle::GetM() const
+const ParticleReal& Particle::operator*() const
 {
-return m_m;
+return *m_data;
 }
 
-double Particle::GetP() const
+ParticleReal* Particle::operator->()
 {
-return m_p;
+return m_data;
+}
+
+const ParticleReal* Particle::operator->() const
+{
+return m_data;
 }
 
 
-double Particle::GetRho() const
+Particle* Particle::operator&()
 {
-return m_rho;
+return this;
 }
 
-void Particle::SetM(double m)
-{
-m_m=m;
-}
 
-void Particle::SetP(double p)
+const Particle* Particle::operator&() const
 {
-m_p=p;
-}
-
-void Particle::SetRho(double rho)
-{
-m_rho=rho;
-}
-
-double Particle::Distance2(Particle& A)
-{
-return m_pos.Distance2(A.m_pos);
-}
-
-void Particle::SetPos(physvector< DIM > pos)
-{
-m_pos=pos;
-}
-
-physvector< DIM > Particle::GetPos() const
-{
-return m_pos;
-}
-
-void Particle::ComputePressure_Density(const Particles & FindVoisin)
-{
-double rho=0;
-for(list<Particle>::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++){
- rho+=it->GetM()*Kernel_Density(GetPos(),h); 
-}
-SetRho(rho);
-SetP((rho-WaterConst.rho0)*WaterConst.k);
+return this;
 }

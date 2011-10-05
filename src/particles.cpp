@@ -24,9 +24,9 @@ void Particles::ComputePressure_Density()
 {
     Particles list_compute;
     for (list<Particle>::iterator it=begin();it!=end();it++) {
-        list_compute=it->FindNeighbour(m_neighbour,h);
+        list_compute=(*it)->FindNeighbour(m_neighbour,h);
         for (Particles::iterator it2=list_compute.begin();it2!=list_compute.end();it2++) {
-            it2->ComputePressure_Density(list_compute);
+            (*it2)->ComputePressure_Density(list_compute);
         }
     }
 }

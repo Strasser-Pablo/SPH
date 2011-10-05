@@ -8,7 +8,12 @@ ParticleReal::ParticleReal()
 
 }
 
-ParticleReal::ParticleReal(physvector< 3 > pos, ParticleType type, double m, double rho, double p):m_pos(),m_type(type),m_m(m),m_rho(rho),m_p(p)
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m, double rho, double p):m_pos(),m_type(type),m_m(m),m_rho(rho),m_p(p)
+{
+
+}
+
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m, double rho, double p):m_pos(),m_speed(speed),m_type(type),m_m(m),m_rho(rho),m_p(p)
 {
 
 }
@@ -55,9 +60,32 @@ void ParticleReal::SetPos(physvector< DIM > pos)
     m_pos=pos;
 }
 
+void ParticleReal::SetSpeed(physvector< DIM > speed)
+{
+    m_speed=speed;
+}
+
+void ParticleReal::SetForce(physvector< DIM > force)
+{
+    m_force=force;
+}
+
+void ParticleReal::AddForce(physvector< DIM > force)
+{
+    m_force+=force;
+}
+
+void ParticleReal::ResetForce(){
+ m_force=physvector< DIM>(); 
+}
 physvector< DIM > ParticleReal::GetPos() const
 {
     return m_pos;
+}
+
+physvector< DIM > ParticleReal::GetForce() const
+{
+    return m_force;
 }
 
 void ParticleReal::ComputePressure_Density(const Particles & FindVoisin)
@@ -69,3 +97,30 @@ void ParticleReal::ComputePressure_Density(const Particles & FindVoisin)
     SetRho(rho);
     SetP((rho-WaterConst.rho0)*WaterConst.k);
 }
+
+bool ParticleReal::Equal(const Particle part)const {
+    return this== part.Get();
+}
+
+inline physvector<DIM> ParticleReal::GetSpeed() const{
+    return m_speed;
+}
+
+void ParticleReal::ComputeInternal_Force(const Particles & FindVoisin) {
+    physvector<DIM> ftot;
+    double pact=GetP();
+    physvector<DIM>  sact=GetSpeed();
+    ParticleReal  real;
+    for (list<Particle>::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++) {
+        if (!Equal(*it)) {
+            real=*(*it);
+            ftot-=(pact+real.GetP())/2* real.GetM()*Kernel_Pressure_Der(GetPos()-(*it)->GetPos(),h);
+            ftot+=WaterConst.mu*(real.GetSpeed()-sact)*real.GetM()/real.GetRho()*Kernel_viscosity_laplacian(GetPos()-(*it)->GetPos(),h);
+            }
+        }
+        AddForce(ftot);
+    }
+
+void ParticleReal::ComputeGravity_Force() {
+        AddForce(GetRho()*G);
+    }

@@ -17,6 +17,8 @@ class Particles;
 class ParticleReal
 {
     physvector<DIM> m_pos;
+    physvector<DIM> m_speed;
+      physvector<DIM> m_force;
     double m_m;
     double m_rho;
     double m_p;
@@ -27,7 +29,7 @@ public:
    **/
     inline ParticleReal();
     /**
-     * @brief Create a individual Particle with givent property
+     * @brief Create a individual Particle with givent property with initial speed 0.
      *
      * @param pos Particle position
      * @param type Particle type
@@ -36,6 +38,18 @@ public:
      * @param p Particle pressure
      **/
     inline ParticleReal(physvector<DIM> pos,ParticleType type,double m,double rho,double p);
+    
+        /**
+     * @brief Create a individual Particle with givent property
+     *
+     * @param pos Particle position
+     * @param speed Particle speed
+     * @param type Particle type
+     * @param m Particle mass
+     * @param rho Particle density
+     * @param p Particle pressure
+     **/
+      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double m,double rho,double p);
     /**
      * @brief Calculate the Distance square of the Particle
      *
@@ -46,9 +60,23 @@ public:
     /**
      * @brief Give the position
      *
-     * @return physvector< 3 > Postion
+     * @return physvector< DIM > Postion
      **/
     inline physvector<DIM> GetPos() const;
+    
+    /**
+     * @brief Give the speed
+     *
+     * @return physvector< DIM > Speed
+     **/
+    inline physvector<DIM> GetSpeed() const;
+    
+    /**
+     * @brief Give the current calculated force
+     *
+     * @return physvector< DIM > Force
+     **/
+    inline physvector<DIM> GetForce() const;
     /**
      * @brief Get the mass
      *
@@ -95,7 +123,35 @@ public:
      * @return void
      **/
     inline void SetPos(physvector<DIM> pos);
+   
+    
     /**
+     * @brief Set the speed
+     *
+     * @param speed Speed
+     * @return void
+     **/
+    inline void SetSpeed(physvector<DIM> speed);
+     
+    /**
+     * @brief Set the force
+     *
+     * @param force Force
+     * @return void
+     **/
+    inline void SetForce(physvector<DIM> force);
+	  
+    /**
+     * @brief Add the force to the current force
+     *
+     * @param force Force to add
+     * @return void
+     **/
+    inline void AddForce(physvector<DIM> force);
+	  
+	  inline void ResetForce();
+	  
+	   /**
      * @brief Get the particle of distance less than h in the list
      *
      * @param Neighbour list of Particles in witch look
@@ -105,12 +161,35 @@ public:
     Particles FindNeighbour(list< Particles > Neighbour, double h);
     /**
      * @brief Compute the pressure and density of the given particle using the Particles as Neighbour
-     *
+     * 
+     * This will change the particle pressure and density.
+     * 
      * @param FindVoisin List of Neighbour to evaluate
      * @return void
      **/
-    
   inline  void ComputePressure_Density(const Particles & FindVoisin);
+  
+  
+  /**
+   * @brief Compute internal force. The computed force will be added to the force variable of the particle
+   *
+   * @param FindVoisin ...
+   * @return void
+   **/
+  inline void ComputeInternal_Force(const Particles &FindVoisin);
+  /**
+   * @brief Compute the gravity force and add it to the particle force.
+   *
+   * @return void
+   **/
+  inline void ComputeGravity_Force();
+  /**
+   * @brief Verify that the two object represent the same particle (ie they share the same memory)
+   *
+   * @param part Particle to test
+   * @return bool
+   **/
+  inline bool Equal(const Particle part) const;
 };
 
 #include "particle_real.htt"

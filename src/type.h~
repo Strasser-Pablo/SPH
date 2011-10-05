@@ -12,7 +12,6 @@ enum ParticleType{none,water};
 struct MatterConstant{
  double rho0;
  double k;
- double mu;
 };
 
 

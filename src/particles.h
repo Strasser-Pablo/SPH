@@ -14,7 +14,7 @@ using namespace std;
 *
 **/
 
-class Particles: public list<Particle>
+class Particles: public std::list<Particle>
 {
     ParticleType m_type;
     list<Particles> m_neighbour;
@@ -36,7 +36,34 @@ public:
     *
     **/
     Particles();
+    
+    /**
+     * @brief Compute the pressure and density for all Particle in this container
+     *
+     * @return void
+     **/
     void ComputePressure_Density();
+    /**
+     * @brief Compute Internals force for all particle in this container.
+     *
+     * @return void
+     **/
+    void ComputeInternal_Force();
+    /**
+     * @brief Compute gravity Force for all particle in this container.
+     *
+     * @return void
+     **/
+    void ComputeGravity_Force();
+    
+    /**
+     * @brief Set The Neighbour of the container.
+     *
+     * Neighbour of the container are defined as particle container that are in a radius of h from the container
+     * it need to contain itself.
+     * @param list of Neighbour
+     * @return void
+     **/
     void SetNeighbour(list<Particles> list);
 };
 

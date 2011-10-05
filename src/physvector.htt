@@ -160,3 +160,39 @@ m_x=A.m_x;
 m_y=A.m_y;
 }
 
+ physvector< 2> operator*(const double c,const physvector<2> a) {
+  return physvector< 2  > (a.m_x*c,a.m_y*c);
+}
+
+ physvector< 3> operator*(const double c,const physvector<3> a) {
+  return physvector< 3  > (a.m_x*c,a.m_y*c,a.m_z*c);
+}
+
+ physvector< 2> operator*(const physvector<2> a,const double c) {
+  return physvector< 2  > (a.m_x*c,a.m_y*c);
+}
+
+ physvector< 3> operator*(const physvector<3> a,const double c) {
+  return physvector< 3  > (a.m_x*c,a.m_y*c,a.m_z*c);
+}
+
+void physvector<3>::operator*=(const double c){
+m_x*=c;
+m_y*=c;
+m_z*=c;
+}
+
+
+void physvector<2>::operator*=(const double c){
+m_x*=c;
+m_y*=c;
+}
+
+
+ physvector< 2> physvector<2>::operator/(const double c) const {
+  return physvector< 2  > (m_x/c,m_y/c);
+}
+
+ physvector< 3> physvector<3>::operator/(const double c) const{
+  return physvector< 3  > (m_x/c,m_y/c,m_z/c);
+}

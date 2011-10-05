@@ -90,6 +90,8 @@ public:
     inline void operator=( const physvector<3> A);
     inline void operator+=(const physvector<3> A);
     inline void operator-=(const physvector<3> A);
+     inline  void operator*=(const double c);
+         inline physvector<3> operator/(const double c) const;
         /**
      * @brief Output Stream Operator for cout<< for example
      *
@@ -98,7 +100,12 @@ public:
      * @return :ostream&
      **/
     friend std::ostream& operator<< (std::ostream& stream, const physvector<3>& A );
+    friend inline physvector< 3> operator*(const double c,const physvector<3> a);
+     friend inline physvector< 3> operator*(const physvector<3> a,const double c);
 };
+
+
+
 
  /**
    * @brief Specialized class for 2d vector
@@ -170,6 +177,8 @@ public:
     inline  void operator=(const physvector<2> A);
     inline void operator+=(const physvector<2> A)  ;
     inline  void operator-=(const physvector<2> A);
+    inline  void operator*=(const double c);
+    inline physvector<2> operator/(const double c) const;
     /**
      * @brief Output Stream Operator for cout<< for example
      *
@@ -178,6 +187,10 @@ public:
      * @return :ostream&
      **/
     friend std::ostream & operator<< (std::ostream& stream, const physvector<2>& A );
+    friend inline physvector< 2> operator*(const double c,const physvector<2> a) ;
+    friend inline physvector< 2> operator*(const physvector<2> a,const double c) ;
 };
+
+
 #include "physvector.htt"
 #endif // POSITION_H

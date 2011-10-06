@@ -11,8 +11,8 @@ using namespace std;
    **/
 class Particles_List{
   
-  map<Particles,Key<DIM> > m_list;
-  
+  map<Key<DIM> ,Particles> m_list;
+  double m_t;
 protected:
 public:
   /**
@@ -27,7 +27,7 @@ public:
    * @param part ...
    * @return void
    **/
-  inline  void Add(Particle & part);
+  inline  void Add(Particle  part);
   
   /**
    * @brief Compute a complete step
@@ -35,7 +35,20 @@ public:
    * @return void
    **/
   void Compute();
+  
+  /**
+   * @brief Uttility function, update neighbour of key k and it's neighbour
+   *
+   * @param k where to update
+   * @return void
+   **/
+  inline  void AddNeighbour(Key<DIM> k);
+  
+  void Dump();
 };
+
+
+
 
 #include "particles_list.htt"
 

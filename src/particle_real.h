@@ -158,7 +158,7 @@ public:
      * @param h distance
      * @return Particles Found List
      **/
-    Particles FindNeighbour(list< Particles > Neighbour, double h);
+    Particles FindNeighbour(list< Particles* > Neighbour, double h);
     /**
      * @brief Compute the pressure and density of the given particle using the Particles as Neighbour
      * 
@@ -204,6 +204,9 @@ public:
    * @return bool
    **/
   inline bool Equal(const Particle part) const;
+  
+  
+    inline void Dump();
 };
 
 #include "particle_real.htt"

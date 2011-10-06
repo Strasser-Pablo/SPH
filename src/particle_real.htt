@@ -2,18 +2,18 @@
 #include "particle_real.h"
 #include "kernel.h"
 #include "particles.h"
-
+#include <iostream>
 ParticleReal::ParticleReal()
 {
 
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m, double rho, double p):m_pos(),m_type(type),m_m(m),m_rho(rho),m_p(p)
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m, double rho, double p):m_pos(pos),m_type(type),m_m(m),m_rho(rho),m_p(p)
 {
 
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m, double rho, double p):m_pos(),m_speed(speed),m_type(type),m_m(m),m_rho(rho),m_p(p)
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m, double rho, double p):m_pos(pos),m_speed(speed),m_type(type),m_m(m),m_rho(rho),m_p(p)
 {
 
 }
@@ -128,4 +128,8 @@ void ParticleReal::ComputeGravity_Force() {
 void ParticleReal::ComputeMove(double dt) {
     m_pos+=dt*m_speed;
     m_speed+=dt*m_force/m_rho;
+}
+
+void ParticleReal::Dump(){
+  cout<<"pos "<<m_pos<<" speed "<<m_speed<<endl;
 }

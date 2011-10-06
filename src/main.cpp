@@ -1,11 +1,9 @@
 #include <iostream>
-#include "type.h"
-#include "physvector.h"
+#include "world_test.h"
 using namespace std;
 int main(int argc, char **argv) {
 
-physvector< 3  > a(2.3,4,5);
-physvector< 3  > b(5,6,7);
-
+World_test w;
+w.Do();
     return 0;
 }

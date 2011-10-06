@@ -40,6 +40,8 @@ public:
    * @brief < operator for key. Give true only if it's true for all element.
    **/
   inline bool operator<(const Key<2> A) const;
+  
+  inline void Dump() const;
 };
 
 /**
@@ -69,7 +71,11 @@ inline list<Key<3> > GetNeighbour();
    * @brief < operator for key. Give true only if it's true for all element.
    **/
 inline bool operator<(const Key<3> A) const;
+
+inline void Dump() const;
 };
+
+
 
 #include "key.htt"
 

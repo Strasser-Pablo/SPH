@@ -2,22 +2,42 @@
 #include "particle.h"
 #include "particles.h"
 #include <list>
-void Particles_List::Add(Particle& part)
+#include <algorithm>
+#include "debug.h"
+void Particles_List::Add(Particle part)
 {
-    Key<DIM> key=part->GetPos().ToKey();
+
+    Key<DIM> key=part->GetPos().ToKey(h);
     if (m_list.count(key)==0) {
-        list<Key<DIM> > l=key.GetNeighbour();
-        m_list.insert(l.begin(),l.end());
-        list<Particles> n;
-        for (list<Key<DIM> >::iterator it=l.begin();it!=l.end();it++) {
-            n.push_front(m_list[*it]);
-        }
-        m_list[key].SetNeighbour(n);
+        AddNeighbour(key);
     }
+    
     m_list[key].push_back(part);
 }
 
-Particles_List::Particles_List()
-{
 
+void Particles_List::AddNeighbour(Key< 3 > k)
+{
+list<Key<DIM> > l=k.GetNeighbour();
+
+        list<Particles*> n;
+	 
+	 Particles* pa0=&m_list[k];
+        for (list<Key<DIM> >::iterator it=l.begin();it!=l.end();it++) {
+	
+	 if(m_list.count(*it)>0){
+	//   cout<<"found"<<endl;
+	   //element found, add element in neighbour of the two element
+	  Particles*   pa=&m_list[*it];
+	   n.push_front(pa);
+	   list<Particles*>   templist=pa->GetNeighbour();
+	  //verify if element is in list if it's not add it
+	 if( find(templist.begin(),templist.end(),pa0)==templist.end()){
+	   templist.push_front(pa0);
+	   pa->SetNeighbour(templist);
+        }
+	}
+	}
+     
+        m_list[k].SetNeighbour(n);
 }

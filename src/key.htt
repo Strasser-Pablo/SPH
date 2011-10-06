@@ -1,5 +1,5 @@
 #include "key.h"
-
+#include <iostream>
 Key<2>::Key(int x, int y):m_x(x),m_y(y)
 {
 
@@ -28,7 +28,7 @@ list<Key<3> > list;
 
 for(int i=m_x-1;i<=m_x+1;i++){
  for(int j=m_y-1;j<=m_y+1;j++){
-    for(int k=m_z-1;j<=m_z+1;j++){
+    for(int k=m_z-1;k<=m_z+1;k++){
   list.push_front(Key< 3  >(i,j,k)); 
  }
 }
@@ -37,27 +37,56 @@ return list;
 }
 
 bool Key<2>::operator<(const Key<2> A) const{
-  if(m_x>=A.m_x){
-    return false;
+  if(m_x<A.m_x){
+    return true;
   }
-  if(m_y>=A.m_y){
+  else if(m_x>A.m_x){
+   return false; 
+  }
+    if(m_y<A.m_y){
+    return true;
+  }
+  else if(m_y>A.m_y){
    return false; 
   }
   
-  return true;
+ 
+  return false;
 }
 
 bool Key<3>::operator<(const Key<3> A) const{
-  if(m_x>=A.m_x){
-    return false;
+
+
+  
+  if(m_x<A.m_x){
+    return true;
   }
-  if(m_y>=A.m_y){
+  else if(m_x>A.m_x){
    return false; 
   }
-    if(m_z>=A.m_z){
+    if(m_y<A.m_y){
+    return true;
+  }
+  else if(m_y>A.m_y){
    return false; 
   }
   
-  return true;
+      if(m_z<A.m_z){
+    return true;
+  }
+  else if(m_z>A.m_z){
+   return false; 
+  }
+  return false;
 }
 
+
+void Key< 2  >::Dump() const
+{
+cout<<"Key 2d "<<m_x<<" "<<m_y<<endl;
+}
+
+void Key< 3  >::Dump() const
+{
+cout<<"Key 3d "<<m_x<<" "<<m_y<<" "<<m_z<<endl;
+}

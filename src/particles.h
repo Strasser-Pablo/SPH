@@ -19,7 +19,7 @@ using namespace std;
 class Particles: public std::list<Particle>
 {
     ParticleType m_type;
-    list<Particles> m_neighbour;
+    list<Particles*> m_neighbour;
 public:
     /**
      * @brief Construct a list of Particle of type type
@@ -73,8 +73,9 @@ public:
      * @param list of Neighbour
      * @return void
      **/
-    void SetNeighbour(list<Particles> list);
+    void SetNeighbour(list<Particles*> list);
     
+    list<Particles*> GetNeighbour();
     
     /**
      * @brief Update in wish container is the particle for every particle in container
@@ -82,7 +83,14 @@ public:
      * @param list map to all particles.
      * @return void
      **/
-    void Update(map<Key<DIM>,Particles> list);
+    void Update(map<Key<DIM>,Particles> & list);
+    
+     bool operator==(const Particles parts) const;
+     
+     void Dump(bool voisin=true);
 };
+
+
+
 
 #endif // PARTICLES_H

@@ -9,6 +9,8 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 
 #include "particles.h"
 #include "particle.h"
+
+#include "debug.h"
 using namespace std;
 Particles::Particles(ParticleType type): list<Particle>(),m_type(type)
 {
@@ -56,11 +58,14 @@ void Particles::ComputeGravity_Force()
 }
 
 
-void Particles::SetNeighbour(list< Particles > list )
+void Particles::SetNeighbour(list< Particles *> list )
 {
     m_neighbour=list;
 }
 
+list<Particles*> Particles::GetNeighbour(){
+  return m_neighbour;
+}
 
 
 void Particles::ComputeMove(double dt)
@@ -70,7 +75,7 @@ void Particles::ComputeMove(double dt)
     }
 }
 
-void Particles::Update(map< Key< DIM >, Particles > listparticles)
+void Particles::Update(map< Key< DIM >, Particles > & listparticles)
 {
     for (list<Particle>::iterator it=begin();it!=end();it++) {
         Particles parts=listparticles[(*it)->GetPos().ToKey(h)];
@@ -78,3 +83,22 @@ void Particles::Update(map< Key< DIM >, Particles > listparticles)
     }
 }
 
+bool Particles::operator==(const Particles parts) const
+{
+return this==&parts;
+}
+
+
+void Particles::Dump(bool voisin)
+{
+  cout<<"begin Particles"<<endl;
+for(Particles::iterator it=begin();it!=end();it++){
+ (*it)->Dump(); 
+}
+if(voisin){
+cout<<"dump of neighbour"<<endl;
+DumpNeighbour(m_neighbour);
+cout<<"end dump of neighbour"<<endl;
+}
+cout<<"end Particles"<<endl;
+}

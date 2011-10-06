@@ -13,8 +13,23 @@ void Particles_List::Compute()
     }
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
         it->second.ComputeMove(DT);
+        m_t+=DT;
     }
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
         it->second.Update(m_list);
     }
+}
+
+Particles_List::Particles_List():m_t(0)
+{
+
+}
+
+void Particles_List::Dump() {
+  cout<<"Begin Particle List"<<endl;
+    for (map< Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+      it->first.Dump();
+        it->second.Dump();
+    }
+    cout<<"End Particle List"<<endl;
 }

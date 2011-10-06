@@ -83,7 +83,11 @@ public:
      **/
   inline const ParticleReal* operator ->() const;
 
+
 };
+
+
+
 
 #include "particle.htt"
 //Need to include after and not before for not having incomplete type.

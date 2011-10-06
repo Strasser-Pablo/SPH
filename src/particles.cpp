@@ -9,7 +9,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 
 #include "particles.h"
 #include "particle.h"
-
+#include "particles_list.h"
 #include "debug.h"
 using namespace std;
 Particles::Particles(ParticleType type): list<Particle>(),m_type(type)
@@ -76,7 +76,7 @@ void Particles::ComputeMove(double dt)
     }
 }
 
-void Particles::Update(map< Key< DIM >, Particles > & listparticles)
+void Particles::Update( Particles_List*  plist)
 {
   list<Particle>::iterator it=begin();
     while (it!=end()) {
@@ -84,11 +84,9 @@ void Particles::Update(map< Key< DIM >, Particles > & listparticles)
       list<Particle>::iterator it2=it;
       //we increase the iterator before that we splice to don't have problem when it2 is invalided
       it++;
-        Particles * parts=&listparticles[(*it2)->GetPos().ToKey(h)];
-	if(parts!=this){
-        parts->splice(parts->end(),*this,it2);
+      plist->Update(it2,this);
 	}
-    }
+    
 }
 
 bool Particles::operator==(const Particles parts) const

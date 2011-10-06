@@ -10,6 +10,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include <map>
 #include "key.h"
 class Particle;
+class Particles_List;
 using namespace std;
 /**
 * @brief Represent a list of Particle, inherit from std::list.
@@ -83,7 +84,7 @@ public:
      * @param list map to all particles.
      * @return void
      **/
-    void Update(map<Key<DIM>,Particles> & list);
+    void Update(  Particles_List*  list);
     
      bool operator==(const Particles parts) const;
      

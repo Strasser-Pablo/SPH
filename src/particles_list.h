@@ -2,6 +2,8 @@
 #define PARTICLES_LIST_H
 #include <map>
 #include "particles.h"
+#include "particle.h"
+
 #include "key.h"
 using namespace std;
 
@@ -43,11 +45,21 @@ public:
    * @return void
    **/
   inline  void AddNeighbour(Key<DIM> k);
-  
+  inline void Update(list<Particle>::iterator & it,Particles * part);
   void Dump();
 };
 
-
+void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
+{
+   Key<DIM> key=(*it)->GetPos().ToKey(h);
+     if (m_list.count(key)==0) {
+        AddNeighbour(key);
+    }
+    Particles * pnew=&m_list[key];
+    if(pnew!=part){
+     part->splice(part->begin(),*pnew,it); 
+    }
+}
 
 
 #include "particles_list.htt"

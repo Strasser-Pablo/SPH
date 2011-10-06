@@ -36,6 +36,7 @@ void Particles::ComputePressure_Density()
             (*it2)->ComputePressure_Density(list_compute);
         }
     }
+   
 }
 
 
@@ -77,9 +78,16 @@ void Particles::ComputeMove(double dt)
 
 void Particles::Update(map< Key< DIM >, Particles > & listparticles)
 {
-    for (list<Particle>::iterator it=begin();it!=end();it++) {
-        Particles parts=listparticles[(*it)->GetPos().ToKey(h)];
-        parts.splice(parts.begin(),*this,it);
+  list<Particle>::iterator it=begin();
+    while (it!=end()) {
+      //iterator effectly used
+      list<Particle>::iterator it2=it;
+      //we increase the iterator before that we splice to don't have problem when it2 is invalided
+      it++;
+        Particles * parts=&listparticles[(*it2)->GetPos().ToKey(h)];
+	if(parts!=this){
+        parts->splice(parts->end(),*this,it2);
+	}
     }
 }
 

@@ -1,6 +1,7 @@
 /*
 Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplinaire
 */
+#include "particle.h"
 
 #ifndef PARTICLES_H
 #define PARTICLES_H
@@ -9,6 +10,9 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include "const.h"
 #include <map>
 #include "key.h"
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+
 class Particle;
 class Particles_List;
 using namespace std;
@@ -89,9 +93,29 @@ public:
      bool operator==(const Particles parts) const;
      
      void Dump(bool voisin=true);
+     
+private:
+    friend class boost::serialization::access;
+      template<class Archive>
+ inline  void save(Archive & ar, const unsigned int version) const;
+       template<class Archive>
+   inline  void load(Archive & ar, const unsigned int version);
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 
 
-
+  template<class Archive>
+void Particles::save(Archive& ar, const unsigned int version) const
+{
+  
+for(Particles::const_iterator it=begin();it!=end();it++){
+ ar<<**it; 
+}
+}
+  template<class Archive>
+void Particles::load(Archive& ar, const unsigned int version)
+{
+cout<<"not done"<<endl;
+}
 
 #endif // PARTICLES_H

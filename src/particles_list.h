@@ -5,6 +5,9 @@
 #include "particle.h"
 
 #include "key.h"
+
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 using namespace std;
 
   /**
@@ -47,19 +50,18 @@ public:
   inline  void AddNeighbour(Key<DIM> k);
   inline void Update(list<Particle>::iterator & it,Particles * part);
   void Dump();
+  
+private:
+  friend class boost::serialization::access;
+      template<class Archive>
+ inline  void save(Archive & ar, const unsigned int version) const;
+       template<class Archive>
+   inline  void load(Archive & ar, const unsigned int version);
+     
+    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 
-void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
-{
-   Key<DIM> key=(*it)->GetPos().ToKey(h);
-     if (m_list.count(key)==0) {
-        AddNeighbour(key);
-    }
-    Particles * pnew=&m_list[key];
-    if(pnew!=part){
-     part->splice(part->begin(),*pnew,it); 
-    }
-}
+
 
 
 #include "particles_list.htt"

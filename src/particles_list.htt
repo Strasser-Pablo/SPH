@@ -43,7 +43,35 @@ void Particles_List::AddNeighbour(Key< 3 > k)
 }
 
 
+void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
+{
+   Key<DIM> key=(*it)->GetPos().ToKey(h);
+     if (m_list.count(key)==0) {
+        AddNeighbour(key);
+    }
+    Particles * pnew=&m_list[key];
+    if(pnew!=part){
+     part->splice(part->begin(),*pnew,it); 
+    }
+}
 
+    template<class Archive>
+void Particles_List::save(Archive& ar, const unsigned int version) const
+{
+ar<<m_t;
+  bool btrue=true;
+  bool bfalse=false;
+for(map< Key<DIM>, Particles >::const_iterator it=m_list.begin();it!=m_list.end();it++){
+  ar<<btrue;
+  ar<<it->second;
+}
+ar<<bfalse;
+}
 
+    template<class Archive>
+void Particles_List::load(Archive& ar, const unsigned int version)
+{
+cout<<"no loading yet"<<endl;
+}
 
 

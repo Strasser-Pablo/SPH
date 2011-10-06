@@ -7,6 +7,9 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include <iostream>
 
 #include "key.h"
+
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
  /**
    * @brief Class that cannot be used. Only spezialitation can be used.
    * 
@@ -106,6 +109,11 @@ public:
     friend inline physvector< 3> operator*(const double c,const physvector<3> a);
      friend inline physvector< 3> operator*(const physvector<3> a,const double c);
      inline Key<3> ToKey(double h);
+     
+private:
+    friend class boost::serialization::access;
+      template<class Archive>
+   inline void serialize(Archive & ar, const unsigned int version);
 };
 
 
@@ -195,7 +203,15 @@ public:
     friend inline physvector< 2> operator*(const physvector<2> a,const double c) ;
     
      inline Key<2> ToKey(double h);
+     
+private:
+  
+    friend class boost::serialization::access;
+      template<class Archive>
+   inline void serialize(Archive & ar, const unsigned int version);
 };
+
+
 
 #define VECTOR_FINISH  //Used in const.h to assure that physvector is enterely defined.
 #include "physvector.htt"

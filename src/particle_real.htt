@@ -128,8 +128,20 @@ void ParticleReal::ComputeGravity_Force() {
 void ParticleReal::ComputeMove(double dt) {
     m_pos+=dt*m_speed;
     m_speed+=dt*m_force/m_rho;
+    ResetForce();
 }
 
 void ParticleReal::Dump(){
   cout<<"pos "<<m_pos<<" speed "<<m_speed<<endl;
+}
+
+    template<class Archive>
+void ParticleReal::serialize(Archive& ar, const unsigned int version)
+{
+ar & m_pos;
+ar &m_speed;
+ar &m_rho;
+ar &m_p;
+ar &m_type;
+ar &m_m;
 }

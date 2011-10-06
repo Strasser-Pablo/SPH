@@ -9,6 +9,9 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include "const.h"
 #include <list>
 #include "particle.h"
+
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 using namespace std;
 class Particles;
     /**
@@ -71,7 +74,13 @@ public:
      **/
     inline physvector<DIM> GetSpeed() const;
     
-    /**
+    /**void ParticleReal::serialize(Archive& ar, const unsigned int version)
+{
+ar & m_pos;
+ar &m_speed;
+ar &m_rho;
+ar &m_
+}
      * @brief Give the current calculated force
      *
      * @return physvector< DIM > Force
@@ -207,7 +216,15 @@ public:
   
   
     inline void Dump();
+    
+private:
+  friend class boost::serialization::access;
+      template<class Archive>
+   inline void serialize(Archive & ar, const unsigned int version);
 };
+
+
+
 
 #include "particle_real.htt"
 #endif // PARTICLE_REAL_H

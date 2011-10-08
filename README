@@ -10,7 +10,7 @@ For UBUNTU:
 The dependency are   cmake libboost-serialization-def libsdl1.2-dev
 Recomended Git Doxygen
 
-To Install: sudo apt-get install git doxygen libboost-serialization-def libsdl1.2-dev
+To Install: sudo apt-get install git doxygen libboost-serialization-dev libsdl1.2-dev
 2)
 -In the sph directory create a build directory (mkdir build) and go in (cd build)
 -Use Cmake (cmake ..)

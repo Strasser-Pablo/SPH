@@ -92,7 +92,7 @@ void ParticleReal::ComputePressure_Density(const Particles & FindVoisin)
 {
     double rho=0;
     for (list<Particle>::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++) {
-        rho+=(*it)->GetM()*Kernel_Density(GetPos(),h);
+        rho+=(*it)->GetM()*Kernel_Density(GetPos()-(*it)->GetPos(),h);
     }
     SetRho(rho);
     SetP((rho-WaterConst.rho0)*WaterConst.k);

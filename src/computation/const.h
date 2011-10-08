@@ -24,7 +24,7 @@ const double h=1.0;
 /**
  * @brief Time step size.
  **/
-const double DT=0.1;
+const double DT=0.01;
 #endif // CONST_H
 
 #ifndef CONST_H_VECTOR

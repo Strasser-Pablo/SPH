@@ -4,7 +4,7 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
-World::World(){
+World::World():m_current(0){
   fstream infile("default");
   boost::archive::binary_iarchive ar(infile);
  // boost::archive::xml_iarchive ar(infile);
@@ -26,4 +26,18 @@ void World::Do()
 {
 cout<< m_list.size()<<endl;
 cout<<m_list.begin()->Size()<<endl;
+}
+
+void World::Draw(GLUquadric* param)
+{
+  
+m_list[m_current].Draw(param);
+}
+
+void World::Next()
+{
+m_current++;
+if(m_current>=m_list.size()){
+ m_current=0;
+}
 }

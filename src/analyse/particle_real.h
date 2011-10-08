@@ -11,6 +11,11 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
+
+#include <SDL/SDL.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+
 using namespace std;
 
 /**
@@ -23,6 +28,7 @@ class ParticleReal
     double m_m;
     double m_rho;
     double m_p;
+    double m_r;
     ParticleType m_type;
 public:
     /**
@@ -126,9 +132,9 @@ public:
    
    
    
-    
+   inline void Draw(GLUquadric* param); 
 
-
+inline double GetRadius();
 
 private:
     friend class boost::serialization::access;
@@ -137,6 +143,16 @@ private:
 };
 
 
+void ParticleReal::Draw(GLUquadric* param)
+{
+  glPushMatrix(); 
+  double x,y,z;
+
+  m_pos.Get(x,y,z);
+   glTranslated(x,y,z);
+gluSphere( param,GetRadius(),20,20);
+glPopMatrix();
+}
 
 
 #include "particle_real.htt"

@@ -12,12 +12,12 @@ void World_test::Do()
   ofstream out("default");
   boost::archive::binary_oarchive ar(out);
 //boost::archive::xml_oarchive ar(out);
- for(int i=0;i<300000;i++){
-Add(ParticleReal(physvector< 3  >(1,i*0.1*i,1),water,2.0,4.0,5.0));
+ for(int i=0;i<10;i++){
+Add(ParticleReal(physvector< 3  >(1,i*0.1*i,1),water,0.02,1000.0,5.0));
  }
 //m_list.Dump();
 cout<<"compute"<<endl;
-for(int i=0;i<10;i++){
+for(int i=0;i<1000;i++){
    cout<<i<<endl;
  m_list.Compute(); 
 // m_list.Dump();

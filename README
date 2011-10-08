@@ -1,3 +1,10 @@
+Install with Git.
+
+-Install git.
+- type git clone git://github.com/Strasser-Pablo/SPH.git
+
+-To update after, type git pull in the SPH directory
+
 How To Build:
 
 1) Install dependency

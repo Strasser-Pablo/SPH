@@ -1,0 +1,89 @@
+
+#include "particle_real.h"
+
+#include <iostream>
+ParticleReal::ParticleReal()
+{
+
+}
+
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m, double rho, double p):m_pos(pos),m_type(type),m_m(m),m_rho(rho),m_p(p)
+{
+
+}
+
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m, double rho, double p):m_pos(pos),m_speed(speed),m_type(type),m_m(m),m_rho(rho),m_p(p)
+{
+
+}
+
+
+double ParticleReal::GetM() const
+{
+    return m_m;
+}
+
+double ParticleReal::GetP() const
+{
+    return m_p;
+}
+
+
+double ParticleReal::GetRho() const
+{
+    return m_rho;
+}
+
+void ParticleReal::SetM(double m)
+{
+    m_m=m;
+}
+
+void ParticleReal::SetP(double p)
+{
+    m_p=p;
+}
+
+void ParticleReal::SetRho(double rho)
+{
+    m_rho=rho;
+}
+
+
+
+void ParticleReal::SetPos(physvector< DIM > pos)
+{
+    m_pos=pos;
+}
+
+void ParticleReal::SetSpeed(physvector< DIM > speed)
+{
+    m_speed=speed;
+}
+
+
+
+physvector< DIM > ParticleReal::GetPos() const
+{
+    return m_pos;
+}
+
+
+
+
+inline physvector<DIM> ParticleReal::GetSpeed() const {
+    return m_speed;
+}
+
+
+
+    template<class Archive>
+void ParticleReal::serialize(Archive& ar, const unsigned int version)
+{
+ar & BOOST_SERIALIZATION_NVP(m_pos);
+ar &BOOST_SERIALIZATION_NVP(m_speed);
+ar &BOOST_SERIALIZATION_NVP(m_rho);
+ar &BOOST_SERIALIZATION_NVP(m_p);
+ar &BOOST_SERIALIZATION_NVP(m_type);
+ar &BOOST_SERIALIZATION_NVP(m_m);
+}

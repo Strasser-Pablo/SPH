@@ -51,14 +51,10 @@ public:
   inline void Update(list<Particle>::iterator & it,Particles * part);
   void Dump();
   
-private:
-  friend class boost::serialization::access;
+
+ 
       template<class Archive>
- inline  void save(Archive & ar, const unsigned int version) const;
-       template<class Archive>
-   inline  void load(Archive & ar, const unsigned int version);
-     
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
+   inline  void write(Archive & ar) const;
 };
 
 

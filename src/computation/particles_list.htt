@@ -56,22 +56,17 @@ void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
 }
 
     template<class Archive>
-void Particles_List::save(Archive& ar, const unsigned int version) const
-{
-ar<<m_t;
-  bool btrue=true;
+void Particles_List::write(Archive& ar) const
+{ bool btrue=true;
   bool bfalse=false;
+  ar<<BOOST_SERIALIZATION_NVP(btrue);
+ar<<BOOST_SERIALIZATION_NVP(m_t);
+ 
 for(map< Key<DIM>, Particles >::const_iterator it=m_list.begin();it!=m_list.end();it++){
-  ar<<btrue;
-  ar<<it->second;
+  it->second.write(ar);
 }
-ar<<bfalse;
+ar<<BOOST_SERIALIZATION_NVP(bfalse);
 }
 
-    template<class Archive>
-void Particles_List::load(Archive& ar, const unsigned int version)
-{
-cout<<"no loading yet"<<endl;
-}
 
 

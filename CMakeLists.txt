@@ -1,16 +1,18 @@
 cmake_minimum_required(VERSION 2.8)
 project(sph)
 find_package (Doxygen)
-find_package( Boost COMPONENTS serialization)
-link_directories ( ${Boost_LIBRARY_DIRS} )
-file(GLOB_RECURSE source src/*.cpp )
-add_executable(sph ${source})
 
-add_custom_target(doc COMMAND "${DOXYGEN_EXECUTABLE}" "Doxyfile"
-COMMENT "Writing documentation ..."
-WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/doc")
-#add_custom_target(doc)
-#add_dependencies(doc doxygen)
+add_subdirectory(src/computation ./computation EXCLUDE_FROM_ALL )
+add_subdirectory(src/analyse ./analyse EXCLUDE_FROM_ALL)
+if(${DOXYGEN_FOUND})
+add_custom_target(sph ALL)
+add_custom_target(doc)
+add_dependencies(doc doc_analyse doc_computation)
+add_dependencies(sph doc)
+endif()
+add_custom_target(sph_computation)
+add_dependencies(sph_computation computation)
+add_custom_target(sph_analyse)
+add_dependencies(sph_analyse analyse)
 
-target_link_libraries (	   sph ${Boost_LIBRARIES})
-
+add_dependencies(sph sph_analyse sph_computation)

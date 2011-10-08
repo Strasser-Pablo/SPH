@@ -138,10 +138,10 @@ void ParticleReal::Dump(){
     template<class Archive>
 void ParticleReal::serialize(Archive& ar, const unsigned int version)
 {
-ar & m_pos;
-ar &m_speed;
-ar &m_rho;
-ar &m_p;
-ar &m_type;
-ar &m_m;
+ar &BOOST_SERIALIZATION_NVP(m_pos);
+ar &BOOST_SERIALIZATION_NVP(m_speed);
+ar &BOOST_SERIALIZATION_NVP(m_rho);
+ar &BOOST_SERIALIZATION_NVP(m_p);
+ar &BOOST_SERIALIZATION_NVP(m_type);
+ar &BOOST_SERIALIZATION_NVP(m_m);
 }

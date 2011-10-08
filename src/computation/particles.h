@@ -12,6 +12,8 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include "key.h"
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
 
 class Particle;
 class Particles_List;
@@ -30,6 +32,7 @@ public:
      * @brief Construct a list of Particle of type type
      *
      * @param type Type of particle of the list
+#include <boost/archive/xml_iarchive.hpp>
      **/
     Particles(ParticleType type);
     /**
@@ -94,28 +97,22 @@ public:
      
      void Dump(bool voisin=true);
      
-private:
-    friend class boost::serialization::access;
+
       template<class Archive>
- inline  void save(Archive & ar, const unsigned int version) const;
-       template<class Archive>
-   inline  void load(Archive & ar, const unsigned int version);
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
+ inline  void write(Archive & ar) const;
 };
 
 
   template<class Archive>
-void Particles::save(Archive& ar, const unsigned int version) const
+void Particles::write(Archive& ar) const
 {
-  
+  const bool bt=true;
+  const bool bf=false;
 for(Particles::const_iterator it=begin();it!=end();it++){
- ar<<**it; 
+  ar<<boost::serialization::make_nvp("true",bt);
+ ar<<boost::serialization::make_nvp("Particle_real",**it); 
+ 
 }
-}
-  template<class Archive>
-void Particles::load(Archive& ar, const unsigned int version)
-{
-cout<<"not done"<<endl;
 }
 
 #endif // PARTICLES_H

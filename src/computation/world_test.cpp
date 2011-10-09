@@ -12,22 +12,47 @@ void World_test::Do()
   ofstream out("default");
   boost::archive::binary_oarchive ar(out);
 //boost::archive::xml_oarchive ar(out);
- for(int i=0;i<10;i++){
-Add(ParticleReal(physvector< 3  >(1,i*0.1*i,1),water,0.02,1000.0,5.0));
+
+   for(int x=0;x<10;x++){
+ for(int y=0;y<4;y++){
+   for(int z=0;z<10;z++){
+Add(ParticleReal(physvector< 3  >(0.1*x,0.1*y,0.1*z),physvector< 3  >(0,5,0),water,10,1000.0,0.00));
  }
+ }
+  }
+  
+    for(int x=0;x<10;x++){
+ for(int y=0;y<4;y++){
+   for(int z=0;z<10;z++){
+Add(ParticleReal(physvector< 3  >(0.1*x,0.1*y+2,0.1*z),physvector< 3  >(0,0,0),water2,10,1000.0,0.00));
+ }
+ }
+  }
+  
+    /*for(int x=0;x<10;x++){
+ for(int y=0;y<10;y++){
+   for(int z=0;z<10;z++){
+Add(ParticleReal(physvector< 3  >(0.1*x,0.1*y+2,0.1*z),physvector< 3  >(0,0,0),water,1,1000.0,0.00));
+ }
+ }
+  }
+  */
+ for(int k=0;k<5000;k++){
+   cout<<"k "<<k<<endl;
+  
 //m_list.Dump();
-cout<<"compute"<<endl;
-for(int i=0;i<1000;i++){
-   cout<<i<<endl;
+
  m_list.Compute(); 
 // m_list.Dump();
- cout<<"computed"<<endl;
 
-
+cout<<"write"<<endl;
  m_list.write(ar);
- cout<<"written"<<endl;
 
 }
+
+   
+ 
+ 
 bool bfalse=false;
 ar<<BOOST_SERIALIZATION_NVP(bfalse);
 //m_list.Dump();

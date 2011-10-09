@@ -1,43 +1,57 @@
 #include "world.h"
-#include <fstream>
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/archive/xml_oarchive.hpp>
-World::World():m_current(0){
-  fstream infile("default");
-  boost::archive::binary_iarchive ar(infile);
- // boost::archive::xml_iarchive ar(infile);
-  bool b;
-  ar>>BOOST_SERIALIZATION_NVP(b);
 
-  while(b){
+World::World():m_current(0),m_infile("default"),m_ar(m_infile),m_finish(false){
+
+    bool b;
+  m_ar>>BOOST_SERIALIZATION_NVP(b);
+cout<<"b "<<b<<endl;
+  if(b){
       double t;
-   ar>>BOOST_SERIALIZATION_NVP(t);
-   Particle_List part(t);
-   part.read(ar);
-   m_list.push_back(part);
-   m_list_t.push_back(t);
-    ar>>BOOST_SERIALIZATION_NVP(b);
+   m_ar>>BOOST_SERIALIZATION_NVP(t);
+   Particle_List part;
+   part.read(m_ar);
+   m_list=part;
+   m_list_t=t;
+cout<<"ready"<<endl;
+
+  }else{
+m_finish=true;
   }
 }
 
 void World::Do()
 {
-cout<< m_list.size()<<endl;
-cout<<m_list.begin()->Size()<<endl;
+
 }
 
 void World::Draw(GLUquadric* param)
 {
   
-m_list[m_current].Draw(param);
+     cout<<"t "<<m_list_t<<endl;
+   m_list.Draw(param);
+   cout<<"finish"<<endl;
 }
 
 void World::Next()
 {
-m_current++;
-if(m_current>=m_list.size()){
- m_current=0;
-}
+  if(!m_finish){
+ bool b;
+  m_ar>>BOOST_SERIALIZATION_NVP(b);
+cout<<"b "<<b<<endl;
+  if(b){
+      double t;
+   m_ar>>BOOST_SERIALIZATION_NVP(t);
+   Particle_List part;
+   part.read(m_ar);
+   m_list=part;
+   m_list_t=t;
+cout<<"ready"<<endl;
+
+  }
+  else{
+   m_finish=true; 
+  }
+  }else{
+   cout<<"finished no possible to take next frame"<<endl; 
+  }
 }

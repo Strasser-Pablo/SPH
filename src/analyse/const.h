@@ -19,7 +19,7 @@ const int DIM=DIM_DEF;
 /**
  * @brief Distance after witch kernel is 0.
  **/
-const double h=1.0;
+const double h=0.3;
 
 /**
  * @brief Time step size.

@@ -4,7 +4,7 @@
 /**
  * @brief Type of particle
  */
-enum ParticleType{none,water};
+enum ParticleType{none,water,water2};
 
 /**
  * @brief Class Containing constant for Material

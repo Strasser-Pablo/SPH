@@ -107,16 +107,16 @@ return physvector< 2  >(resx,resy);
 
 
 physvector<3> physvector<3>::operator-(const physvector<3> A)const{
-double resx=A.m_x-m_x;
-double resy=A.m_y-m_y;
-double resz=A.m_z-m_z;
+double resx=m_x-A.m_x;
+double resy=m_y-A.m_y;
+double resz=m_z-A.m_z;
 return physvector< 3  >(resx,resy,resz);
 }
 
 
 physvector<2> physvector<2>::operator-(const physvector<2> A)const{
-double resx=A.m_x-m_x;
-double resy=A.m_y-m_y;
+double resx=m_x-A.m_x;
+double resy=m_y-A.m_y;
 return physvector< 2  >(resx,resy);
 }
 

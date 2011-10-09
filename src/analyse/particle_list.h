@@ -13,9 +13,9 @@
 using namespace std;
 class Particle_List{
   deque<ParticleReal> m_list;
-  double m_t;
+
 public:
-  Particle_List(double t);
+  Particle_List();
 inline  int Size() const;
 
       template<class Archive>

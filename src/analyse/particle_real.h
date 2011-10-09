@@ -149,6 +149,11 @@ void ParticleReal::Draw(GLUquadric* param)
   double x,y,z;
 
   m_pos.Get(x,y,z);
+  if(m_type==water){
+       glColor3ub(0, 0, 255); 
+  }else{
+       glColor3ub(0, 255, 0); 
+  }
    glTranslated(x,y,z);
 gluSphere( param,GetRadius(),20,20);
 glPopMatrix();

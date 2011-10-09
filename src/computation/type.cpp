@@ -1,3 +1,3 @@
 
 #include "type.h"
-  MatterConstant WaterConst={998.29,3,3.5};
+  MatterConstant WaterConst={998.29,100,1};

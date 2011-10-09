@@ -37,7 +37,11 @@ inline double sign(double x) {
  * @return double Value at the given point
  **/
 inline double Kernel_Density(physvector<DIM> vect,double h ) {
-    return 315.0/(64*M_PI*pow(h,9))*pow(pow(h,2)-vect.Norm2(),3);
+    double ret=315.0/(64*M_PI*pow(h,9))*pow(pow(h,2)-vect.Norm2(),3);
+    if(ret<=0){
+    cout<<vect.Norm2()<<" "<<pow(h,2)<<endl;
+    }
+    return ret;
 }
 
 /**
@@ -49,25 +53,28 @@ inline double Kernel_Density(physvector<DIM> vect,double h ) {
  **/
 inline physvector<DIM>  Kernel_Pressure_Der(physvector<DIM> vect,double h ) {
     double x,y,z;
-    double d=vect.Norm2();
+    double d=vect.Norm();
+    double c=pow(h-d,2);
+    if(c>0){ 
+    }
     vect.Get(x,y,z);
-    if (abs(x)<0.001) {
-        x=sign(x)*45/(M_PI*pow(h,6));
+    if (abs(d)<0.001) {
+        x=-sign(x)*45/(M_PI*pow(h,6));
     }
     else {
-        x=x/d*45/(M_PI*pow(h,6))*pow(h-d,2);
+        x=-x/d*45/(M_PI*pow(h,6))*c;
     }
-    if (abs(y)<0.001) {
-        y=sign(y)*45/(M_PI*pow(h,6));
+    if (abs(d)<0.001) {
+        y=-sign(y)*45/(M_PI*pow(h,6));
     } else {
-        y=y/d*45/(M_PI*pow(h,6))*pow(h-d,2);
+        y=-y/d*45/(M_PI*pow(h,6))*c;
     }
-    if (abs(z)<0.001) {
-        z=sign(z)*45/(M_PI*pow(h,6));
+    if (abs(d)<0.001) {
+        z=-sign(z)*45/(M_PI*pow(h,6));
     } else {
-        z=z/d*45/(M_PI*pow(h,6))*pow(h-d,2);
+        z=-z/d*45/(M_PI*pow(h,6))*c;
     }
-    physvector<DIM>(x,y,z);
+   return physvector<DIM>(x,y,z);
 }
 
 /**

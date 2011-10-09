@@ -93,6 +93,7 @@ void ParticleReal::ComputePressure_Density(const Particles & FindVoisin)
     double rho=0;
     for (list<Particle>::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++) {
         rho+=(*it)->GetM()*Kernel_Density(GetPos()-(*it)->GetPos(),h);
+	
     }
     SetRho(rho);
     SetP((rho-WaterConst.rho0)*WaterConst.k);
@@ -114,10 +115,11 @@ void ParticleReal::ComputeInternal_Force(const Particles & FindVoisin) {
     for (list<Particle>::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++) {
         if (!Equal(*it)) {
             real=*(*it);
-            ftot-=(pact+real.GetP())/2* real.GetM()*Kernel_Pressure_Der(GetPos()-(*it)->GetPos(),h);
+            ftot-=(pact+real.GetP())/2* real.GetM()*1/real.GetRho()*Kernel_Pressure_Der(GetPos()-real.GetPos(),h);;
             ftot+=WaterConst.mu*(real.GetSpeed()-sact)*real.GetM()/real.GetRho()*Kernel_viscosity_laplacian(GetPos()-(*it)->GetPos(),h);
         }
     }
+
     AddForce(ftot);
 }
 

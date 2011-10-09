@@ -13,8 +13,9 @@ void Particles_List::Compute()
     }
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
         it->second.ComputeMove(DT);
-        m_t+=DT;
+        
     }
+    m_t+=DT;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
         it->second.Update(this);
     }

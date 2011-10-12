@@ -91,12 +91,12 @@ inline double Kernel_viscosity_laplacian(physvector<DIM> vect,double h){
 inline double Kernel_spline5(physvector<DIM> vect,double h ){
  double d=(3/h*vect).Norm();
  double ret;
- if(d<1./3){
-   ret=pow(3-d,5)-6*pow(2-d,5)+15*pow(1-d,5);
+ if(d<1){
+   ret=pow(3-d,5)-6*pow(2-d,5)+15*pow(1-d,5); 
  }
- else if(d<2./3){
+ else if(d<2){
       ret=pow(3-d,5)-6*pow(2-d,5);
- }else if(d<1.0){
+ }else if(d<3){
   ret=pow(3-d,5);
 }else{
    ret=0;
@@ -106,17 +106,20 @@ return ret*1/(80*M_PI*h);
 
 inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h ){
  double d=(3/h*vect).Norm();
+ if(vect.Norm()==0){
+  return physvector< DIM>(); 
+ }
  double ret;
- if(d<1./3){
+ if(d<1){
    ret=(-5*pow(3-d,4)+30*pow(2-d,4)-75*pow(1-d,4));
  }
- else if(d<2./3){
+ else if(d<2){
       ret=(-5*pow(3-d,4)+30*pow(2-d,4));
- }else if(d<1.0){
+ }else if(d<3){
   ret=-5*pow(3-d,5);
 }else{
   
 }
-return ret*1/(80*M_PI*h)*vect/d;
+return ret*1/(80*M_PI*h)*vect/vect.Norm();
 }
 #endif // KERNEL_H

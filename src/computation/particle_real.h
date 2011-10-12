@@ -25,6 +25,7 @@ class ParticleReal
     double m_m;
     double m_density;
     double m_p;
+    physvector<DIM> m_surface_tens;
     ParticleType m_type;
 public:
       /**
@@ -216,7 +217,10 @@ ar &m_
   
   
     inline void Dump();
-    
+   inline void ComputeSurface_Force(const Particles & FindVoisin);
+   inline void ComputeSurface_Tensor(const Particles &FindVoisin);
+   inline physvector<DIM> Color_Grad(const Particles &FindVoisin,ParticleType A,ParticleType B) const;
+ inline  physvector<DIM> ComputeSurface_Tensor(const Particles &FindVoisin,ParticleType A,ParticleType B) const;
 private:
   friend class boost::serialization::access;
       template<class Archive>

@@ -39,7 +39,15 @@ void Particles::ComputePressure_Density()
    
 }
 
-
+void Particles::ComputeSurface_Tensor(){
+     Particles list_compute;
+    for (list<Particle>::iterator it=begin();it!=end();it++) {
+        list_compute=(*it)->FindNeighbour(m_neighbour,h);
+      
+            (*it)->ComputeSurface_Tensor(list_compute);
+    }
+   
+}
 void Particles::ComputeInternal_Force()
 {
     Particles list_compute;

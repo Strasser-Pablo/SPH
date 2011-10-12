@@ -99,7 +99,9 @@ void ParticleReal::ComputePressure_Density(const Particles & FindVoisin)
     }
     SetDensity(rho);
 //   SetP((rho-WaterConst.rho0)*WaterConst.k+3000);
-    SetP(pressure(rho*GetM()));
+    SetP(pressure(rho*GetM(),m_type));
+   // double m_r=pow(3/(4*M_PI*rho),1./3);
+   // cout<<m_r<<endl;
 }
 
 bool ParticleReal::Equal(const Particle part)const {
@@ -117,9 +119,12 @@ void ParticleReal::ComputeGravity_Force() {
 }
 
 void ParticleReal::ComputeMove(double dt) {
+  if(m_type!=Fixed){
     m_pos+=dt*m_speed;
     m_speed+=dt*m_a;
+
     ResetAcceleration();
+  }
 }
 
 void ParticleReal::Dump() {
@@ -142,12 +147,79 @@ void ParticleReal::ComputeInternal_Force(const Particles & FindVoisin) {
     physvector<DIM>  sact=GetSpeed();
     ParticleReal  real;
     for (list<Particle>::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++) {
+      real=*(*it);
         if (!Equal(*it)) {
-            real=*(*it);
-            ftot-=1/GetM()*(GetP()/GetDensity()+real.GetP()/real.GetDensity())*Kernel_grad_spline5(GetPos()-real.GetPos(),h);
-            ftot+=1/GetM()*Mat_Const(m_type).eta*(1/pow(GetDensity(),2)+1/pow(real.GetDensity(),2))/(GetPos()-real.GetPos()).Norm()*Kernel_grad_spline5(GetPos()-real.GetPos(),h)*(GetSpeed()-GetSpeed());
-        }
+	  ftot+=1/GetM()*Mat_Const(m_type).eta*(1/pow(GetDensity(),2)+1/pow(real.GetDensity(),2))/(GetPos()-real.GetPos()).Norm()*Kernel_grad_spline5(GetPos()-real.GetPos(),h)*(GetSpeed()-real.GetSpeed());}
+            
+            ftot-=1/GetM()*(GetP()/pow(GetDensity(),2)+real.GetP()/pow(real.GetDensity(),2))*Kernel_grad_spline5(GetPos()-real.GetPos(),h);
+           
+	 
+   
     }
 
     AddAcceleration(ftot);
+    ComputeSurface_Force( FindVoisin);
+}
+
+
+
+void ParticleReal::ComputeSurface_Force(const Particles& FindVoisin)
+{
+physvector<DIM> temp;
+int i=0;
+for(Particles::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++){
+ i++;
+ temp+= Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(m_surface_tens/pow(GetDensity(),2)+(*it)->m_surface_tens/pow((*it)->GetDensity(),2));
+ double x,y,z;
+(temp).Get(x,y,z);
+if((isnan(x)||isnan(y)||isnan(z))){
+cout<<"nan "<<GetM()<<" "<<Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)<<endl;
+}
+}
+
+AddAcceleration(temp/GetM());
+}
+
+physvector< DIM > ParticleReal::ComputeSurface_Tensor(const Particles& FindVoisin, ParticleType A, ParticleType B) const
+{
+physvector<DIM> grad=Color_Grad(FindVoisin,A,B);
+double d=grad.Norm();
+physvector<DIM> I;
+if(DIM==3){
+ I=physvector< 3  >(1,1,1); 
+}
+ physvector<DIM> ret;
+if(d!=0){
+ret=surface_Const(A,B)/d*(1./DIM*pow(d,2)*I-grad*grad);
+}
+
+}
+
+
+physvector< DIM > ParticleReal::Color_Grad(const Particles& FindVoisin,ParticleType A,ParticleType B)const
+{
+  physvector<DIM> temp;
+  if(m_type!=A){
+   return temp; 
+  }
+  if(A==B){
+   return temp; 
+  }
+for(Particles::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++){
+  if((*it)->m_type==B){
+   temp+=1./pow((*it)->GetDensity(),2)*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h); 
+  }
+}
+
+return temp*GetDensity();
+}
+
+void ParticleReal::ComputeSurface_Tensor(const Particles& FindVoisin)
+{
+if(m_type==water){
+ m_surface_tens=ComputeSurface_Tensor(FindVoisin,m_type,Gaz); 
+}
+else{
+   m_surface_tens=ComputeSurface_Tensor(FindVoisin,m_type,water); 
+}
 }

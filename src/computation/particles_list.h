@@ -41,6 +41,7 @@ public:
    **/
   void Compute();
   
+  void Prepare();
   /**
    * @brief Uttility function, update neighbour of key k and it's neighbour
    *

@@ -19,12 +19,12 @@ const int DIM=DIM_DEF;
 /**
  * @brief Distance after witch kernel is 0.
  **/
-const double h=0.3;
+const double h=3; 
 
 /**
  * @brief Time step size.
  **/
-const double DT=0.002;
+const double DT=0.0005;
 #endif // CONST_H
 
 #ifndef CONST_H_VECTOR

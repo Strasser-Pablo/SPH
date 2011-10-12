@@ -4,7 +4,8 @@
 /**
  * @brief Type of particle
  */
-enum ParticleType{none,water,water2};
+enum ParticleType{none,water,Gaz,Fixed};
+
 
 
 

@@ -17,16 +17,51 @@ void World_test::Do()
   
    
   
-    for(int x=0;x<4;x++){
-      for(int y=0;y<4;y++){
- for(int z=0;z<4;z++){
- 
-Add(ParticleReal(physvector< 3  >(0.1*x,0.1*y,0.1*z),physvector< 3  >(0,0,0),water,1000.0));
- }
- }
-    } 
   
- for(int k=0;k<50;k++){
+      for(int x=1;x<5;x++){
+ for(int y=1;y<10;y++){
+ 
+Add(ParticleReal(physvector< 3  >(0,x,y),physvector< 3  >(0,0,0),water,10000));
+ }
+ }
+ 
+     for(int x=5;x<10;x++){
+ for(int y=1;y<10;y++){
+ 
+Add(ParticleReal(physvector< 3  >(0,x,y),physvector< 3  >(0,0,0),water,10000));
+ }
+ }
+ 
+  for(int y=1;y<10;y++){
+ 
+Add(ParticleReal(physvector< 3  >(0,0,y),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,10,y),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,y,0),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,y,10),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,-1,y),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,11,y),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,y,-1),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,y,11),physvector< 3  >(0,0,0),water,10000));
+ }
+   Add(ParticleReal(physvector< 3  >(0,0,0),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,10,10),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,10,0),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,0,10),physvector< 3  >(0,0,0),water,10000)); 
+   Add(ParticleReal(physvector< 3  >(0,-1,-1),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,11,11),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,11,-1),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,-1,11),physvector< 3  >(0,0,0),water,10000)); 
+   Add(ParticleReal(physvector< 3  >(0,0,-1),physvector< 3  >(0,0,0),water,10000));
+      Add(ParticleReal(physvector< 3  >(0,-1,0),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,11,10),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,10,11),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,10,-1),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,11,0),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,0,11),physvector< 3  >(0,0,0),water,10000)); 
+Add(ParticleReal(physvector< 3  >(0,-1,10),physvector< 3  >(0,0,0),water,10000));   
+m_list.Prepare();  
+    m_list.write(ar);
+ for(int k=0;k<500;k++){
   cout<<"k "<<k<<endl;
 
    

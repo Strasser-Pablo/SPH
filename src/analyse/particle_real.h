@@ -151,8 +151,11 @@ void ParticleReal::Draw(GLUquadric* param)
   m_pos.Get(x,y,z);
   if(m_type==water){
        glColor3ub(0, 0, 255); 
-  }else{
+  }else if(m_type==Gaz){
        glColor3ub(0, 255, 0); 
+  }
+  else{
+      glColor3ub(255, 0, 0); 
   }
    glTranslated(x,y,z);
 gluSphere( param,GetRadius(),20,20);

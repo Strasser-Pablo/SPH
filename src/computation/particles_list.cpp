@@ -6,6 +6,10 @@ void Particles_List::Compute()
         it->second.ComputePressure_Density();
     }
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+        it->second. ComputeSurface_Tensor();
+    }
+   
+    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
         it->second.ComputeInternal_Force();
     }
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
@@ -35,5 +39,11 @@ void Particles_List::Dump() {
     cout<<"End Particle List"<<endl;
 }
 
+void Particles_List::Prepare()
+{
+  for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+        it->second.ComputePressure_Density();
+    }
+}
 
 

@@ -93,7 +93,8 @@ ar &BOOST_SERIALIZATION_NVP(m_p);
 ar &BOOST_SERIALIZATION_NVP(m_type);
 ar &BOOST_SERIALIZATION_NVP(m_m);
 m_rho=m_density*m_m;
-m_r=pow(3*m_m/(4*M_PI*m_rho),1./3);
+//m_r=pow(3/(4*M_PI*m_density),1./3);
+m_r=0.1;
 cout<<"rho "<<m_rho<<" m "<< m_m<<" m_r "<<m_r<<" m_p "<<m_p<<endl;
 }
 

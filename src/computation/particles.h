@@ -66,6 +66,7 @@ public:
      **/
     void ComputeGravity_Force();
     
+    void ComputeSurface_Tensor();
     /**
      * @brief Make Move all the particle in the  container.
      *

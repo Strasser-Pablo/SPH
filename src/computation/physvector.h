@@ -92,7 +92,9 @@ public:
      **/
     inline void Get(double &x,double &y,double &z) const;
     inline  physvector<3> operator+(const physvector<3> A) const;
+     inline  physvector<3> operator*(const physvector<3> A) const;
     inline physvector<3> operator-(const physvector<3> A) const;
+        inline physvector<3> operator-() const;
     inline void operator=( const physvector<3> A);
     inline void operator+=(const physvector<3> A);
     inline void operator-=(const physvector<3> A);
@@ -108,6 +110,7 @@ public:
     friend std::ostream& operator<< (std::ostream& stream, const physvector<3>& A );
     friend inline physvector< 3> operator*(const double c,const physvector<3> a);
      friend inline physvector< 3> operator*(const physvector<3> a,const double c);
+  
      inline Key<3> ToKey(double h);
      
 private:

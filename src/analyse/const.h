@@ -25,5 +25,8 @@ const double h=0.3;
  * @brief Time step size.
  **/
 const double DT=0.1;
+
+
+
 #endif // CONST_H
 

@@ -1,19 +1,21 @@
 #include "particle.h"
-#include "particle_real.h"
+
 #include "kernel.h"
 #include "particles.h"
 #include <iostream>
+
+#include "pressure.h"
 ParticleReal::ParticleReal()
 {
 
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m, double rho, double p):m_pos(pos),m_type(type),m_m(m),m_rho(rho),m_p(p)
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m):m_pos(pos),m_type(type),m_m(m)
 {
-
+  
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m, double rho, double p):m_pos(pos),m_speed(speed),m_type(type),m_m(m),m_rho(rho),m_p(p)
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m):m_pos(pos),m_speed(speed),m_type(type),m_m(m)
 {
 
 }
@@ -30,9 +32,9 @@ double ParticleReal::GetP() const
 }
 
 
-double ParticleReal::GetRho() const
+double ParticleReal::GetDensity() const
 {
-    return m_rho;
+    return m_density;
 }
 
 void ParticleReal::SetM(double m)
@@ -45,9 +47,9 @@ void ParticleReal::SetP(double p)
     m_p=p;
 }
 
-void ParticleReal::SetRho(double rho)
+void ParticleReal::SetDensity(double rho)
 {
-    m_rho=rho;
+    m_density=rho;
 }
 
 double ParticleReal::Distance2(Particle& A)
@@ -65,38 +67,39 @@ void ParticleReal::SetSpeed(physvector< DIM > speed)
     m_speed=speed;
 }
 
-void ParticleReal::SetForce(physvector< DIM > force)
+void ParticleReal::SetAcceleration(physvector< DIM > force)
 {
-    m_force=force;
+    m_a=force;
 }
 
-void ParticleReal::AddForce(physvector< DIM > force)
+void ParticleReal::AddAcceleration(physvector< DIM > force)
 {
-    m_force+=force;
+    m_a+=force;
 }
 
-void ParticleReal::ResetForce() {
-    m_force=physvector< DIM>();
+void ParticleReal::ResetAcceleration() {
+    m_a=physvector< DIM>();
 }
 physvector< DIM > ParticleReal::GetPos() const
 {
     return m_pos;
 }
 
-physvector< DIM > ParticleReal::GetForce() const
+physvector< DIM > ParticleReal::GetAcceleration() const
 {
-    return m_force;
+    return m_a;
 }
 
 void ParticleReal::ComputePressure_Density(const Particles & FindVoisin)
 {
     double rho=0;
     for (list<Particle>::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++) {
-        rho+=(*it)->GetM()*Kernel_Density(GetPos()-(*it)->GetPos(),h);
-	
+        rho+=Kernel_spline5(GetPos()-(*it)->GetPos(),h);
+
     }
-    SetRho(rho);
-    SetP((rho-WaterConst.rho0)*WaterConst.k);
+    SetDensity(rho);
+//   SetP((rho-WaterConst.rho0)*WaterConst.k+3000);
+    SetP(pressure(rho*GetM()));
 }
 
 bool ParticleReal::Equal(const Particle part)const {
@@ -107,6 +110,32 @@ inline physvector<DIM> ParticleReal::GetSpeed() const {
     return m_speed;
 }
 
+
+
+void ParticleReal::ComputeGravity_Force() {
+    AddAcceleration(G);
+}
+
+void ParticleReal::ComputeMove(double dt) {
+    m_pos+=dt*m_speed;
+    m_speed+=dt*m_a;
+    ResetAcceleration();
+}
+
+void ParticleReal::Dump() {
+    cout<<"pos "<<m_pos<<" speed "<<m_speed<<endl;
+}
+
+template<class Archive>
+void ParticleReal::serialize(Archive& ar, const unsigned int version)
+{
+    ar &BOOST_SERIALIZATION_NVP(m_pos);
+    ar &BOOST_SERIALIZATION_NVP(m_speed);
+    ar &BOOST_SERIALIZATION_NVP(m_density);
+    ar &BOOST_SERIALIZATION_NVP(m_p);
+    ar &BOOST_SERIALIZATION_NVP(m_type);
+    ar &BOOST_SERIALIZATION_NVP(m_m);
+}
 void ParticleReal::ComputeInternal_Force(const Particles & FindVoisin) {
     physvector<DIM> ftot;
     double pact=GetP();
@@ -115,35 +144,10 @@ void ParticleReal::ComputeInternal_Force(const Particles & FindVoisin) {
     for (list<Particle>::const_iterator it=FindVoisin.begin();it!=FindVoisin.end();it++) {
         if (!Equal(*it)) {
             real=*(*it);
-            ftot-=(pact+real.GetP())/2* real.GetM()*1/real.GetRho()*Kernel_Pressure_Der(GetPos()-real.GetPos(),h);;
-            ftot+=WaterConst.mu*(real.GetSpeed()-sact)*real.GetM()/real.GetRho()*Kernel_viscosity_laplacian(GetPos()-(*it)->GetPos(),h);
+            ftot-=1/GetM()*(GetP()/GetDensity()+real.GetP()/real.GetDensity())*Kernel_grad_spline5(GetPos()-real.GetPos(),h);
+            ftot+=1/GetM()*Mat_Const(m_type).eta*(1/pow(GetDensity(),2)+1/pow(real.GetDensity(),2))/(GetPos()-real.GetPos()).Norm()*Kernel_grad_spline5(GetPos()-real.GetPos(),h)*(GetSpeed()-GetSpeed());
         }
     }
 
-    AddForce(ftot);
-}
-
-void ParticleReal::ComputeGravity_Force() {
-    AddForce(GetRho()*G);
-}
-
-void ParticleReal::ComputeMove(double dt) {
-    m_pos+=dt*m_speed;
-    m_speed+=dt*m_force/m_rho;
-    ResetForce();
-}
-
-void ParticleReal::Dump(){
-  cout<<"pos "<<m_pos<<" speed "<<m_speed<<endl;
-}
-
-    template<class Archive>
-void ParticleReal::serialize(Archive& ar, const unsigned int version)
-{
-ar &BOOST_SERIALIZATION_NVP(m_pos);
-ar &BOOST_SERIALIZATION_NVP(m_speed);
-ar &BOOST_SERIALIZATION_NVP(m_rho);
-ar &BOOST_SERIALIZATION_NVP(m_p);
-ar &BOOST_SERIALIZATION_NVP(m_type);
-ar &BOOST_SERIALIZATION_NVP(m_m);
+    AddAcceleration(ftot);
 }

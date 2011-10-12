@@ -24,7 +24,7 @@ const double h=0.3;
 /**
  * @brief Time step size.
  **/
-const double DT=0.0001;
+const double DT=0.002;
 #endif // CONST_H
 
 #ifndef CONST_H_VECTOR
@@ -37,7 +37,7 @@ const double DT=0.0001;
 /**
  * @brief Vector G for gravity
  **/
-const  physvector<DIM> G=physvector<DIM>(0,-9.81,0);
+const  physvector<DIM> G=physvector<DIM>(0,0,0);
 #endif
 
 #if DIM_DEF==2

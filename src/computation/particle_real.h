@@ -21,9 +21,9 @@ class ParticleReal
 {
     physvector<DIM> m_pos;
     physvector<DIM> m_speed;
-      physvector<DIM> m_force;
+      physvector<DIM> m_a;
     double m_m;
-    double m_rho;
+    double m_density;
     double m_p;
     ParticleType m_type;
 public:
@@ -40,7 +40,7 @@ public:
      * @param rho Particle density
      * @param p Particle pressure
      **/
-    inline ParticleReal(physvector<DIM> pos,ParticleType type,double m,double rho,double p);
+    inline ParticleReal(physvector<DIM> pos,ParticleType type,double m);
     
         /**
      * @brief Create a individual Particle with givent property
@@ -52,7 +52,7 @@ public:
      * @param rho Particle density
      * @param p Particle pressure
      **/
-      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double m,double rho,double p);
+      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double m);
     /**
      * @brief Calculate the Distance square of the Particle
      *
@@ -85,7 +85,7 @@ ar &m_
      *
      * @return physvector< DIM > Force
      **/
-    inline physvector<DIM> GetForce() const;
+    inline physvector<DIM> GetAcceleration() const;
     /**
      * @brief Get the mass
      *
@@ -97,7 +97,7 @@ ar &m_
      *
      * @return double rho
      **/
-    inline double GetRho() const;
+    inline double GetDensity() const;
         /**
      * @brief Get the pressure
      *
@@ -117,7 +117,7 @@ ar &m_
      * @param rho density
      * @return void
      **/
-    inline void SetRho(double rho);
+    inline void SetDensity(double rho);
     /**
      * @brief Set the pressure
      *
@@ -148,7 +148,7 @@ ar &m_
      * @param force Force
      * @return void
      **/
-    inline void SetForce(physvector<DIM> force);
+    inline void SetAcceleration(physvector<DIM> force);
 	  
     /**
      * @brief Add the force to the current force
@@ -156,9 +156,9 @@ ar &m_
      * @param force Force to add
      * @return void
      **/
-    inline void AddForce(physvector<DIM> force);
+    inline void AddAcceleration(physvector<DIM> force);
 	  
-	  inline void ResetForce();
+	  inline void ResetAcceleration();
 	  
 	   /**
      * @brief Get the particle of distance less than h in the list
@@ -222,7 +222,6 @@ private:
       template<class Archive>
    inline void serialize(Archive & ar, const unsigned int version);
 };
-
 
 
 

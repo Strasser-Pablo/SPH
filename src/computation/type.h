@@ -12,11 +12,19 @@ enum ParticleType{none,water,water2};
 struct MatterConstant{
  double rho0;
  double k;
- double mu;
+ double eta;
 };
 
-
 extern MatterConstant WaterConst;
+
+inline MatterConstant Mat_Const(ParticleType type){
+ switch(type){
+   case water:
+     return WaterConst;
+ }
+}
+
+
 
 
 /**

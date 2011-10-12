@@ -21,7 +21,7 @@ int Application::Run()
 {
 
     SDL_Event event;
-    SDL_AddTimer(1000, TimerFrames, this);
+   // SDL_AddTimer(100, TimerFrames, this);
     Draw();
 
     while (SDL_WaitEvent(&event))
@@ -136,14 +136,7 @@ Uint32 Application::TimerFrames(Uint32 interval, void* param)
 void Application::Next()
 {
     m_world.Next();
-        m_world.Next();
-	    m_world.Next();
-	      m_world.Next();
-	        m_world.Next();
-		  m_world.Next();
-		  m_world.Next();
-	        m_world.Next();
-		  m_world.Next();
+       
 	    
     Draw();
 }

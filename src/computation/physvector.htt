@@ -1,6 +1,6 @@
 
 #include <cmath>
-#include "physvector.h"
+
 
 physvector<3>::physvector():m_x(0),m_y(0),m_z(0) {
 
@@ -114,6 +114,13 @@ return physvector< 3  >(resx,resy,resz);
 }
 
 
+physvector<3> physvector<3>::operator-()const{
+double resx=-m_x;
+double resy=-m_y;
+double resz=-m_z;
+return physvector< 3  >(resx,resy,resz);
+}
+
 physvector<2> physvector<2>::operator-(const physvector<2> A)const{
 double resx=m_x-A.m_x;
 double resy=m_y-A.m_y;
@@ -175,6 +182,14 @@ m_y=A.m_y;
  physvector< 3> operator*(const physvector<3> a,const double c) {
   return physvector< 3  > (a.m_x*c,a.m_y*c,a.m_z*c);
 }
+
+physvector<3> physvector<3>::operator*(const physvector<3> A)const{
+double resx=A.m_x*m_x;
+double resy=A.m_y*m_y;
+double resz=A.m_z*m_z;
+return physvector< 3  >(resx,resy,resz);
+}
+
 
 void physvector<3>::operator*=(const double c){
 m_x*=c;

@@ -29,33 +29,35 @@ Particles::Particles():m_type(none)
 
 void Particles::ComputePressure_Density()
 {
-    Particles list_compute;
+
     for (list<Particle>::iterator it=begin();it!=end();it++) {
-        list_compute=(*it)->FindNeighbour(m_neighbour,h);
-      
+        Particles list_compute;
+        (*it)->FindNeighbour(m_neighbour,h,list_compute);
+
             (*it)->ComputePressure_Density(list_compute);
-     
     }
-   
+
 }
 
 void Particles::ComputeSurface_Tensor(){
-     Particles list_compute;
+
     for (list<Particle>::iterator it=begin();it!=end();it++) {
-        list_compute=(*it)->FindNeighbour(m_neighbour,h);
-      
+        Particles list_compute;
+        (*it)->FindNeighbour(m_neighbour,h,list_compute);
+
             (*it)->ComputeSurface_Tensor(list_compute);
     }
-   
+
 }
 void Particles::ComputeInternal_Force()
 {
-    Particles list_compute;
+
     for (list<Particle>::iterator it=begin();it!=end();it++) {
-        list_compute=(*it)->FindNeighbour(m_neighbour,h);
-      
+          Particles list_compute;
+        (*it)->FindNeighbour(m_neighbour,h,list_compute);
+
             (*it)->ComputeInternal_Force(list_compute);
-        
+
     }
 }
 
@@ -94,7 +96,7 @@ void Particles::Update( Particles_List*  plist)
       it++;
       plist->Update(it2,this);
 	}
-    
+
 }
 
 bool Particles::operator==(const Particles parts) const
@@ -107,7 +109,7 @@ void Particles::Dump(bool voisin)
 {
   cout<<"begin Particles"<<endl;
 for(Particles::iterator it=begin();it!=end();it++){
- (*it)->Dump(); 
+ (*it)->Dump();
 }
 if(voisin){
 cout<<"dump of neighbour"<<endl;

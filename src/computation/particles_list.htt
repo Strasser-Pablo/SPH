@@ -1,4 +1,3 @@
-
 #include "particle.h"
 #include "particles.h"
 #include <list>
@@ -6,9 +5,9 @@
 #include "debug.h"
 void Particles_List::Add(Particle part)
 {
-
     Key<DIM> key=part->GetPos().ToKey(h);
-    if (m_list.count(key)==0) {
+    if (m_list.count(key)==0)
+    {
         AddNeighbour(key);
     }
 
@@ -23,16 +22,19 @@ void Particles_List::AddNeighbour(Key< 3 > k)
     list<Particles*> n;
 
     Particles* pa0=&m_list[k];
-    for (list<Key<DIM> >::iterator it=l.begin();it!=l.end();it++) {
+    for (list<Key<DIM> >::iterator it=l.begin(); it!=l.end(); it++)
+    {
 
-        if (m_list.count(*it)>0) {
+        if (m_list.count(*it)>0)
+        {
             //   cout<<"found"<<endl;
             //element found, add element in neighbour of the two element
             Particles*   pa=&m_list[*it];
             n.push_front(pa);
             list<Particles*>   templist=pa->GetNeighbour();
             //verify if element is in list if it's not add it
-            if ( find(templist.begin(),templist.end(),pa0)==templist.end()) {
+            if ( find(templist.begin(),templist.end(),pa0)==templist.end())
+            {
                 templist.push_front(pa0);
                 pa->SetNeighbour(templist);
             }
@@ -45,27 +47,36 @@ void Particles_List::AddNeighbour(Key< 3 > k)
 
 void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
 {
-   Key<DIM> key=(*it)->GetPos().ToKey(h);
-     if (m_list.count(key)==0) {
+    Key<DIM> key=(*it)->GetPos().ToKey(h);
+    if (m_list.count(key)==0)
+    {
         AddNeighbour(key);
     }
     Particles * pnew=&m_list[key];
-    if(pnew!=part){
-     part->splice(part->begin(),*pnew,it); 
+    if(pnew!=part)
+    {
+        part->splice(part->begin(),*pnew,it);
     }
 }
 
-    template<class Archive>
+template<class Archive>
 void Particles_List::write(Archive& ar) const
-{ bool btrue=true;
-  bool bfalse=false;
-  ar<<BOOST_SERIALIZATION_NVP(btrue);
-ar<<BOOST_SERIALIZATION_NVP(m_t);
- 
-for(map< Key<DIM>, Particles >::const_iterator it=m_list.begin();it!=m_list.end();it++){
-  it->second.write(ar);
-}
-ar<<BOOST_SERIALIZATION_NVP(bfalse);
+{
+    bool btrue=true;
+    bool bfalse=false;
+    ar<<BOOST_SERIALIZATION_NVP(btrue);
+    ar<<BOOST_SERIALIZATION_NVP(m_t);
+
+    for(map< Key<DIM>, Particles >::const_iterator it=m_list.begin(); it!=m_list.end(); it++)
+    {
+        it->second.write(ar);
+    }
+    ar<<BOOST_SERIALIZATION_NVP(bfalse);
+
+    #if DOXYGEN
+      Particles p;
+      p.write(ar);
+    #endif //DOXYGEN
 }
 
 

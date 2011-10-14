@@ -6,13 +6,14 @@
 #include "const.h"
 #include <cmath>
 /** \file kernel.h Contain all the kernel function used
- * 
+ *
  **/
 
 /**
- * @brief Sign function
+ * @brief Sign function.
  *
- * Return +1 if positif, -1 if negatif . 0 if 0.
+ * \f[ sign(x)=\begin{cases}-1& \text{if $x<0$}\\ 0& \text{if $x=0$}\\ 1& \text{if $x>0$}  \end{cases}
+ \f]
  * @param x number to test
  * @return double value of the function.
  **/
@@ -55,7 +56,7 @@ inline physvector<DIM>  Kernel_Pressure_Der(physvector<DIM> vect,double h ) {
     double x,y,z;
     double d=vect.Norm();
     double c=pow(h-d,2);
-    if(c>0){ 
+    if(c>0){
     }
     vect.Get(x,y,z);
     if (abs(d)<0.001) {
@@ -85,14 +86,26 @@ inline physvector<DIM>  Kernel_Pressure_Der(physvector<DIM> vect,double h ) {
  * @return double Value at the given point
  **/
 inline double Kernel_viscosity_laplacian(physvector<DIM> vect,double h){
- return 45/(M_PI*pow(h,6))*(h-vect.Norm2()); 
+ return 45/(M_PI*pow(h,6))*(h-vect.Norm2());
 }
 
+/**
+ * @brief QSpline kernel
+ * With \f$ h \f$, and \f$ v \f$ the argument.
+ * \f[ s=3\left|\left|\frac{v}{h}\right|\right| \f]
+ * \f[ splin5(s)=\frac{1}{80\pi h} \begin{cases} (3-s)^5-6(2-s)^5+15(1-s)^5 & \text{if $s<1$}\\
+ * (3-s)^5-6(2-s)^5& \text{if $s<2$}\\
+ * (3-s)^5& \text{if $s<3$}\\
+ *  0& \text{if $s\geq 3$} \end{cases}  \f]
+ * @param vect position to consider
+ * @param h compact suport after witch the result is 0.
+ * @return double
+ **/
 inline double Kernel_spline5(physvector<DIM> vect,double h ){
  double d=(3/h*vect).Norm();
  double ret;
  if(d<1){
-   ret=pow(3-d,5)-6*pow(2-d,5)+15*pow(1-d,5); 
+   ret=pow(3-d,5)-6*pow(2-d,5)+15*pow(1-d,5);
  }
  else if(d<2){
       ret=pow(3-d,5)-6*pow(2-d,5);
@@ -104,10 +117,25 @@ inline double Kernel_spline5(physvector<DIM> vect,double h ){
 return ret*1/(80*M_PI*h);
 }
 
+/**
+ * @brief Qspline kernel gradiant
+ *
+ * With \f$ h \f$, and \f$ v \f$ the argument.
+ * \f[ s=3\left|\left|\frac{v}{h}\right|\right| \f]
+ * \f[ splin5\_grad(s)=\frac{1}{80\pi h}\frac{v}{||v||}
+ * \begin{cases} 0 & \text{if $s=0$}\\
+ * (3-s)^5-6(2-s)^5+15(1-s)^5 & \text{if $s<1$}\\
+ * (3-s)^5-6(2-s)^5& \text{if $s<2$}\\
+ * (3-s)^5& \text{if $s<3$}\\
+ *  0& \text{if $s\geq 3$} \end{cases}  \f]
+ * @param vect vector of value
+ * @param h compact suport
+ * @return physvector< 3 >
+ **/
 inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h ){
  double d=(3/h*vect).Norm();
  if(vect.Norm()==0){
-  return physvector< DIM>(); 
+  return physvector< DIM>();
  }
  double ret;
  if(d<1){
@@ -118,7 +146,7 @@ inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h ){
  }else if(d<3){
   ret=-5*pow(3-d,5);
 }else{
-  
+
 }
 return ret*1/(80*M_PI*h)*vect/vect.Norm();
 }

@@ -12,7 +12,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include <boost/archive/binary_oarchive.hpp>
  /**
    * @brief Class that cannot be used. Only spezialitation can be used.
-   * 
+   *
    **/
 template<int N=3>
 class physvector {
@@ -24,7 +24,7 @@ public:
 
  /**
    * @brief Specialized class for 3d vector
-   * 
+   *
    **/
 template<>
 class physvector<3> {
@@ -35,7 +35,7 @@ class physvector<3> {
 public:
     /**
    * @brief Create a null 3d vector
-   * 
+   *
    **/
     inline physvector();
       /**
@@ -81,7 +81,7 @@ public:
      * @return void
      **/
     inline void Set(const double x,const double y,const double z);
-    
+
        /**
      * @brief Get the value of the vector
      *
@@ -103,20 +103,23 @@ public:
         /**
      * @brief Output Stream Operator for cout<< for example
      *
-     * @param stream 
+     * @param stream
      * @param A physvector to output
      * @return :ostream&
      **/
     friend std::ostream& operator<< (std::ostream& stream, const physvector<3>& A );
     friend inline physvector< 3> operator*(const double c,const physvector<3> a);
      friend inline physvector< 3> operator*(const physvector<3> a,const double c);
-  
+
      inline Key<3> ToKey(double h);
-     
+
+     #ifndef DOXYGEN
 private:
     friend class boost::serialization::access;
+       #endif //DOXYGEN
       template<class Archive>
    inline void serialize(Archive & ar, const unsigned int version);
+
 };
 
 
@@ -124,7 +127,7 @@ private:
 
  /**
    * @brief Specialized class for 2d vector
-   * 
+   *
    **/
 template<>
 class physvector<2> {
@@ -134,7 +137,7 @@ class physvector<2> {
 public:
   /**
    * @brief Create a null 2d vector
-   * 
+   *
    **/
     inline physvector();
     /**
@@ -150,7 +153,7 @@ public:
      * @param A Other vector
      * @return double Distance.
      **/
-    inline  double Distance(const physvector<2> A) const; 
+    inline  double Distance(const physvector<2> A) const;
     /**
      * @brief Get the square euclidian distance \f$(x-x2)^2+(y-y2)^2\f$
      *
@@ -158,7 +161,7 @@ public:
      * @return double Distance
      **/
     inline  double Distance2(const physvector<2> A) const;
-    
+
     /**
      * @brief Calculate the euclidian norm \f$\sqrt{x^2+y^2}\f$
      *
@@ -197,21 +200,22 @@ public:
     /**
      * @brief Output Stream Operator for cout<< for example
      *
-     * @param stream 
+     * @param stream
      * @param A physvector to output
      * @return :ostream&
      **/
     friend std::ostream & operator<< (std::ostream& stream, const physvector<2>& A );
     friend inline physvector< 2> operator*(const double c,const physvector<2> a) ;
     friend inline physvector< 2> operator*(const physvector<2> a,const double c) ;
-    
+
      inline Key<2> ToKey(double h);
-     
+#ifndef DOXYGEN
 private:
-  
     friend class boost::serialization::access;
+    #endif //DOXYGEN
       template<class Archive>
    inline void serialize(Archive & ar, const unsigned int version);
+
 };
 
 

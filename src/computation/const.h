@@ -1,5 +1,5 @@
-/** \file const.h Contain constant
- *  
+/** \file const.h Contain constant used everywhere.
+ *
  **/
 
 
@@ -7,7 +7,7 @@
 #define CONST_H
 
 /**
- * @brief Dimension used for calculation 
+ * @brief Dimension used for calculation
  **/
 #define DIM_DEF 3
 const int DIM=DIM_DEF;
@@ -19,12 +19,12 @@ const int DIM=DIM_DEF;
 /**
  * @brief Distance after witch kernel is 0.
  **/
-const double h=3; 
+const double h=3;
 
 /**
  * @brief Time step size.
  **/
-const double DT=0.0005;
+const double DT=0.01;
 #endif // CONST_H
 
 #ifndef CONST_H_VECTOR
@@ -35,16 +35,16 @@ const double DT=0.0005;
 
 #if DIM_DEF==3
 /**
- * @brief Vector G for gravity
+ * @brief Vector G for gravity. It's value is \f$ -9.81 e_y \f$ .
  **/
-const  physvector<DIM> G=physvector<DIM>(0,0,0);
+const  physvector<DIM> G=physvector<DIM>(0,-9.81,0);
 #endif
 
 #if DIM_DEF==2
 /**
- * @brief Vector G for gravity
+ * @brief Vector G for gravity. It's value is \f$ -9.81 e_y \f$ .
  **/
 const  physvector<DIM> G=physvector<DIM>(0,-9.81);
-#endif 
+#endif
 #endif //POSITION_H
 #endif //CONST_H_VECTOR

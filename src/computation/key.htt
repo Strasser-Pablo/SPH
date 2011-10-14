@@ -1,5 +1,10 @@
 #include "key.h"
 #include <iostream>
+/**
+* \file key.htt
+* @brief Contain implementation for inline a template for class Key
+*/
+
 Key<2>::Key(int x, int y):m_x(x),m_y(y)
 {
 
@@ -11,7 +16,7 @@ list<Key<2> > list;
 
 for(int i=m_x-1;i<=m_x+1;i++){
  for(int j=m_y-1;j<=m_y+1;j++){
-  list.push_front(Key< 2  >(i,j)); 
+  list.push_front(Key< 2  >(i,j));
  }
 }
 return list;
@@ -29,7 +34,7 @@ list<Key<3> > list;
 for(int i=m_x-1;i<=m_x+1;i++){
  for(int j=m_y-1;j<=m_y+1;j++){
     for(int k=m_z-1;k<=m_z+1;k++){
-  list.push_front(Key< 3  >(i,j,k)); 
+  list.push_front(Key< 3  >(i,j,k));
  }
 }
 }
@@ -41,41 +46,41 @@ bool Key<2>::operator<(const Key<2> A) const{
     return true;
   }
   else if(m_x>A.m_x){
-   return false; 
+   return false;
   }
     if(m_y<A.m_y){
     return true;
   }
   else if(m_y>A.m_y){
-   return false; 
+   return false;
   }
-  
- 
+
+
   return false;
 }
 
 bool Key<3>::operator<(const Key<3> A) const{
 
 
-  
+
   if(m_x<A.m_x){
     return true;
   }
   else if(m_x>A.m_x){
-   return false; 
+   return false;
   }
     if(m_y<A.m_y){
     return true;
   }
   else if(m_y>A.m_y){
-   return false; 
+   return false;
   }
-  
+
       if(m_z<A.m_z){
     return true;
   }
   else if(m_z>A.m_z){
-   return false; 
+   return false;
   }
   return false;
 }

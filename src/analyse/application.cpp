@@ -2,7 +2,7 @@
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-const int N=10;
+const int N=1;
 const int EVENT_FRAME_TIMER=1;
 Application::Application():m_status(0),m_cont(true),m_look_x(0),m_look_y(0),m_look_z(0),m_cam_x(5),m_cam_y(0),m_cam_z(0),m_vert_x(0),m_vert_y(1),m_vert_z(0)
 {
@@ -21,7 +21,7 @@ int Application::Run()
 {
 
     SDL_Event event;
-    SDL_AddTimer(500, TimerFrames, this);
+    //SDL_AddTimer(500, TimerFrames, this);
     Draw();
 
     while (SDL_WaitEvent(&event))
@@ -91,7 +91,7 @@ int Application::Run()
 	       cout<<"cam y "<<m_cam_y<<endl;
 	         Draw();
 	       break;
-	      
+
             }
         }
 
@@ -138,7 +138,7 @@ void Application::Next()
   for(int i=0;i<N;i++){
     m_world.Next();
   }
-	    
+
     Draw();
 }
 

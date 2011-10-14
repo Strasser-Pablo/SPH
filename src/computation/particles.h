@@ -46,7 +46,7 @@ public:
     *
     **/
     Particles();
-    
+
     /**
      * @brief Compute the pressure and density for all Particle in this container
      *
@@ -65,7 +65,7 @@ public:
      * @return void
      **/
     void ComputeGravity_Force();
-    
+
     void ComputeSurface_Tensor();
     /**
      * @brief Make Move all the particle in the  container.
@@ -83,9 +83,9 @@ public:
      * @return void
      **/
     void SetNeighbour(list<Particles*> list);
-    
+
     list<Particles*> GetNeighbour();
-    
+
     /**
      * @brief Update in wish container is the particle for every particle in container
      *
@@ -93,11 +93,11 @@ public:
      * @return void
      **/
     void Update(  Particles_List*  list);
-    
+
      bool operator==(const Particles parts) const;
-     
+
      void Dump(bool voisin=true);
-     
+
 
       template<class Archive>
  inline  void write(Archive & ar) const;
@@ -111,8 +111,12 @@ void Particles::write(Archive& ar) const
   const bool bf=false;
 for(Particles::const_iterator it=begin();it!=end();it++){
   ar<<boost::serialization::make_nvp("true",bt);
- ar<<boost::serialization::make_nvp("Particle_real",**it); 
- 
+ ar<<boost::serialization::make_nvp("Particle_real",**it);
+
+ #ifdef DOXYGEN
+  ParticleReal p;
+ p.serialize(ar,0);
+ #endif //DOXYGEN
 }
 }
 

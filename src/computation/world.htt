@@ -1,12 +1,8 @@
+/**
+* \file world.htt
+* @brief Contain template and inline function implementation for class World.
+*/
 
-
-/*void World::Add(ParticleReal& part)
-{
-part.Dump();
-m_particle_real_list.push_front(part);
-
-m_list.Add(Particle(&m_particle_real_list.front()));
-}*/
 
 void World::Add ( ParticleReal part )
 {

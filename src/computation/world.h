@@ -4,7 +4,14 @@
 #include <deque>
 using namespace std;
 
-
+/**
+* \file world.h
+* @brief Contain Header for class World
+**/
+/**
+* @brief This class is used to add particle to the system.
+*
+*/
 class World{
 protected:
   deque<ParticleReal> m_particle_real_list;
@@ -16,12 +23,11 @@ public:
    **/
   World();
   /**
-   * @brief Add a real particle in the world. The particle will be copied it can be deleted after.
+   * @brief Add a real particle in the world. The particle will be copied so it can be deleted after.
    *
-   * @param part Real Particle to add. 
+   * @param part Real Particle to add.
    * @return void
    **/
- // inline  void  Add(ParticleReal & part);
     inline  void  Add(ParticleReal  part);
    ~World();
 };

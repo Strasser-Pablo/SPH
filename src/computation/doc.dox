@@ -1,0 +1,33 @@
+/** \mainpage 
+*
+* \section Introduction
+* 
+* The Goal of this work is to simulate the Jet d'Eau.
+* For this, we use the Smooth %Particle Hydrodynamique methode (SPH).
+* 
+* This method is a Particul based method. In does nothing have to do with the CERN. 
+* This name come from the fact that we simulate with particles that carry information.
+* 
+* \section Navier-Stocks equation
+* 
+* \f[ \rho\left( \frac{\partial }{\partial t}+\mathbf{u}\cdot \nabla\right)\mathbf u 
+* =-\nabla p+\mu \Delta \mathbf u+\mathbf f \f]
+* 
+* With as additional condition an equation of state \f$ p(\rho)\f$ or
+* a condition of incompresibility \f$ \nabla \cdot u=0 \f$.
+* 
+* For all quantity \f$ \phi(t,x(t)) \f$ we have:
+* \f[  \frac{d  }{d t} \phi(t,x(t))=\left( \frac{\partial }{\partial t}+\mathbf u \cdot \nabla \right)\mathbf u\f]
+* 
+* This is exactly the left hand side of the Navier-Stocks equation.
+*
+* We can then rewrite it 
+* 
+* \f[ \rho\frac{d}{dt}\mathbf u 
+* =-\nabla p+\mu \Delta \mathbf u+\mathbf f \f]
+* 
+* This form is more easy to implement for a particle based method. 
+* The right hand side is a acceleration and the left hand side give the variation of density for a given particle.
+* The complicate term in the other equation are automatically taken care by the motion of the particle.
+**/
+

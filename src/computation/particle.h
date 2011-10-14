@@ -1,5 +1,8 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
+/**
+ * \file particle.h Contain class Particle. Implementing a opaque pointer to particle_real
+ **/
 
 class ParticleReal;
 

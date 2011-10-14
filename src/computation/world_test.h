@@ -10,13 +10,31 @@
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 
-using namespace std;
+/**
+* \file world_test.h
+*  @brief This file contain Header file for World_test.
+*/
 
-class World_test:public World{
+
+
+using namespace std;
+/**
+* @brief This class created the position of particle and say when to output. And in witch file.
+*
+**/
+class World_test:public World
+{
 
 public:
-  World_test();
-  void Do();
+ /**
+ * Default constructor outfile is default
+ */
+    World_test();
+    /**
+    * Make the calculation.
+    *\return void Nothing
+    */
+    void Do();
 };
 
 

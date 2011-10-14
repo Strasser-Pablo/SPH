@@ -7,15 +7,22 @@ using namespace std;
 
 
 /** \file key.h Contain the definition of keys used to access particle
- * 
+ *
  */
 
+/**
+ * @brief Base template class
+ *
+ **/
 template<int n=DIM>
 class Key{
   Key(){};
 };
+
+
 /**
  * @brief A 2d Key. Used in map to access particle.
+ * Consist of 2 int. With an order.
  **/
 template<>
 class Key<2>{
@@ -35,17 +42,23 @@ public:
    * @return :list< Key< 2 > > List of key
    **/
   inline list<Key<2> > GetNeighbour();
-  
-  /** 
-   * @brief < operator for key. Give true only if it's true for all element.
+
+ /**
+   * @brief < operator for key. Test the inegality from x to y. If the first component is the same, test the next.
    **/
   inline bool operator<(const Key<2> A) const;
-  
+
+  /**
+   * @brief Dump value of the key, used for debuging
+   *
+   * @return void
+   **/
   inline void Dump() const;
 };
 
 /**
  * @brief A 3d Key. Used in map to access particle.
+  * Consist of 3 int. With an order.
  **/
 template<>
 class Key<3>{
@@ -67,11 +80,16 @@ class Key<3>{
      * @return :list< Key< 3 > > List of Key
      **/
 inline list<Key<3> > GetNeighbour();
-  /** 
-   * @brief < operator for key. Give true only if it's true for all element.
+  /**
+   * @brief < operator for key. Test the inegality from x to z. If the first component is the same, test the next.
    **/
 inline bool operator<(const Key<3> A) const;
 
+/**
+ * @brief Dump value of the key. Usefull for debuging
+ *
+ * @return void
+ **/
 inline void Dump() const;
 };
 

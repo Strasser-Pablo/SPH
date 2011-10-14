@@ -12,21 +12,50 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
+
+/**
+ * \file particle_real.h Contain Header for class Particle_Real, containing the particle.
+ *
+ **/
 using namespace std;
 class Particles;
     /**
-   * @brief Represent a individual Particle
+   * @brief Represent an individual Particle. This class contain the actual calculation of pressure, density ...
    **/
 class ParticleReal
 {
-    physvector<DIM> m_pos;
-    physvector<DIM> m_speed;
-      physvector<DIM> m_a;
-    double m_m;
-    double m_density;
-    double m_p;
-    physvector<DIM> m_surface_tens;
-    ParticleType m_type;
+  /**
+   * @brief Position
+   **/
+  physvector<DIM> m_pos;
+  /**
+   * @brief Speed
+   **/
+  physvector<DIM> m_speed;
+  /**
+   * @brief Acceleration
+   **/
+  physvector<DIM> m_a;
+  /**
+   * @brief Mass
+   **/
+  double m_m;
+  /**
+   * @brief Density of particle \f$ \sum W \f$
+   **/
+  double m_density;
+  /**
+   * @brief Pressure
+   **/
+  double m_p;
+  /**
+   * @brief Surface tension
+   **/
+  physvector<DIM> m_surface_tens;
+  /**
+   * @brief Type of particle.
+   **/
+  ParticleType m_type;
 public:
       /**
    * @brief Default Constructor
@@ -38,11 +67,9 @@ public:
      * @param pos Particle position
      * @param type Particle type
      * @param m Particle mass
-     * @param rho Particle density
-     * @param p Particle pressure
      **/
     inline ParticleReal(physvector<DIM> pos,ParticleType type,double m);
-    
+
         /**
      * @brief Create a individual Particle with givent property
      *
@@ -50,8 +77,6 @@ public:
      * @param speed Particle speed
      * @param type Particle type
      * @param m Particle mass
-     * @param rho Particle density
-     * @param p Particle pressure
      **/
       inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double m);
     /**
@@ -67,21 +92,15 @@ public:
      * @return physvector< DIM > Postion
      **/
     inline physvector<DIM> GetPos() const;
-    
+
     /**
      * @brief Give the speed
      *
      * @return physvector< DIM > Speed
      **/
     inline physvector<DIM> GetSpeed() const;
-    
-    /**void ParticleReal::serialize(Archive& ar, const unsigned int version)
-{
-ar & m_pos;
-ar &m_speed;
-ar &m_rho;
-ar &m_
-}
+
+    /**
      * @brief Give the current calculated force
      *
      * @return physvector< DIM > Force
@@ -92,7 +111,7 @@ ar &m_
      *
      * @return double mass
      **/
-    inline double GetM() const; 
+    inline double GetM() const;
     /**
      * @brief Get the density
      *
@@ -133,8 +152,8 @@ ar &m_
      * @return void
      **/
     inline void SetPos(physvector<DIM> pos);
-   
-    
+
+
     /**
      * @brief Set the speed
      *
@@ -142,7 +161,7 @@ ar &m_
      * @return void
      **/
     inline void SetSpeed(physvector<DIM> speed);
-     
+
     /**
      * @brief Set the force
      *
@@ -150,17 +169,21 @@ ar &m_
      * @return void
      **/
     inline void SetAcceleration(physvector<DIM> force);
-	  
+
     /**
-     * @brief Add the force to the current force
+     * @brief Add the Acceleration to the current acceleration
      *
-     * @param force Force to add
+     * @param force Acceleration to add
      * @return void
      **/
     inline void AddAcceleration(physvector<DIM> force);
-	  
+
+    /**
+    * @brief Put the actual acceleration to 0.
+    *
+    **/
 	  inline void ResetAcceleration();
-	  
+
 	   /**
      * @brief Get the particle of distance less than h in the list
      *
@@ -171,18 +194,22 @@ ar &m_
     Particles FindNeighbour(list< Particles* > Neighbour, double h);
     /**
      * @brief Compute the pressure and density of the given particle using the Particles as Neighbour
-     * 
+     *
      * This will change the particle pressure and density.
-     * 
+     * The density is defined as:
+     *\f[ \sigma_{i}=\sum_{j} W_{ij} \f]
+     *
      * @param FindVoisin List of Neighbour to evaluate
      * @return void
      **/
   inline  void ComputePressure_Density(const Particles & FindVoisin);
-  
-  
+
+
   /**
    * @brief Compute internal force. The computed force will be added to the force variable of the particle
    *
+   * For the acceleration:
+   * \f[ a^p_i=-\frac{1}{m_i}\sum_{j\neq i}\left(\frac{p_i}{\sigma_{i}^2}+\frac{p_j}{\sigma_{j}^2}\right)\nabla W_{ij} \f]
    * @param FindVoisin ...
    * @return void
    **/
@@ -196,7 +223,7 @@ ar &m_
   /**
    * @brief Move the particle with the calculated force, updating position and velocity.
    *
-   * The euler algorithm is used. With \f$ v \f$ 
+   * The euler algorithm is used. With \f$ v \f$
    * the velocity , \f$ x \f$ the position, \f$ a \f$ the acceleration
    * and \f$ \Delta t \f$  the time step.
    * \f{align*}{
@@ -214,17 +241,59 @@ ar &m_
    * @return bool
    **/
   inline bool Equal(const Particle part) const;
-  
-  
-    inline void Dump();
-   inline void ComputeSurface_Force(const Particles & FindVoisin);
-   inline void ComputeSurface_Tensor(const Particles &FindVoisin);
-   inline physvector<DIM> Color_Grad(const Particles &FindVoisin,ParticleType A,ParticleType B) const;
- inline  physvector<DIM> ComputeSurface_Tensor(const Particles &FindVoisin,ParticleType A,ParticleType B) const;
+
+
+  /**
+   * @brief Dump the value of the class. Usefull for debuging
+   *
+   * @return void
+   **/
+  inline void Dump();
+  /**
+   * @brief Compute the surface force
+   *
+   * @param FindVoisin List of neighbour
+   * @return void
+   **/
+  inline void ComputeSurface_Force(const Particles & FindVoisin);
+  /**
+   * @brief Compute the surface tensor used after to compute surface force.
+   *
+   * @param FindVoisin List of neighbour
+   * @return void
+   **/
+  inline void ComputeSurface_Tensor(const Particles &FindVoisin);
+  /**
+   * @brief Gradiant of color
+   *
+   * @param FindVoisin list of neighbour
+   * @param A First Color
+   * @param B Second Color
+   * @return physvector< 3 >
+   **/
+  inline physvector<DIM> Color_Grad(const Particles &FindVoisin,ParticleType A,ParticleType B) const;
+  /**
+   * @brief Compute the surface tensor between two interface type
+   *
+   * @param FindVoisin List of Neighbour
+   * @param A First Type
+   * @param B Second Type
+   * @return physvector< 3 >
+   **/
+  inline  physvector<DIM> ComputeSurface_Tensor_ind(const Particles &FindVoisin,ParticleType A,ParticleType B) const;
+  #ifndef DOXYGEN
 private:
   friend class boost::serialization::access;
-      template<class Archive>
-   inline void serialize(Archive & ar, const unsigned int version);
+    #endif //DOXYGEN
+      /**
+       * @brief Used to Serialize the class
+       *
+       * @param ar Archive to witch read or write
+       * @param version version number, Unused.
+       * @return void
+       **/
+        template<class Archive>
+      inline void serialize(Archive & ar, const unsigned int version);
 };
 
 

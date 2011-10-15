@@ -36,10 +36,6 @@ class ParticleReal
    **/
   physvector<DIM> m_speed;
   /**
-   * @brief Acceleration
-   **/
-  physvector<DIM> m_a;
-  /**
    * @brief Mass
    **/
   double m_m;
@@ -48,6 +44,7 @@ class ParticleReal
    **/
   double m_density;
 
+double m_density0;
   /**
    * @brief Pressure
    **/
@@ -78,7 +75,7 @@ public:
      * @param type Particle type
      * @param m Particle mass
      **/
-    inline ParticleReal(physvector<DIM> pos,ParticleType type,double m,bool fixed=false);
+    inline ParticleReal(physvector<DIM> pos,ParticleType type,double r,double rho_0,bool fixed=false);
 
         /**
      * @brief Create a individual Particle with givent property
@@ -88,7 +85,7 @@ public:
      * @param type Particle type
      * @param m Particle mass
      **/
-      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double m,bool fixed=false);
+      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double r,double rho_0,bool fixed=false);
     /**
      * @brief Calculate the Distance square of the Particle
      *
@@ -110,12 +107,7 @@ public:
      **/
     inline physvector<DIM> GetSpeed() const;
 
-    /**
-     * @brief Give the current calculated force
-     *
-     * @return physvector< DIM > Force
-     **/
-    inline physvector<DIM> GetAcceleration() const;
+
     /**
      * @brief Get the mass
      *
@@ -172,27 +164,11 @@ public:
      **/
     inline void SetSpeed(physvector<DIM> speed);
 
-    /**
-     * @brief Set the force
-     *
-     * @param force Force
-     * @return void
-     **/
-    inline void SetAcceleration(physvector<DIM> force);
 
-    /**
-     * @brief Add the Acceleration to the current acceleration
-     *
-     * @param force Acceleration to add
-     * @return void
-     **/
-    inline void AddAcceleration(physvector<DIM> force);
 
-    /**
-    * @brief Put the actual acceleration to 0.
-    *
-    **/
-	  inline void ResetAcceleration();
+
+
+
 
 	   /**
      * @brief Get the particle of distance less than h in the list
@@ -212,37 +188,10 @@ public:
      * @param FindVoisin List of Neighbour to evaluate
      * @return void
      **/
-  inline  void ComputePressure_Density();
+  inline  void ComputeDensity();
 
 
-  /**
-   * @brief Compute internal force. The computed force will be added to the force variable of the particle
-   *
-   * For the acceleration:
-   * \f[ a^p_i=-\frac{1}{m_i}\sum_{j\neq i}\left(\frac{p_i}{\sigma_{i}^2}+\frac{p_j}{\sigma_{j}^2}\right)\nabla W_{ij} \f]
-   * @param FindVoisin ...
-   * @return void
-   **/
-  inline void ComputeInternal_Force();
-  /**
-   * @brief Compute the gravity force and add it to the particle force.
-   *
-   * @return void
-   **/
-  inline void ComputeGravity_Force();
-  /**
-   * @brief Move the particle with the calculated force, updating position and velocity.
-   *
-   * The euler algorithm is used. With \f$ v \f$
-   * the velocity , \f$ x \f$ the position, \f$ a \f$ the acceleration
-   * and \f$ \Delta t \f$  the time step.
-   * \f{align*}{
-   * v_{i+1}&=v_{i}+\Delta t a_{i}\\
-   * x_{i+1}&=x_{i}+\Delta t v_{i+1}
-   * \f}
-   * @param dt time step
-   * @return void
-   **/
+
   inline void ComputeMove(double dt);
    /**
    * @brief Verify that the two object represent the same particle (ie they share the same memory)
@@ -265,7 +214,7 @@ public:
    * @param FindVoisin List of neighbour
    * @return void
    **/
-  inline void ComputeSurface_Force();
+  inline physvector<DIM> ComputeSurface_Force();
   /**
    * @brief Compute the surface tensor used after to compute surface force.
    *

@@ -10,12 +10,18 @@ ParticleReal::ParticleReal():m_fixed(false),m_container(0)
 
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m,bool fixed):m_pos(pos),m_type(type),m_fixed(fixed),m_m(m),m_container(0)
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double r,double rho_0,bool fixed):m_pos(pos),m_type(type),m_fixed(fixed),m_container(0)
 {
+    double V=4./3.*M_PI*pow(r,3);
+    m_m=rho_0*V;
+    m_density0=1/V;
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m,bool fixed):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_m(m),m_container(0)
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double r,double rho_0,bool fixed):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_container(0)
 {
+       double V=4./3.*M_PI*pow(r,3);
+    m_m=rho_0*V;
+    m_density0=1/V;
 }
 
 
@@ -65,30 +71,16 @@ void ParticleReal::SetSpeed(physvector< DIM > speed)
     m_speed=speed;
 }
 
-void ParticleReal::SetAcceleration(physvector< DIM > force)
-{
-    m_a=force;
-}
 
-void ParticleReal::AddAcceleration(physvector< DIM > force)
-{
-    m_a+=force;
-}
 
-void ParticleReal::ResetAcceleration() {
-    m_a=physvector< DIM>();
-}
+
 physvector< DIM > ParticleReal::GetPos() const
 {
     return m_pos;
 }
 
-physvector< DIM > ParticleReal::GetAcceleration() const
-{
-    return m_a;
-}
 
-void ParticleReal::ComputePressure_Density()
+void ParticleReal::ComputeDensity()
 {
     double rho=0;
     UpdateVoisin();
@@ -96,12 +88,10 @@ void ParticleReal::ComputePressure_Density()
         rho+=Kernel_spline5(GetPos()-(*it)->GetPos(),h);
 
     }
-   // cout<<h<<" "<<rho<<endl;
+
     SetDensity(rho);
-//   SetP((rho-WaterConst.rho0)*WaterConst.k+3000);
-    SetP(pressure(rho,m_type));
-   // double m_r=pow(3/(4*M_PI*rho),1./3);
-   // cout<<m_r<<endl;
+
+
 }
 
 bool ParticleReal::Equal(const Particle part)const {
@@ -114,16 +104,11 @@ inline physvector<DIM> ParticleReal::GetSpeed() const {
 
 
 
-void ParticleReal::ComputeGravity_Force() {
-    AddAcceleration(G);
-}
+
 
 void ParticleReal::ComputeMove(double dt) {
   if(!m_fixed){
-    m_pos+=dt*m_speed;
-    m_speed+=dt*m_a;
 
-    ResetAcceleration();
   }
 }
 
@@ -145,36 +130,16 @@ void ParticleReal::serialize(Archive& ar, const unsigned int version)
     p.serialize(ar,0);
     #endif //DOXYGEN
 }
-void ParticleReal::ComputeInternal_Force() {
-    physvector<DIM> ftot;
-    double pact=GetP();
-    physvector<DIM>  sact=GetSpeed();
-    ParticleReal  real;
-    physvector<DIM> ftemp;
-    for (list<Particle>::const_iterator it=m_voisin.begin();it!=m_voisin.end();it++) {
-      real=*(*it);
-        if (!Equal(*it)) {
-	  ftot+=1/GetM()*Mat_Const(m_type).eta*(1/pow(GetDensity(),2)+1/pow(real.GetDensity(),2))/(GetPos()-real.GetPos()).Norm()*Kernel_grad_spline5(GetPos()-real.GetPos(),h)*(GetSpeed()-real.GetSpeed());
-        ftemp=-1/GetM()*(GetP()/pow(GetDensity(),2)+real.GetP()/pow(real.GetDensity(),2))*Kernel_grad_spline5(GetPos()-real.GetPos(),h);
-        ftot+=ftemp;
-     //   cout<<"temp "<<ftemp<<endl;
-        }
-    }
-    //cout<<ftot<<endl;
-    AddAcceleration(ftot);
-    ComputeSurface_Force( );
-}
 
 
 
-void ParticleReal::ComputeSurface_Force()
+physvector<DIM> ParticleReal::ComputeSurface_Force()
 {
 physvector<DIM> temp;
 for(Particles::const_iterator it=m_voisin.begin();it!=m_voisin.end();it++){
  temp+= Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(m_surface_tens/pow(GetDensity(),2)+(*it)->m_surface_tens/pow((*it)->GetDensity(),2));
 }
-
-AddAcceleration(temp/GetM());
+return temp;
 }
 
 physvector< DIM > ParticleReal::ComputeSurface_Tensor_ind( ParticleType A, ParticleType B) const

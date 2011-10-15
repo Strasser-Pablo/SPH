@@ -25,7 +25,7 @@ void World_test::Do()
       for(int x=0;x<10;x++){
  for(int y=0;y<10;y++){
 
-Add(ParticleReal(physvector< 3  >(0,x+20,y),physvector< 3  >(0,0,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,x+20,y),physvector< 3  >(0,0,0),water,0.5,1000));
  }
  }
 
@@ -33,7 +33,7 @@ Add(ParticleReal(physvector< 3  >(0,x+20,y),physvector< 3  >(0,0,0),water,10000)
    for(int x=0;x<10;x++){
  for(int y=0;y<10;y++){
 
-Add(ParticleReal(physvector< 3  >(0,x,y),physvector< 3  >(0,10,0),water,10000));
+Add(ParticleReal(physvector< 3  >(0,x,y),physvector< 3  >(0,10,0),water,0.5,10000));
  }
  }
 

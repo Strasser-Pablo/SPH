@@ -3,18 +3,9 @@
 void Particles_List::Compute()
 {
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-        it->second.ComputePressure_Density();
-    }
-    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-        it->second.ComputeSurface_Tensor();
+        it->second.ComputeDensity();
     }
 
-    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-        it->second.ComputeInternal_Force();
-    }
-    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-        it->second.ComputeGravity_Force();
-    }
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
         it->second.ComputeMove(DT);
 
@@ -53,7 +44,7 @@ void Particles_List::Dump() {
 void Particles_List::Prepare()
 {
   for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-        it->second.ComputePressure_Density();
+        it->second.ComputeDensity();
     }
 
     #if DOXYGEN

@@ -27,38 +27,18 @@ Particles::Particles():m_type(none)
 }
 
 
-void Particles::ComputePressure_Density()
+void Particles::ComputeDensity()
 {
 
     for (list<Particle>::iterator it=begin();it!=end();it++) {
 
-            (*it)->ComputePressure_Density();
+            (*it)->ComputeDensity();
     }
 
 }
 
-void Particles::ComputeSurface_Tensor(){
 
-    for (list<Particle>::iterator it=begin();it!=end();it++) {
-            (*it)->ComputeSurface_Tensor();
-    }
 
-}
-void Particles::ComputeInternal_Force()
-{
-
-    for (list<Particle>::iterator it=begin();it!=end();it++) {
-            (*it)->ComputeInternal_Force();
-
-    }
-}
-
-void Particles::ComputeGravity_Force()
-{
-    for (list<Particle>::iterator it=begin();it!=end();it++) {
-        (*it)->ComputeGravity_Force();
-    }
-}
 
 
 void Particles::SetNeighbour(list< Particles *> list )

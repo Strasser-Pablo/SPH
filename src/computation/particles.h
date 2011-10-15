@@ -52,21 +52,11 @@ public:
      *
      * @return void
      **/
-    void ComputePressure_Density();
-    /**
-     * @brief Compute Internals force for all particle in this container.
-     *
-     * @return void
-     **/
-    void ComputeInternal_Force();
-    /**
-     * @brief Compute gravity Force for all particle in this container.
-     *
-     * @return void
-     **/
-    void ComputeGravity_Force();
+    void ComputeDensity();
 
-    void ComputeSurface_Tensor();
+
+
+
     /**
      * @brief Make Move all the particle in the  container.
      *

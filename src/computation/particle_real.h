@@ -244,6 +244,8 @@ public:
   void SetContainerParticles(Particles * container);
 
  void UpdateVoisin();
+
+ inline physvector<DIM> Force();
   #ifndef DOXYGEN
 private:
   friend class boost::serialization::access;

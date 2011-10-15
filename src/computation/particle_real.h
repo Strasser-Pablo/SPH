@@ -9,7 +9,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include "const.h"
 #include <list>
 #include "particle.h"
-
+#include "particles.h"
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 
@@ -18,13 +18,14 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
  *
  **/
 using namespace std;
-class Particles;
+//class Particles;
     /**
    * @brief Represent an individual Particle. This class contain the actual calculation of pressure, density ...
    **/
 class ParticleReal
 {
     Particles* m_container;
+    Particles  m_voisin;
 
   /**
    * @brief Position
@@ -211,7 +212,7 @@ public:
      * @param FindVoisin List of Neighbour to evaluate
      * @return void
      **/
-  inline  void ComputePressure_Density(const Particles & FindVoisin);
+  inline  void ComputePressure_Density();
 
 
   /**
@@ -222,7 +223,7 @@ public:
    * @param FindVoisin ...
    * @return void
    **/
-  inline void ComputeInternal_Force(const Particles &FindVoisin);
+  inline void ComputeInternal_Force();
   /**
    * @brief Compute the gravity force and add it to the particle force.
    *
@@ -264,14 +265,14 @@ public:
    * @param FindVoisin List of neighbour
    * @return void
    **/
-  inline void ComputeSurface_Force(const Particles & FindVoisin);
+  inline void ComputeSurface_Force();
   /**
    * @brief Compute the surface tensor used after to compute surface force.
    *
    * @param FindVoisin List of neighbour
    * @return void
    **/
-  inline void ComputeSurface_Tensor(const Particles &FindVoisin);
+  inline void ComputeSurface_Tensor();
   /**
    * @brief Gradiant of color
    *
@@ -280,7 +281,7 @@ public:
    * @param B Second Color
    * @return physvector< 3 >
    **/
-  inline physvector<DIM> Color_Grad(const Particles &FindVoisin,ParticleType A,ParticleType B) const;
+  inline physvector<DIM> Color_Grad(ParticleType A,ParticleType B) const;
   /**
    * @brief Compute the surface tensor between two interface type
    *
@@ -289,9 +290,11 @@ public:
    * @param B Second Type
    * @return physvector< 3 >
    **/
-  inline  physvector<DIM> ComputeSurface_Tensor_ind(const Particles &FindVoisin,ParticleType A,ParticleType B) const;
+  inline  physvector<DIM> ComputeSurface_Tensor_ind(ParticleType A,ParticleType B) const;
 
   void SetContainerParticles(Particles * container);
+
+ void UpdateVoisin();
   #ifndef DOXYGEN
 private:
   friend class boost::serialization::access;

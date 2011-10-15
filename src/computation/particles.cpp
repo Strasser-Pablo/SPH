@@ -31,10 +31,8 @@ void Particles::ComputePressure_Density()
 {
 
     for (list<Particle>::iterator it=begin();it!=end();it++) {
-        Particles list_compute;
-        (*it)->FindNeighbour(m_neighbour,h,list_compute);
 
-            (*it)->ComputePressure_Density(list_compute);
+            (*it)->ComputePressure_Density();
     }
 
 }
@@ -42,10 +40,7 @@ void Particles::ComputePressure_Density()
 void Particles::ComputeSurface_Tensor(){
 
     for (list<Particle>::iterator it=begin();it!=end();it++) {
-        Particles list_compute;
-        (*it)->FindNeighbour(m_neighbour,h,list_compute);
-
-            (*it)->ComputeSurface_Tensor(list_compute);
+            (*it)->ComputeSurface_Tensor();
     }
 
 }
@@ -53,10 +48,7 @@ void Particles::ComputeInternal_Force()
 {
 
     for (list<Particle>::iterator it=begin();it!=end();it++) {
-          Particles list_compute;
-        (*it)->FindNeighbour(m_neighbour,h,list_compute);
-
-            (*it)->ComputeInternal_Force(list_compute);
+            (*it)->ComputeInternal_Force();
 
     }
 }

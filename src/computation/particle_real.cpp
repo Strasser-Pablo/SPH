@@ -29,3 +29,9 @@ for(list<Particles*>::iterator it=Neighbour.begin();it!=Neighbour.end();it++){
 void ParticleReal::SetContainerParticles(Particles *container){
 m_container=container;
 }
+
+void ParticleReal::UpdateVoisin(){
+    list<Particles *> neigh;
+    m_container->GetNeighbour(neigh);
+FindNeighbour(neigh,h,m_voisin);
+}

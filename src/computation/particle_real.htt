@@ -5,16 +5,16 @@
 #include <iostream>
 
 #include "pressure.h"
-ParticleReal::ParticleReal():m_fixed(false)
+ParticleReal::ParticleReal():m_fixed(false),m_container(0)
 {
 
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m,bool fixed):m_pos(pos),m_type(type),m_fixed(fixed),m_m(m)
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m,bool fixed):m_pos(pos),m_type(type),m_fixed(fixed),m_m(m),m_container(0)
 {
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m,bool fixed):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_m(m)
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m,bool fixed):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_m(m),m_container(0)
 {
 }
 

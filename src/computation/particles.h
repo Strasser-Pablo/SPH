@@ -101,6 +101,8 @@ public:
 
       template<class Archive>
  inline  void write(Archive & ar) const;
+
+ void Add(Particle part);
 };
 
 

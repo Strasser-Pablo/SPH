@@ -24,6 +24,8 @@ class Particles;
    **/
 class ParticleReal
 {
+    Particles* m_container;
+
   /**
    * @brief Position
    **/
@@ -288,6 +290,8 @@ public:
    * @return physvector< 3 >
    **/
   inline  physvector<DIM> ComputeSurface_Tensor_ind(const Particles &FindVoisin,ParticleType A,ParticleType B) const;
+
+  void SetContainerParticles(Particles * container);
   #ifndef DOXYGEN
 private:
   friend class boost::serialization::access;

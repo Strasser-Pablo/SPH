@@ -119,4 +119,9 @@ cout<<"end dump of neighbour"<<endl;
 cout<<"end Particles"<<endl;
 }
 
+void Particles::Add(Particle part){
+part->SetContainerParticles(this);
+push_back(part);
+
+}
 

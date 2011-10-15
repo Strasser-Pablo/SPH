@@ -26,3 +26,6 @@ for(list<Particles*>::iterator it=Neighbour.begin();it!=Neighbour.end();it++){
 }
 
 
+void ParticleReal::SetContainerParticles(Particles *container){
+m_container=container;
+}

@@ -11,7 +11,7 @@ void Particles_List::Add(Particle part)
         AddNeighbour(key);
     }
 
-    m_list[key].push_back(part);
+    m_list[key].Add(part);
 }
 
 

@@ -4,7 +4,7 @@
 /**
  * @brief Type of particle
  */
-enum ParticleType{none,water,Gaz,Fixed};
+enum ParticleType{none,water,Gaz};
 
 /**
  * @brief Class Containing constant for Material
@@ -28,9 +28,9 @@ inline double surface_Const(ParticleType A,ParticleType B){
  ParticleType a;
  ParticleType b;
  if(A<B){
-  a=A;b=B; 
+  a=A;b=B;
  }else{
-  a=B;b=A; 
+  a=B;b=A;
  }
  if(a==water&&b==Gaz){
    return 1.0;

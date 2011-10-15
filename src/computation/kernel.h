@@ -40,7 +40,6 @@ inline double sign(double x) {
 inline double Kernel_Density(physvector<DIM> vect,double h ) {
     double ret=315.0/(64*M_PI*pow(h,9))*pow(pow(h,2)-vect.Norm2(),3);
     if(ret<=0){
-    cout<<vect.Norm2()<<" "<<pow(h,2)<<endl;
     }
     return ret;
 }
@@ -114,7 +113,8 @@ inline double Kernel_spline5(physvector<DIM> vect,double h ){
 }else{
    ret=0;
 }
-return ret*1/(80*M_PI*h);
+ret=ret*567/(2535*M_PI*pow(h,3));
+return ret;
 }
 
 /**
@@ -148,6 +148,6 @@ inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h ){
 }else{
 
 }
-return ret*1/(80*M_PI*h)*vect/vect.Norm();
+return ret*567/(2535*M_PI*pow(h,3))*vect/vect.Norm();
 }
 #endif // KERNEL_H

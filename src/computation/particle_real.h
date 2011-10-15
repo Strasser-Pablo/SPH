@@ -208,7 +208,14 @@ public:
    * @return void
    **/
   inline void Dump();
-  /**
+
+
+  void SetContainerParticles(Particles * container);
+
+private:
+
+ void UpdateVoisin();
+/**
    * @brief Compute the surface force
    *
    * @param FindVoisin List of neighbour
@@ -240,12 +247,8 @@ public:
    * @return physvector< 3 >
    **/
   inline  physvector<DIM> ComputeSurface_Tensor_ind(ParticleType A,ParticleType B) const;
-
-  void SetContainerParticles(Particles * container);
-
- void UpdateVoisin();
-
  inline physvector<DIM> Force();
+ public:
   #ifndef DOXYGEN
 private:
   friend class boost::serialization::access;

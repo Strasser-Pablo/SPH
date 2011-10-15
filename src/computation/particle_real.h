@@ -44,10 +44,12 @@ class ParticleReal
    * @brief Density of particle \f$ \sum W \f$
    **/
   double m_density;
+
   /**
    * @brief Pressure
    **/
   double m_p;
+
   /**
    * @brief Surface tension
    **/
@@ -56,6 +58,11 @@ class ParticleReal
    * @brief Type of particle.
    **/
   ParticleType m_type;
+
+  /**
+  * @brief A fixed particle cannot move.
+  **/
+  bool m_fixed;
 public:
       /**
    * @brief Default Constructor
@@ -68,7 +75,7 @@ public:
      * @param type Particle type
      * @param m Particle mass
      **/
-    inline ParticleReal(physvector<DIM> pos,ParticleType type,double m);
+    inline ParticleReal(physvector<DIM> pos,ParticleType type,double m,bool fixed=false);
 
         /**
      * @brief Create a individual Particle with givent property
@@ -78,7 +85,7 @@ public:
      * @param type Particle type
      * @param m Particle mass
      **/
-      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double m);
+      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double m,bool fixed=false);
     /**
      * @brief Calculate the Distance square of the Particle
      *

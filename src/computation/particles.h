@@ -103,6 +103,8 @@ public:
  inline  void write(Archive & ar) const;
 
  void Add(Particle part);
+
+ inline void GetNeighbour(list<Particles *> & neigh);
 };
 
 
@@ -121,5 +123,9 @@ for(Particles::const_iterator it=begin();it!=end();it++){
  #endif //DOXYGEN
 }
 }
+
+  void Particles::GetNeighbour( list<Particles *> &  neigh){
+  neigh=m_neighbour;
+  }
 
 #endif // PARTICLES_H

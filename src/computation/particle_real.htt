@@ -106,10 +106,16 @@ inline physvector<DIM> ParticleReal::GetSpeed() const {
 
 
 
-void ParticleReal::ComputeMove(double dt) {
+bool ParticleReal::PreComputeMove(double dt) {
   if(!m_fixed){
 
-  }
+m_speed+=Force()*dt/2;
+m_pos+=m_speed*dt;
+ComputeDensity();
+double rap=(m_density0-m_density)/m_density0;
+return abs(rap)>0.01;
+}
+return false;
 }
 
 void ParticleReal::Dump() {
@@ -195,5 +201,6 @@ else{
 
 
 physvector<DIM> ParticleReal::Force(){
-return ComputeSurface_Force()+G;
+//return ComputeSurface_Force()+G;
+return G;
 }

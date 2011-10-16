@@ -51,11 +51,13 @@ list<Particles*> Particles::GetNeighbour(){
 }
 
 
-void Particles::ComputeMove(double dt)
+bool Particles::PreComputeMove(double dt)
 {
+    bool ret=false;
     for (list<Particle>::iterator it=begin();it!=end();it++) {
-        (*it)->ComputeMove( dt);
+        ret=(*it)->PreComputeMove( dt)|| ret;
     }
+    return ret;
 }
 
 void Particles::Update( Particles_List*  plist)

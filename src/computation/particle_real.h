@@ -192,7 +192,7 @@ public:
 
 
 
-  inline void ComputeMove(double dt);
+  inline bool PreComputeMove(double dt);
    /**
    * @brief Verify that the two object represent the same particle (ie they share the same memory)
    *

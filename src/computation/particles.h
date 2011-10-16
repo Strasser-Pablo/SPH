@@ -63,7 +63,7 @@ public:
      * @param dt Time step
      * @return void
      **/
-    void ComputeMove(double dt);
+    bool PreComputeMove(double dt);
     /**
      * @brief Set The Neighbour of the container.
      *

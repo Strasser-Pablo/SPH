@@ -81,3 +81,15 @@ for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++)
         it->second.CalculateP1(beta);
     }
 }
+
+void Particles_List::ConjugateGradiant(){
+InitializeCG();
+bool bcont;
+
+while(bcont){
+    double num;
+double alpha=CalculateAlpha(num);
+double beta=CalculateBeta(num,bcont,alpha);
+CalculateP1(beta);
+}
+}

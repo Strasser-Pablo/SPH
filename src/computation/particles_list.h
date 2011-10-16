@@ -24,6 +24,7 @@ public:
 double CalculateAlpha(double &num);
 double CalculateBeta(double &denom,bool &b,double alpha);
 void CalculateP1(double bet);
+void ConjugateGradiant();
   /**
    * @brief Create a empty list of particles
    *

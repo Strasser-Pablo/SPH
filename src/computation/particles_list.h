@@ -21,7 +21,8 @@ class Particles_List{
 protected:
 public:
  void InitializeCG();
-double CalculateAlpha();
+double CalculateAlpha(double &num);
+double CalculateBeta(double &denom,bool &b,double alpha);
   /**
    * @brief Create a empty list of particles
    *

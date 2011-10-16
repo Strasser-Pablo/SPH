@@ -58,12 +58,21 @@ void Particles_List::Prepare()
     }
 }
 
-double Particles_List::CalculateAlpha(){
-    double num;
+double Particles_List::CalculateAlpha(double &num){
     double denom;
 for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
         it->second.CalculateAlphaPart(num,denom);
     }
+return num/denom;
+}
+
+double Particles_List::CalculateBeta(double &denom,bool &bret,double alpha){
+    double num;
+    bool b=true;
+for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+        it->second.CalculateBetaPart(num,b,alpha);
+    }
+    bret=b;
 return num/denom;
 }
 

@@ -280,3 +280,7 @@ m_b=val;
 void ParticleReal::GetVoisin( Particles & voisin) const {
 voisin=m_voisin;
 }
+
+bool ParticleReal::OKR(){
+return m_r<0.001;
+}

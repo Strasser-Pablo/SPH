@@ -124,8 +124,21 @@ for(Particles::iterator it=begin();it!=end();it++){
 }
 }
 
+ void Particles::CalculateBetaPart(double &num,bool &b,double alpha){
 
-
+for(Particles::iterator it=begin();it!=end();it++){
+double p=(*it)->GetP1();
+(*it)->AddP(alpha*p);
+ Particles voisin;
+ (*it)->GetVoisin(voisin);
+for(Particles::iterator it2=voisin.begin();it!=voisin.end();it++){
+(*it)->AddR(-alpha*CalculateA(*it,*it2,voisin)*(*it2)->GetP());
+ }
+ (*it)->SetZ((*it)->GetR());
+ b=(*it)->OKR()&&b;
+ num+=(*it)->MultRZ();
+ }
+ }
 
 double CalculateA(const Particle& A,const Particle& B,Particles & voisin){
 double ret=0;

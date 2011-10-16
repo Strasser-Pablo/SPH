@@ -105,6 +105,8 @@ inline double MultRZ() const;
 inline double MultRZprec() const;
 
 inline void UpdateRZ() ;
+
+inline bool OKR();
       /**
    * @brief Default Constructor
    **/

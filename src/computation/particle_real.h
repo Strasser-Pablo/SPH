@@ -241,7 +241,7 @@ inline void UpdateRZ() ;
 
 
   void SetContainerParticles(Particles * container);
-
+inline void GetVoisin( Particles & voisin) const;
 private:
 
  void UpdateVoisin();

@@ -271,3 +271,7 @@ return m_b;
  void ParticleReal::SetB(double val){
 m_b=val;
 }
+
+void ParticleReal::GetVoisin( Particles & voisin) const {
+voisin=m_voisin;
+}

@@ -20,7 +20,8 @@ class Particles_List{
   double m_t;
 protected:
 public:
-inline void InitializeCG();
+ void InitializeCG();
+double CalculateAlpha();
   /**
    * @brief Create a empty list of particles
    *

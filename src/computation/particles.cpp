@@ -108,3 +108,21 @@ for(Particles::iterator it=begin();it!=end();it++){
 (*it)->SetP1(b);
 }
 }
+
+  void Particles::CalculateAlphaPart(double &num,double &denom){
+for(Particles::iterator it=begin();it!=end();it++){
+ num+=(*it)->MultRZprec();
+ Particles voisin;
+ (*it)->GetVoisin(voisin);
+ double p=(*it)->GetP1();
+ for(Particles::iterator it2=voisin.begin();it!=voisin.end();it++){
+     //TODO verify p^TAP
+ denom+=CalculateA(*it,*it2)*(p-(*it2)->GetP1())*((*it2)->GetP1()-p);
+ }
+}
+}
+
+//TODO: write implementation and make inline.
+double Particles::CalculateA(const Particle& A,const Particle& B){
+return 3.0;
+}

@@ -30,6 +30,8 @@ class Particles: public std::list<Particle>
 public:
 
     void InitializeCG();
+    double CalculateA(const Particle& A,const Particle& B);
+    void CalculateAlphaPart(double &num,double &denom);
     /**
      * @brief Construct a list of Particle of type type
      *

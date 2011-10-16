@@ -30,10 +30,7 @@ double ParticleReal::GetM() const
     return m_m;
 }
 
-double ParticleReal::GetP() const
-{
-    return m_p;
-}
+
 
 
 double ParticleReal::GetDensity() const
@@ -46,10 +43,7 @@ void ParticleReal::SetM(double m)
     m_m=m;
 }
 
-void ParticleReal::SetP(double p)
-{
-    m_p=p;
-}
+
 
 void ParticleReal::SetDensity(double rho)
 {
@@ -204,3 +198,30 @@ physvector<DIM> ParticleReal::Force(){
 //return ComputeSurface_Force()+G;
 return G;
 }
+
+double ParticleReal::GetR() const{
+return m_r;
+}
+ void ParticleReal::SetR(double val){
+m_r=val;
+ }
+
+ double ParticleReal::GetZ() const{
+return m_z;
+ }
+ void ParticleReal::SetZ(double val){
+ m_z=val;
+ }
+  double ParticleReal::GetP1() const{
+return m_p1;
+ }
+ void ParticleReal::SetP1(double val){
+m_p1=val;
+ }
+
+ double ParticleReal::GetP() const{
+return m_p;
+ }
+ void ParticleReal::SetP(double val){
+m_p=val;
+ }

@@ -24,6 +24,16 @@ using namespace std;
    **/
 class ParticleReal
 {
+    //Used for conjugate gradiant
+    double m_r;
+    double m_z;
+    double m_p1;
+    double m_px;
+    double m_pv;
+
+    double m_p;
+
+
     Particles* m_container;
     Particles  m_voisin;
 
@@ -45,10 +55,7 @@ class ParticleReal
   double m_density;
 
 double m_density0;
-  /**
-   * @brief Pressure
-   **/
-  double m_p;
+
 
   /**
    * @brief Surface tension
@@ -64,6 +71,19 @@ double m_density0;
   **/
   bool m_fixed;
 public:
+//For conjugate gradiant
+
+inline double GetR() const;
+inline void SetR(double val);
+
+inline double GetZ() const;
+inline void SetZ(double val);
+
+inline double GetP1() const;
+inline void SetP1(double val);
+
+inline double GetP() const;
+inline void SetP(double val);
       /**
    * @brief Default Constructor
    **/
@@ -120,12 +140,7 @@ public:
      * @return double rho
      **/
     inline double GetDensity() const;
-        /**
-     * @brief Get the pressure
-     *
-     * @return double rho
-     **/
-    inline double GetP() const;
+
     /**
      * @brief Set the mass
      *
@@ -140,13 +155,7 @@ public:
      * @return void
      **/
     inline void SetDensity(double rho);
-    /**
-     * @brief Set the pressure
-     *
-     * @param p pressure
-     * @return void
-     **/
-    inline void SetP(double p);
+
     /**
      * @brief Set the postion
      *

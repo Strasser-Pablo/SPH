@@ -28,6 +28,8 @@ class Particles: public std::list<Particle>
     ParticleType m_type;
     list<Particles*> m_neighbour;
 public:
+
+    void InitializeCG();
     /**
      * @brief Construct a list of Particle of type type
      *

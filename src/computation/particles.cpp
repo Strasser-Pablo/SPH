@@ -99,3 +99,12 @@ push_back(part);
 
 }
 
+void Particles::InitializeCG(){
+for(Particles::iterator it=begin();it!=end();it++){
+    double b=(*it)->GetB();
+    (*it)->SetP(0);
+(*it)->SetRprec(b);
+(*it)->SetZprec(b);
+(*it)->SetP1(b);
+}
+}

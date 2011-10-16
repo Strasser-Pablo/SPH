@@ -15,17 +15,18 @@ using namespace std;
    *
    **/
 class Particles_List{
-  
+
   map<Key<DIM> ,Particles> m_list;
   double m_t;
 protected:
 public:
+inline void InitializeCG();
   /**
    * @brief Create a empty list of particles
    *
    **/
   Particles_List();
-  
+
   /**
    * @brief Add the particle in the list. Adding it in the good particles. And creating the link.
    *
@@ -33,14 +34,14 @@ public:
    * @return void
    **/
   inline  void Add(Particle  part);
-  
+
   /**
    * @brief Compute a complete step
    *
    * @return void
    **/
   void Compute();
-  
+
   void Prepare();
   /**
    * @brief Uttility function, update neighbour of key k and it's neighbour
@@ -51,9 +52,9 @@ public:
   inline  void AddNeighbour(Key<DIM> k);
   inline void Update(list<Particle>::iterator & it,Particles * part);
   void Dump();
-  
 
- 
+
+
       template<class Archive>
    inline  void write(Archive & ar) const;
 };

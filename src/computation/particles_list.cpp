@@ -52,4 +52,10 @@ void Particles_List::Prepare()
     #endif //DOXYGEN
 }
 
+ void Particles_List::InitializeCG(){
+  for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+        it->second.InitializeCG();
+    }
+}
+
 

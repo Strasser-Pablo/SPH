@@ -133,7 +133,9 @@ inline void UpdateRZ() ;
      * @param A Particle to calculate distance with
      * @return double Distance
      **/
-    inline double Distance2(Particle & A);
+    inline double Distance2(const Particle & A) const;
+
+      inline double Distance(const Particle & A) const;
     /**
      * @brief Give the position
      *

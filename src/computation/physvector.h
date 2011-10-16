@@ -92,7 +92,7 @@ public:
      **/
     inline void Get(double &x,double &y,double &z) const;
     inline  physvector<3> operator+(const physvector<3> A) const;
-     inline  physvector<3> operator*(const physvector<3> A) const;
+     inline  double operator*(const physvector<3> A) const;
     inline physvector<3> operator-(const physvector<3> A) const;
         inline physvector<3> operator-() const;
     inline void operator=( const physvector<3> A);

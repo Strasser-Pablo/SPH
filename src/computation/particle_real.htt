@@ -50,9 +50,14 @@ void ParticleReal::SetDensity(double rho)
     m_density=rho;
 }
 
-double ParticleReal::Distance2(Particle& A)
+double ParticleReal::Distance2(const Particle& A) const
 {
     return m_pos.Distance2(A->m_pos);
+}
+
+double ParticleReal::Distance(const Particle& A) const
+{
+    return m_pos.Distance(A->m_pos);
 }
 
 void ParticleReal::SetPos(physvector< DIM > pos)
@@ -132,16 +137,16 @@ void ParticleReal::serialize(Archive& ar, const unsigned int version)
 }
 
 
-
+//TODO: to rewrite
 physvector<DIM> ParticleReal::ComputeSurface_Force()
 {
 physvector<DIM> temp;
 for(Particles::const_iterator it=m_voisin.begin();it!=m_voisin.end();it++){
- temp+= Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(m_surface_tens/pow(GetDensity(),2)+(*it)->m_surface_tens/pow((*it)->GetDensity(),2));
+ //temp+= Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(m_surface_tens/pow(GetDensity(),2)+(*it)->m_surface_tens/pow((*it)->GetDensity(),2));
 }
 return temp;
 }
-
+//Todo: To Rewrite
 physvector< DIM > ParticleReal::ComputeSurface_Tensor_ind( ParticleType A, ParticleType B) const
 {
 physvector<DIM> grad=Color_Grad(A,B);
@@ -152,7 +157,7 @@ if(DIM==3){
 }
  physvector<DIM> ret;
 if(d!=0){
-ret=surface_Const(A,B)/d*(1./DIM*pow(d,2)*I-grad*grad);
+//ret=surface_Const(A,B)/d*(1./DIM*pow(d,2)*I-grad*grad);
 }
 
 }

@@ -264,3 +264,10 @@ m_rprec=m_r;
 m_zprec=m_z;
 }
 
+
+ double ParticleReal::GetB() const{
+return m_b;
+}
+ void ParticleReal::SetB(double val){
+m_b=val;
+}

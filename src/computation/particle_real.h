@@ -34,7 +34,7 @@ class ParticleReal
     double m_pv;
 
     double m_p;
-
+    double m_b;
 
     Particles* m_container;
     Particles  m_voisin;
@@ -74,6 +74,9 @@ double m_density0;
   bool m_fixed;
 public:
 //For conjugate gradiant
+
+inline double GetB() const;
+inline void SetB(double val);
 
 inline double GetR() const;
 inline void SetR(double val);

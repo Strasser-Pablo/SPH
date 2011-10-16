@@ -76,4 +76,8 @@ for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++)
 return num/denom;
 }
 
-
+void Particles_List::CalculateP1(double beta){
+for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+        it->second.CalculateP1(beta);
+    }
+}

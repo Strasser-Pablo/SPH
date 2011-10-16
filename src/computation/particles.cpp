@@ -126,6 +126,7 @@ for(Particles::iterator it=begin();it!=end();it++){
 
  void Particles::CalculateBetaPart(double &num,bool &b,double alpha){
 
+
 for(Particles::iterator it=begin();it!=end();it++){
 double p=(*it)->GetP1();
 (*it)->AddP(alpha*p);
@@ -139,6 +140,14 @@ for(Particles::iterator it2=voisin.begin();it!=voisin.end();it++){
  num+=(*it)->MultRZ();
  }
  }
+
+void Particles::CalculateP1(double beta){
+for(Particles::iterator it=begin();it!=end();it++){
+ double p1=(*it)->GetP1();
+  double z=(*it)->GetZ();
+  (*it)->SetP1(z+beta*p1);
+}
+}
 
 double CalculateA(const Particle& A,const Particle& B,Particles & voisin){
 double ret=0;

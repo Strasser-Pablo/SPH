@@ -32,6 +32,7 @@ public:
     void InitializeCG();
     void CalculateBetaPart(double &num,bool & b,double alpha);
     void CalculateAlphaPart(double &num,double &denom);
+    void CalculateP1(double beta);
     /**
      * @brief Construct a list of Particle of type type
      *

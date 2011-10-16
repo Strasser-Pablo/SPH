@@ -146,6 +146,7 @@ for(Particles::iterator it=begin();it!=end();it++){
  double p1=(*it)->GetP1();
   double z=(*it)->GetZ();
   (*it)->SetP1(z+beta*p1);
+  (*it)->UpdateRZ();
 }
 }
 

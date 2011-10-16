@@ -27,6 +27,8 @@ class ParticleReal
     //Used for conjugate gradiant
     double m_r;
     double m_z;
+    double m_zprec;
+    double m_rprec;
     double m_p1;
     double m_px;
     double m_pv;
@@ -76,6 +78,12 @@ public:
 inline double GetR() const;
 inline void SetR(double val);
 
+inline double GetRprec() const;
+inline void SetRprec(double val);
+
+inline double GetZprec() const;
+inline void SetZprec(double val);
+
 inline double GetZ() const;
 inline void SetZ(double val);
 
@@ -84,6 +92,16 @@ inline void SetP1(double val);
 
 inline double GetP() const;
 inline void SetP(double val);
+
+inline void AddR(double val);
+inline void AddP1(double val);
+inline void AddP(double val);
+
+inline double MultRZ() const;
+
+inline double MultRZprec() const;
+
+inline void UpdateRZ() ;
       /**
    * @brief Default Constructor
    **/

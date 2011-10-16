@@ -225,3 +225,42 @@ return m_p;
  void ParticleReal::SetP(double val){
 m_p=val;
  }
+
+
+  void ParticleReal::AddR(double val){
+m_r+=val;
+ }
+ void ParticleReal::AddP1(double val){
+m_p1+=val;
+}
+ void ParticleReal::AddP(double val){
+m_p+=val;
+}
+
+ double ParticleReal::MultRZ() const{
+return m_r*m_z;
+}
+
+ double ParticleReal::MultRZprec() const{
+return m_rprec*m_zprec;
+}
+
+ double ParticleReal::GetRprec() const{
+ return m_rprec;
+ }
+ void ParticleReal::SetRprec(double val){
+ m_rprec=val;
+ }
+
+  double ParticleReal::GetZprec() const{
+ return m_zprec;
+ }
+  void ParticleReal::SetZprec(double val){
+m_zprec=val;
+}
+
+ void ParticleReal::UpdateRZ(){
+m_rprec=m_r;
+m_zprec=m_z;
+}
+

@@ -116,8 +116,7 @@ for(Particles::iterator it=begin();it!=end();it++){
  (*it)->GetVoisin(voisin);
  double p=(*it)->GetP1();
  for(Particles::iterator it2=voisin.begin();it!=voisin.end();it++){
-     //TODO verify p^TAP
- denom+=CalculateA(*it,*it2)*(p-(*it2)->GetP1())*((*it2)->GetP1()-p);
+ denom+=CalculateA(*it,*it2)*p*(*it2)->GetP1();
  }
 }
 }

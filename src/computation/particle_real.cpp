@@ -11,7 +11,7 @@ void ParticleReal::FindNeighbour(list< Particles* > Neighbour, double h,Particle
 DumpNeighbour( Neighbour);
 cout<<"end dummmmp"<<endl;
 */
-
+    Find.clear();
 
 for(list<Particles*>::iterator it=Neighbour.begin();it!=Neighbour.end();it++){
  for(list<Particle>::iterator it2=(*it)->begin();it2!=(*it)->end();it2++){

@@ -5,102 +5,88 @@
 
 
 #include <iostream>
-ParticleReal::ParticleReal()
-{
+ParticleReal::ParticleReal():m_type(none),m_r(0),m_p(0),m_rho(0),m_m(0) {
 
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m, double rho, double p):m_pos(pos),m_type(type),m_m(m),m_rho(rho),m_p(p)
-{
-  cout<< m_m<< " "<<m_rho<<endl;
-m_r=pow(3*m_m/(4*M_PI*m_rho),1./3);
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m, double rho, double p):m_pos(pos),m_type(type),m_m(m),m_rho(rho),m_p(p) {
+	cout<< m_m<< " "<<m_rho<<endl;
+	m_r=pow(3*m_m/(4*M_PI*m_rho),1./3);
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m, double rho, double p):m_pos(pos),m_speed(speed),m_type(type),m_m(m),m_rho(rho),m_p(p)
-{
-    cout<< m_m<< " "<<m_rho<<endl;
-m_r=pow(3*m_m/(4*M_PI*m_rho),1./3);
-}
-
-
-double ParticleReal::GetM() const
-{
-    return m_m;
-}
-
-double ParticleReal::GetP() const
-{
-    return m_p;
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m, double rho, double p):m_pos(pos),m_speed(speed),m_type(type),m_m(m),m_rho(rho),m_p(p) {
+	cout<< m_m<< " "<<m_rho<<endl;
+	m_r=pow(3*m_m/(4*M_PI*m_rho),1./3);
 }
 
 
-double ParticleReal::GetRho() const
-{
-    return m_rho;
+double ParticleReal::GetM() const {
+	return m_m;
 }
 
-void ParticleReal::SetM(double m)
-{
-    m_m=m;
+double ParticleReal::GetP() const {
+	return m_p;
 }
 
-void ParticleReal::SetP(double p)
-{
-    m_p=p;
+
+double ParticleReal::GetRho() const {
+	return m_rho;
 }
 
-void ParticleReal::SetRho(double rho)
-{
-    m_rho=rho;
+void ParticleReal::SetM(double m) {
+	m_m=m;
+}
+
+void ParticleReal::SetP(double p) {
+	m_p=p;
+}
+
+void ParticleReal::SetRho(double rho) {
+	m_rho=rho;
 }
 
 
 
-void ParticleReal::SetPos(physvector< DIM > pos)
-{
-    m_pos=pos;
+void ParticleReal::SetPos(physvector< DIM > pos) {
+	m_pos=pos;
 }
 
-void ParticleReal::SetSpeed(physvector< DIM > speed)
-{
-    m_speed=speed;
+void ParticleReal::SetSpeed(physvector< DIM > speed) {
+	m_speed=speed;
 }
 
 
 
-physvector< DIM > ParticleReal::GetPos() const
-{
-    return m_pos;
+physvector< DIM > ParticleReal::GetPos() const {
+	return m_pos;
 }
 
 
 
 
 inline physvector<DIM> ParticleReal::GetSpeed() const {
-    return m_speed;
+	return m_speed;
 }
 
 
 
-    template<class Archive>
-void ParticleReal::serialize(Archive& ar, const unsigned int version)
-{
-double m_density;
-ar & BOOST_SERIALIZATION_NVP(m_pos);
-ar &BOOST_SERIALIZATION_NVP(m_speed);
-ar &BOOST_SERIALIZATION_NVP(m_density);
-ar &BOOST_SERIALIZATION_NVP(m_p);
-ar &BOOST_SERIALIZATION_NVP(m_type);
-ar &BOOST_SERIALIZATION_NVP(m_m);
-m_rho=m_density*m_m;
+template<class Archive>
+void ParticleReal::serialize(Archive& ar, const unsigned int version) {
+	double m_density;
+	ar & BOOST_SERIALIZATION_NVP(m_pos);
+	ar &BOOST_SERIALIZATION_NVP(m_speed);
+	ar &BOOST_SERIALIZATION_NVP(m_density);
+	ar &BOOST_SERIALIZATION_NVP(m_p);
+	ar &BOOST_SERIALIZATION_NVP(m_type);
+	ar &BOOST_SERIALIZATION_NVP(m_m);
+	m_rho=m_density*m_m;
 //m_r=pow(3/(4*M_PI*m_density),1./3);
-m_r=0.1;
-cout<<"rho "<<m_rho<<" m "<< m_m<<" m_r "<<m_r<<" m_p "<<m_p<<endl;
+	m_r=0.1;
+	cout<<"rho "<<m_rho<<" m "<< m_m<<" m_r "<<m_r<<" m_p "<<m_p<<endl;
 }
 
 
 
-double ParticleReal::GetRadius()
-{
-return m_r;
+double ParticleReal::GetRadius() const {
+	return m_r;
 }

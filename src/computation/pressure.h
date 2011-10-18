@@ -21,17 +21,17 @@ const double AVW=0.5542;
 const double B=VB*(0.25*exp(1/(2.3*T/TB+0.5))-B1*exp(2.3*T/TB)+B2);
 const double R=8.314472;
 const double NA=5;
-inline double pressure(double rho,ParticleType A){
+inline double pressure(double rho,ParticleType A) {
 
- if(A==water){
-     rho=rho/NA;
-   double ret=rho*R*T*(1+rho*(-BSTAR-AVW/(R*T)+ALPHA/(1-LAMBDA*B*rho)));
-   return ret;
- }else if(A==Gaz){
-   return  4*rho;
- }
+	if(A==water) {
+		rho=rho/NA;
+		double ret=rho*R*T*(1+rho*(-BSTAR-AVW/(R*T)+ALPHA/(1-LAMBDA*B*rho)));
+		return ret;
+	} else if(A==Gaz) {
+		return  4*rho;
+	}
 
- return 0;
+	return 0;
 }
 
 #endif //PRESSURE_H

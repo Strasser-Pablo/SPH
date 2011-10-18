@@ -4,56 +4,44 @@
 
 
 
-Particle::Particle(ParticleReal* part):m_data(part)
-{
+Particle::Particle(ParticleReal* part):m_data(part) {
 
 }
 
 
 
 
-ParticleReal* Particle::Get()
-{
-return m_data;
+ParticleReal* Particle::Get() {
+	return m_data;
 }
 
-const ParticleReal* Particle::Get() const
-{
-return m_data;
+const ParticleReal* Particle::Get() const {
+	return m_data;
 }
 
-ParticleReal& Particle::operator*()
-{
-return *m_data;
+ParticleReal& Particle::operator*() {
+	return *m_data;
 }
 
 
-const ParticleReal& Particle::operator*() const
-{
-return *m_data;
+const ParticleReal& Particle::operator*() const {
+	return *m_data;
 }
 
-ParticleReal* Particle::operator->()
-{
-return m_data;
+ParticleReal* Particle::operator->() {
+	return m_data;
 }
 
-const ParticleReal* Particle::operator->() const
-{
-return m_data;
+const ParticleReal* Particle::operator->() const {
+	return m_data;
 }
 
 
-Particle* Particle::operator&()
-{
-return this;
+Particle* Particle::operator&() {
+	return this;
 }
 
 
-const Particle* Particle::operator&() const
-{
-return this;
+const Particle* Particle::operator&() const {
+	return this;
 }
-
-
-

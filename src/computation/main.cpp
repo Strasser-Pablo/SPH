@@ -3,8 +3,8 @@
 using namespace std;
 int main(int argc, char **argv) {
 
-World_test w;
-w.Do();
+	World_test w;
+	w.Do();
 
-    return 0;
+	return 0;
 }

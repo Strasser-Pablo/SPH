@@ -5,12 +5,10 @@
 * @brief Contain constructor for World.
 */
 
-World::World()
-{
+World::World() {
 
 }
 
-World::~World()
-{
+World::~World() {
 
 }

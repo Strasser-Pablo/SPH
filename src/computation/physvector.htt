@@ -24,211 +24,209 @@ physvector<2>::physvector(const double x,const double y):m_x(x),m_y(y) {
 
 
 
-double physvector<3>::Distance(const physvector<3> A)const {
-    return sqrt(pow(A.m_x-m_x,2)+pow(A.m_y-m_y,2)+pow(A.m_z-m_z,2));
+double physvector<3>::Distance(const physvector<3>& A)const {
+	return sqrt(pow(A.m_x-m_x,2)+pow(A.m_y-m_y,2)+pow(A.m_z-m_z,2));
 }
 
 
-double physvector<2>::Distance(const physvector<2> A) const {
-    return sqrt(pow(A.m_x-m_x,2)+pow(A.m_y-m_y,2));
+double physvector<2>::Distance(const physvector<2>& A) const {
+	return sqrt(pow(A.m_x-m_x,2)+pow(A.m_y-m_y,2));
 }
 
 
-double physvector<3>::Distance2(const physvector<3> A) const {
-    return pow(A.m_x-m_x,2)+pow(A.m_y-m_y,2)+pow(A.m_z-m_z,2);
+double physvector<3>::Distance2(const physvector<3>& A) const {
+	return pow(A.m_x-m_x,2)+pow(A.m_y-m_y,2)+pow(A.m_z-m_z,2);
 }
 
 
-double physvector<2>::Distance2(const physvector<2> A)const {
-    return pow(A.m_x-m_x,2)+pow(A.m_y-m_y,2);
+double physvector<2>::Distance2(const physvector<2>& A)const {
+	return pow(A.m_x-m_x,2)+pow(A.m_y-m_y,2);
 }
 
 
 double physvector<3>::Norm()const {
-    return sqrt(pow(m_x,2)+pow(-m_y,2)+pow(m_z,2));
+	return sqrt(pow(m_x,2)+pow(-m_y,2)+pow(m_z,2));
 }
 
 
 double physvector<2>::Norm() const {
-    return sqrt(pow(m_x,2)+pow(m_y,2));
+	return sqrt(pow(m_x,2)+pow(m_y,2));
 }
 
 
 double physvector<3>::Norm2() const {
-    return pow(m_x,2)+pow(m_y,2)+pow(m_z,2);
+	return pow(m_x,2)+pow(m_y,2)+pow(m_z,2);
 }
 
 
 double physvector<2>::Norm2()const {
-    return pow(m_x,2)+pow(m_y,2);
+	return pow(m_x,2)+pow(m_y,2);
 }
 
-void physvector<3>::Set(const double x,const double y,const double z){
-  m_x=x;
-  m_y=y;
-  m_z=z;
-}
-
-
-void physvector<2>::Set(const double x,const double y){
-  m_x=x;
-  m_y=y;
+void physvector<3>::Set(const double x,const double y,const double z) {
+	m_x=x;
+	m_y=y;
+	m_z=z;
 }
 
 
-void physvector<3>::Get( double & x, double & y, double & z) const{
-  x=m_x;
-  y=m_y;
-  z=m_z;
+void physvector<2>::Set(const double x,const double y) {
+	m_x=x;
+	m_y=y;
 }
 
 
-
-void physvector<2>::Get( double & x, double & y)const{
-  x=m_x;
-  y=m_y;
+void physvector<3>::Get( double & x, double & y, double & z) const {
+	x=m_x;
+	y=m_y;
+	z=m_z;
 }
 
 
 
-physvector<3> physvector<3>::operator+(const physvector<3> A)const{
-double resx=A.m_x+m_x;
-double resy=A.m_y+m_y;
-double resz=A.m_z+m_z;
-return physvector< 3  >(resx,resy,resz);
-}
-
-
-physvector<2> physvector<2>::operator+(const physvector<2> A)const{
-double resx=A.m_x+m_x;
-double resy=A.m_y+m_y;
-return physvector< 2  >(resx,resy);
-}
-
-
-physvector<3> physvector<3>::operator-(const physvector<3> A)const{
-double resx=m_x-A.m_x;
-double resy=m_y-A.m_y;
-double resz=m_z-A.m_z;
-return physvector< 3  >(resx,resy,resz);
-}
-
-
-physvector<3> physvector<3>::operator-()const{
-double resx=-m_x;
-double resy=-m_y;
-double resz=-m_z;
-return physvector< 3  >(resx,resy,resz);
-}
-
-physvector<2> physvector<2>::operator-(const physvector<2> A)const{
-double resx=m_x-A.m_x;
-double resy=m_y-A.m_y;
-return physvector< 2  >(resx,resy);
+void physvector<2>::Get( double & x, double & y)const {
+	x=m_x;
+	y=m_y;
 }
 
 
 
-void physvector<3>::operator+=(const physvector<3> A){
-m_x+=A.m_x;
-m_y+=A.m_y;
-m_z+=A.m_z;
+physvector<3> physvector<3>::operator+(const physvector<3>& A)const {
+	double resx=A.m_x+m_x;
+	double resy=A.m_y+m_y;
+	double resz=A.m_z+m_z;
+	return physvector< 3  >(resx,resy,resz);
 }
 
 
-void physvector<2>::operator+=(const physvector<2> A){
-m_x+=A.m_x;
-m_y+=A.m_y;
+physvector<2> physvector<2>::operator+(const physvector<2>& A)const {
+	double resx=A.m_x+m_x;
+	double resy=A.m_y+m_y;
+	return physvector< 2  >(resx,resy);
 }
 
 
-void physvector<3>::operator-=(const physvector<3> A){
-m_x-=A.m_x;
-m_y-=A.m_y;
-m_z-=A.m_z;
+physvector<3> physvector<3>::operator-(const physvector<3>& A)const {
+	double resx=m_x-A.m_x;
+	double resy=m_y-A.m_y;
+	double resz=m_z-A.m_z;
+	return physvector< 3  >(resx,resy,resz);
 }
 
 
-void physvector<2>::operator-=(const physvector<2> A){
-m_x-=A.m_x;
-m_y-=A.m_y;
+physvector<3> physvector<3>::operator-()const {
+	double resx=-m_x;
+	double resy=-m_y;
+	double resz=-m_z;
+	return physvector< 3  >(resx,resy,resz);
+}
+
+physvector<2> physvector<2>::operator-(const physvector<2>& A)const {
+	double resx=m_x-A.m_x;
+	double resy=m_y-A.m_y;
+	return physvector< 2  >(resx,resy);
 }
 
 
-void physvector<3>::operator=(const physvector<3> A){
-m_x=A.m_x;
-m_y=A.m_y;
-m_z=A.m_z;
+
+void physvector<3>::operator+=(const physvector<3>& A) {
+	m_x+=A.m_x;
+	m_y+=A.m_y;
+	m_z+=A.m_z;
 }
 
 
-void physvector<2>::operator=(const physvector<2> A){
-m_x=A.m_x;
-m_y=A.m_y;
-}
-
- physvector< 2> operator*(const double c,const physvector<2> a) {
-  return physvector< 2  > (a.m_x*c,a.m_y*c);
-}
-
- physvector< 3> operator*(const double c,const physvector<3> a) {
-  return physvector< 3  > (a.m_x*c,a.m_y*c,a.m_z*c);
-}
-
- physvector< 2> operator*(const physvector<2> a,const double c) {
-  return physvector< 2  > (a.m_x*c,a.m_y*c);
-}
-
- physvector< 3> operator*(const physvector<3> a,const double c) {
-  return physvector< 3  > (a.m_x*c,a.m_y*c,a.m_z*c);
-}
-
-physvector<3> physvector<3>::operator*(const physvector<3> A)const{
-double resx=A.m_x*m_x;
-double resy=A.m_y*m_y;
-double resz=A.m_z*m_z;
-return physvector< 3  >(resx,resy,resz);
+void physvector<2>::operator+=(const physvector<2>& A) {
+	m_x+=A.m_x;
+	m_y+=A.m_y;
 }
 
 
-void physvector<3>::operator*=(const double c){
-m_x*=c;
-m_y*=c;
-m_z*=c;
+void physvector<3>::operator-=(const physvector<3>& A) {
+	m_x-=A.m_x;
+	m_y-=A.m_y;
+	m_z-=A.m_z;
 }
 
 
-void physvector<2>::operator*=(const double c){
-m_x*=c;
-m_y*=c;
+void physvector<2>::operator-=(const physvector<2>& A) {
+	m_x-=A.m_x;
+	m_y-=A.m_y;
 }
 
 
- physvector< 2> physvector<2>::operator/(const double c) const {
-  return physvector< 2  > (m_x/c,m_y/c);
+void physvector<3>::operator=(const physvector<3>& A) {
+	m_x=A.m_x;
+	m_y=A.m_y;
+	m_z=A.m_z;
 }
 
- physvector< 3> physvector<3>::operator/(const double c) const{
-  return physvector< 3  > (m_x/c,m_y/c,m_z/c);
+
+void physvector<2>::operator=(const physvector<2>& A) {
+	m_x=A.m_x;
+	m_y=A.m_y;
 }
 
-      Key<3> physvector<3>::ToKey(double h){
-return Key<3>(m_x/h,m_y/h,m_z/h);
+physvector< 2> operator*(const double c,const physvector<2>& a) {
+	return physvector< 2  > (a.m_x*c,a.m_y*c);
 }
 
-Key<2> physvector<2>::ToKey(double h){
-return Key<2>(m_x/h,m_y/h);
+physvector< 3> operator*(const double c,const physvector<3>& a) {
+	return physvector< 3  > (a.m_x*c,a.m_y*c,a.m_z*c);
 }
-    template<class Archive>
-void physvector< 3  >::serialize(Archive& ar, const unsigned int version)
-{
-ar&BOOST_SERIALIZATION_NVP(m_x);
-ar&BOOST_SERIALIZATION_NVP(m_y);
-ar&BOOST_SERIALIZATION_NVP(m_z);
+
+physvector< 2> operator*(const physvector<2>& a,const double c) {
+	return physvector< 2  > (a.m_x*c,a.m_y*c);
 }
-    template<class Archive>
-void physvector< 2  >::serialize(Archive& ar, const unsigned int version)
-{
-ar&BOOST_SERIALIZATION_NVP(m_x);
-ar&BOOST_SERIALIZATION_NVP(m_y);
+
+physvector< 3> operator*(const physvector<3>& a,const double c) {
+	return physvector< 3  > (a.m_x*c,a.m_y*c,a.m_z*c);
+}
+
+physvector<3> physvector<3>::operator*(const physvector<3>& A)const {
+	double resx=A.m_x*m_x;
+	double resy=A.m_y*m_y;
+	double resz=A.m_z*m_z;
+	return physvector< 3  >(resx,resy,resz);
+}
+
+
+void physvector<3>::operator*=(const double c) {
+	m_x*=c;
+	m_y*=c;
+	m_z*=c;
+}
+
+
+void physvector<2>::operator*=(const double c) {
+	m_x*=c;
+	m_y*=c;
+}
+
+
+physvector< 2> physvector<2>::operator/(const double c) const {
+	return physvector< 2  > (m_x/c,m_y/c);
+}
+
+physvector< 3> physvector<3>::operator/(const double c) const {
+	return physvector< 3  > (m_x/c,m_y/c,m_z/c);
+}
+
+Key<3> physvector<3>::ToKey(double h) {
+	return Key<3>(m_x/h,m_y/h,m_z/h);
+}
+
+Key<2> physvector<2>::ToKey(double h) {
+	return Key<2>(m_x/h,m_y/h);
+}
+template<class Archive>
+void physvector< 3  >::serialize(Archive& ar, const unsigned int version) {
+	ar&BOOST_SERIALIZATION_NVP(m_x);
+	ar&BOOST_SERIALIZATION_NVP(m_y);
+	ar&BOOST_SERIALIZATION_NVP(m_z);
+}
+template<class Archive>
+void physvector< 2  >::serialize(Archive& ar, const unsigned int version) {
+	ar&BOOST_SERIALIZATION_NVP(m_x);
+	ar&BOOST_SERIALIZATION_NVP(m_y);
 }

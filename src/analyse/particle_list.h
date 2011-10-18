@@ -11,16 +11,16 @@
 #include <GL/glu.h>
 
 using namespace std;
-class Particle_List{
-  deque<ParticleReal> m_list;
+class Particle_List {
+	deque<ParticleReal> m_list;
 
 public:
-  Particle_List();
-inline  int Size() const;
+	Particle_List();
+	inline  int Size() const;
 
-      template<class Archive>
- inline  void read(Archive & ar) ;
-void Draw(GLUquadric* param);
+	template<class Archive>
+	inline  void read(Archive & ar) ;
+	void Draw(GLUquadric* param);
 };
 
 

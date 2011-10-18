@@ -3,6 +3,3 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 */
 
 #include "particle_real.h"
-
-
-

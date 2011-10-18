@@ -1,5 +1,5 @@
 /** \file const.h Contain constant
- *  
+ *
  **/
 
 
@@ -7,7 +7,7 @@
 #define CONST_H
 
 /**
- * @brief Dimension used for calculation 
+ * @brief Dimension used for calculation
  **/
 #define DIM_DEF 3
 const int DIM=DIM_DEF;
@@ -29,4 +29,3 @@ const double DT=0.1;
 
 
 #endif // CONST_H
-

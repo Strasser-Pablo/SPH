@@ -5,225 +5,202 @@
 #include <iostream>
 
 #include "pressure.h"
-ParticleReal::ParticleReal():m_fixed(false),m_container(0)
-{
+ParticleReal::ParticleReal():m_fixed(false),m_container(0),m_type(none),m_p(0),m_density(0),m_m(0) {
 
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m,bool fixed):m_pos(pos),m_type(type),m_fixed(fixed),m_m(m),m_container(0)
-{
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double m,bool fixed):m_pos(pos),m_type(type),m_fixed(fixed),m_m(m),m_container(0),m_p(0),m_density(0) {
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m,bool fixed):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_m(m),m_container(0)
-{
-}
-
-
-double ParticleReal::GetM() const
-{
-    return m_m;
-}
-
-double ParticleReal::GetP() const
-{
-    return m_p;
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double m,bool fixed):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_m(m),m_container(0),m_p(0),m_density(0) {
 }
 
 
-double ParticleReal::GetDensity() const
-{
-    return m_density;
+double ParticleReal::GetM() const {
+	return m_m;
 }
 
-void ParticleReal::SetM(double m)
-{
-    m_m=m;
+double ParticleReal::GetP() const {
+	return m_p;
 }
 
-void ParticleReal::SetP(double p)
-{
-    m_p=p;
+
+double ParticleReal::GetDensity() const {
+	return m_density;
 }
 
-void ParticleReal::SetDensity(double rho)
-{
-    m_density=rho;
+void ParticleReal::SetM(double m) {
+	m_m=m;
 }
 
-double ParticleReal::Distance2(Particle& A)
-{
-    return m_pos.Distance2(A->m_pos);
+void ParticleReal::SetP(double p) {
+	m_p=p;
 }
 
-void ParticleReal::SetPos(physvector< DIM > pos)
-{
-    m_pos=pos;
+void ParticleReal::SetDensity(double rho) {
+	m_density=rho;
 }
 
-void ParticleReal::SetSpeed(physvector< DIM > speed)
-{
-    m_speed=speed;
+double ParticleReal::Distance2(Particle& A) {
+	return m_pos.Distance2(A->m_pos);
 }
 
-void ParticleReal::SetAcceleration(physvector< DIM > force)
-{
-    m_a=force;
+void ParticleReal::SetPos(physvector< DIM > pos) {
+	m_pos=pos;
 }
 
-void ParticleReal::AddAcceleration(physvector< DIM > force)
-{
-    m_a+=force;
+void ParticleReal::SetSpeed(physvector< DIM > speed) {
+	m_speed=speed;
+}
+
+void ParticleReal::SetAcceleration(physvector< DIM > force) {
+	m_a=force;
+}
+
+void ParticleReal::AddAcceleration(physvector< DIM > force) {
+	m_a+=force;
 }
 
 void ParticleReal::ResetAcceleration() {
-    m_a=physvector< DIM>();
+	m_a=physvector< DIM>();
 }
-physvector< DIM > ParticleReal::GetPos() const
-{
-    return m_pos;
-}
-
-physvector< DIM > ParticleReal::GetAcceleration() const
-{
-    return m_a;
+physvector< DIM > ParticleReal::GetPos() const {
+	return m_pos;
 }
 
-void ParticleReal::ComputePressure_Density()
-{
-    double rho=0;
-    UpdateVoisin();
-    for (list<Particle>::const_iterator it=m_voisin.begin();it!=m_voisin.end();it++) {
-        rho+=Kernel_spline5(GetPos()-(*it)->GetPos(),h);
+physvector< DIM > ParticleReal::GetAcceleration() const {
+	return m_a;
+}
 
-    }
-   // cout<<h<<" "<<rho<<endl;
-    SetDensity(rho);
+void ParticleReal::ComputePressure_Density() {
+	double rho=0;
+	UpdateVoisin();
+	for (list<Particle>::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); ++it) {
+		rho+=Kernel_spline5(GetPos()-(*it)->GetPos(),h);
+
+	}
+	// cout<<h<<" "<<rho<<endl;
+	SetDensity(rho);
 //   SetP((rho-WaterConst.rho0)*WaterConst.k+3000);
-    SetP(pressure(rho,m_type));
-   // double m_r=pow(3/(4*M_PI*rho),1./3);
-   // cout<<m_r<<endl;
+	SetP(pressure(rho,m_type));
+	// double m_r=pow(3/(4*M_PI*rho),1./3);
+	// cout<<m_r<<endl;
 }
 
-bool ParticleReal::Equal(const Particle part)const {
-    return this== part.Get();
+bool ParticleReal::Equal(const Particle& part)const {
+	return this== part.Get();
 }
 
 inline physvector<DIM> ParticleReal::GetSpeed() const {
-    return m_speed;
+	return m_speed;
 }
 
 
 
 void ParticleReal::ComputeGravity_Force() {
-    AddAcceleration(G);
+	AddAcceleration(G);
 }
 
 void ParticleReal::ComputeMove(double dt) {
-  if(!m_fixed){
-    m_pos+=dt*m_speed;
-    m_speed+=dt*m_a;
+	if(!m_fixed) {
+		m_pos+=dt*m_speed;
+		m_speed+=dt*m_a;
 
-    ResetAcceleration();
-  }
+		ResetAcceleration();
+	}
 }
 
-void ParticleReal::Dump() {
-    cout<<"pos "<<m_pos<<" speed "<<m_speed<<endl;
+void ParticleReal::Dump() const {
+	cout<<"pos "<<m_pos<<" speed "<<m_speed<<endl;
 }
 
 template<class Archive>
-void ParticleReal::serialize(Archive& ar, const unsigned int version)
-{
-    ar &BOOST_SERIALIZATION_NVP(m_pos);
-    ar &BOOST_SERIALIZATION_NVP(m_speed);
-    ar &BOOST_SERIALIZATION_NVP(m_density);
-    ar &BOOST_SERIALIZATION_NVP(m_p);
-    ar &BOOST_SERIALIZATION_NVP(m_type);
-    ar &BOOST_SERIALIZATION_NVP(m_m);
-    #ifdef DOXYGEN
-    physvector<3> p;
-    p.serialize(ar,0);
-    #endif //DOXYGEN
+void ParticleReal::serialize(Archive& ar, const unsigned int version) {
+	ar &BOOST_SERIALIZATION_NVP(m_pos);
+	ar &BOOST_SERIALIZATION_NVP(m_speed);
+	ar &BOOST_SERIALIZATION_NVP(m_density);
+	ar &BOOST_SERIALIZATION_NVP(m_p);
+	ar &BOOST_SERIALIZATION_NVP(m_type);
+	ar &BOOST_SERIALIZATION_NVP(m_m);
+#ifdef DOXYGEN
+	physvector<3> p;
+	p.serialize(ar,0);
+#endif //DOXYGEN
 }
 void ParticleReal::ComputeInternal_Force() {
-    physvector<DIM> ftot;
-    double pact=GetP();
-    physvector<DIM>  sact=GetSpeed();
-    ParticleReal  real;
-    physvector<DIM> ftemp;
-    for (list<Particle>::const_iterator it=m_voisin.begin();it!=m_voisin.end();it++) {
-      real=*(*it);
-        if (!Equal(*it)) {
-	  ftot+=1/GetM()*Mat_Const(m_type).eta*(1/pow(GetDensity(),2)+1/pow(real.GetDensity(),2))/(GetPos()-real.GetPos()).Norm()*Kernel_grad_spline5(GetPos()-real.GetPos(),h)*(GetSpeed()-real.GetSpeed());
-        ftemp=-1/GetM()*(GetP()/pow(GetDensity(),2)+real.GetP()/pow(real.GetDensity(),2))*Kernel_grad_spline5(GetPos()-real.GetPos(),h);
-        ftot+=ftemp;
-     //   cout<<"temp "<<ftemp<<endl;
-        }
-    }
-    //cout<<ftot<<endl;
-    AddAcceleration(ftot);
-    ComputeSurface_Force( );
+	physvector<DIM> ftot;
+	// double pact=GetP();
+	physvector<DIM>  sact=GetSpeed();
+	ParticleReal  real;
+	physvector<DIM> ftemp;
+	for (list<Particle>::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); ++it) {
+		real=*(*it);
+		if (!Equal(*it)) {
+			ftot+=1/GetM()*Mat_Const(m_type).eta*(1/pow(GetDensity(),2)+1/pow(real.GetDensity(),2))/(GetPos()-real.GetPos()).Norm()*Kernel_grad_spline5(GetPos()-real.GetPos(),h)*(GetSpeed()-real.GetSpeed());
+			ftemp=-1/GetM()*(GetP()/pow(GetDensity(),2)+real.GetP()/pow(real.GetDensity(),2))*Kernel_grad_spline5(GetPos()-real.GetPos(),h);
+			ftot+=ftemp;
+			//   cout<<"temp "<<ftemp<<endl;
+		}
+	}
+	//cout<<ftot<<endl;
+	AddAcceleration(ftot);
+	ComputeSurface_Force( );
 }
 
 
 
-void ParticleReal::ComputeSurface_Force()
-{
-physvector<DIM> temp;
-for(Particles::const_iterator it=m_voisin.begin();it!=m_voisin.end();it++){
- temp+= Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(m_surface_tens/pow(GetDensity(),2)+(*it)->m_surface_tens/pow((*it)->GetDensity(),2));
+void ParticleReal::ComputeSurface_Force() {
+	physvector<DIM> temp;
+	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); ++it) {
+		temp+= Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(m_surface_tens/pow(GetDensity(),2)+(*it)->m_surface_tens/pow((*it)->GetDensity(),2));
+	}
+
+	AddAcceleration(temp/GetM());
 }
 
-AddAcceleration(temp/GetM());
-}
-
-physvector< DIM > ParticleReal::ComputeSurface_Tensor_ind( ParticleType A, ParticleType B) const
-{
-physvector<DIM> grad=Color_Grad(A,B);
-double d=grad.Norm();
-physvector<DIM> I;
-if(DIM==3){
- I=physvector< 3  >(1,1,1);
-}
- physvector<DIM> ret;
-if(d!=0){
-ret=surface_Const(A,B)/d*(1./DIM*pow(d,2)*I-grad*grad);
-}
+physvector< DIM > ParticleReal::ComputeSurface_Tensor_ind( ParticleType A, ParticleType B) const {
+	physvector<DIM> grad=Color_Grad(A,B);
+	double d=grad.Norm();
+	physvector<DIM> I;
+	if(DIM==3) {
+		I=physvector< 3  >(1,1,1);
+	}
+	physvector<DIM> ret;
+	if(d!=0) {
+		ret=surface_Const(A,B)/d*(1./DIM*pow(d,2)*I-grad*grad);
+	}
 
 }
 
 
-physvector< DIM > ParticleReal::Color_Grad(ParticleType A,ParticleType B)const
-{
-  physvector<DIM> temp;
-  if(m_type!=A){
-   return temp;
-  }
-  if(A==B){
-   return temp;
-  }
-for(Particles::const_iterator it=m_voisin.begin();it!=m_voisin.end();it++){
-  if((*it)->m_type==B){
-   temp+=1./pow((*it)->GetDensity(),2)*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h);
-  }
-}
+physvector< DIM > ParticleReal::Color_Grad(ParticleType A,ParticleType B)const {
+	physvector<DIM> temp;
+	if(m_type!=A) {
+		return temp;
+	}
+	if(A==B) {
+		return temp;
+	}
+	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); ++it) {
+		if((*it)->m_type==B) {
+			temp+=1./pow((*it)->GetDensity(),2)*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h);
+		}
+	}
 
 #ifdef DOXYGEN
-ParticleReal p;
-p.GetDensity();
-Kernel_grad_spline5(GetPos());
+	ParticleReal p;
+	p.GetDensity();
+	Kernel_grad_spline5(GetPos());
 #endif //DOXYGEN
 
-return temp*GetDensity();
+	return temp*GetDensity();
 }
 
-void ParticleReal::ComputeSurface_Tensor()
-{
-if(m_type==water){
- m_surface_tens=ComputeSurface_Tensor_ind(m_type,Gaz);
-}
-else{
-   m_surface_tens=ComputeSurface_Tensor_ind(m_type,water);
-}
+void ParticleReal::ComputeSurface_Tensor() {
+	if(m_type==water) {
+		m_surface_tens=ComputeSurface_Tensor_ind(m_type,Gaz);
+	} else {
+		m_surface_tens=ComputeSurface_Tensor_ind(m_type,water);
+	}
 
 }

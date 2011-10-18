@@ -22,19 +22,18 @@ using namespace std;
 * @brief This class created the position of particle and say when to output. And in witch file.
 *
 **/
-class World_test:public World
-{
+class World_test:public World {
 
 public:
- /**
- * Default constructor outfile is default
- */
-    World_test();
-    /**
-    * Make the calculation.
-    *\return void Nothing
-    */
-    void Do();
+	/**
+	* Default constructor outfile is default
+	*/
+	World_test();
+	/**
+	* Make the calculation.
+	*\return void Nothing
+	*/
+	void Do();
 };
 
 

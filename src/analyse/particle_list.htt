@@ -1,18 +1,16 @@
 #include "particle_list.h"
-     template<class Archive>
-void Particle_List::read(Archive& ar)
-{
-  bool b;
-  ar>>BOOST_SERIALIZATION_NVP(b);
-while(b){
-  ParticleReal part;
-  ar>>BOOST_SERIALIZATION_NVP(part);
-  m_list.push_back(part);
-  ar>>BOOST_SERIALIZATION_NVP(b);
-}
+template<class Archive>
+void Particle_List::read(Archive& ar) {
+	bool b;
+	ar>>BOOST_SERIALIZATION_NVP(b);
+	while(b) {
+		ParticleReal part;
+		ar>>BOOST_SERIALIZATION_NVP(part);
+		m_list.push_back(part);
+		ar>>BOOST_SERIALIZATION_NVP(b);
+	}
 }
 
-int Particle_List::Size() const
-{
-return m_list.size();
+int Particle_List::Size() const {
+	return m_list.size();
 }

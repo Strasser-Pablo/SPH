@@ -32,7 +32,7 @@ class ParticleReal
     double m_p1;
     double m_px;
     double m_pv;
-
+	bool m_boundary;
     double m_p;
     double m_b;
 
@@ -75,6 +75,8 @@ double m_density0;
 public:
 //For conjugate gradiant
 
+inline bool GetBoundary() const;
+
 inline double GetB() const;
 inline void SetB(double val);
 
@@ -106,7 +108,7 @@ inline double MultRZprec() const;
 
 inline void UpdateRZ() ;
 
-inline bool OKR();
+inline bool OKR() const;
       /**
    * @brief Default Constructor
    **/
@@ -118,7 +120,7 @@ inline bool OKR();
      * @param type Particle type
      * @param m Particle mass
      **/
-    inline ParticleReal(physvector<DIM> pos,ParticleType type,double r,double rho_0,bool fixed=false);
+    inline ParticleReal(physvector<DIM> pos,ParticleType type,double r,double rho_0,bool fixed=false,bool boundary=false);
 
         /**
      * @brief Create a individual Particle with givent property
@@ -128,7 +130,7 @@ inline bool OKR();
      * @param type Particle type
      * @param m Particle mass
      **/
-      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double r,double rho_0,bool fixed=false);
+      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double r,double rho_0,bool fixed=false,bool boundary=false);
     /**
      * @brief Calculate the Distance square of the Particle
      *
@@ -233,7 +235,7 @@ inline bool OKR();
    * @param part Particle to test
    * @return bool
    **/
-  inline bool Equal(const Particle part) const;
+  inline bool Equal(const Particle &part) const;
 
 
   /**
@@ -241,7 +243,7 @@ inline bool OKR();
    *
    * @return void
    **/
-  inline void Dump();
+  inline void Dump() const;
 
 
   void SetContainerParticles(Particles * container);
@@ -281,7 +283,7 @@ private:
    * @return physvector< 3 >
    **/
   inline  physvector<DIM> ComputeSurface_Tensor_ind(ParticleType A,ParticleType B) const;
- inline physvector<DIM> Force();
+ inline physvector<DIM> Force() const;
  public:
   #ifndef DOXYGEN
 private:

@@ -5,25 +5,28 @@
 #include <iostream>
 
 #include "pressure.h"
-ParticleReal::ParticleReal():m_fixed(false),m_container(0),m_type(none),m_density0(0),m_density(0),m_m(0),m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0)
+ParticleReal::ParticleReal():m_fixed(false),m_container(0),m_type(none),m_density0(0),m_density(0),m_m(0),m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(false)
 {
 
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double r,double rho_0,bool fixed):m_pos(pos),m_type(type),m_fixed(fixed),m_container(0)   ,m_density(0),m_m(0),m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0)
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type, double r,double rho_0,bool fixed,bool boundary):m_pos(pos),m_type(type),m_fixed(fixed),m_container(0)   ,m_density(0),m_m(0),m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(boundary)
 {
     double V=4./3.*M_PI*pow(r,3);
     m_m=rho_0*V;
     m_density0=1/V;
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double r,double rho_0,bool fixed):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_container(0) ,m_density(0),m_m(0),m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0)
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type, double r,double rho_0,bool fixed,bool boundary):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_container(0) ,m_density(0),m_m(0),m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(boundary)
 {
        double V=4./3.*M_PI*pow(r,3);
     m_m=rho_0*V;
     m_density0=1/V;
 }
 
+bool ParticleReal::GetBoundary() const{
+return m_boundary;	
+}
 
 double ParticleReal::GetM() const
 {

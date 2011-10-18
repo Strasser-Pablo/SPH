@@ -21,7 +21,7 @@ class World{
    boost::archive::binary_iarchive m_ar;
 public:
   World();
- void Do();
+ void Do() const;
  void Draw(GLUquadric* param);
  void Next();
 };

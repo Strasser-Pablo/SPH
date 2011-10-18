@@ -134,7 +134,7 @@ public:
    
    inline void Draw(GLUquadric* param); 
 
-inline double GetRadius();
+inline double GetRadius() const;
 
 private:
     friend class boost::serialization::access;

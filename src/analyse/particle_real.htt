@@ -5,7 +5,7 @@
 
 
 #include <iostream>
-ParticleReal::ParticleReal()
+ParticleReal::ParticleReal():m_type(none),m_r(0),m_p(0),m_rho(0),m_m(0)
 {
 
 }
@@ -100,7 +100,7 @@ cout<<"rho "<<m_rho<<" m "<< m_m<<" m_r "<<m_r<<" m_p "<<m_p<<endl;
 
 
 
-double ParticleReal::GetRadius()
+double ParticleReal::GetRadius() const
 {
 return m_r;
 }

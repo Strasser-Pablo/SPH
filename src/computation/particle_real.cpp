@@ -13,8 +13,8 @@ cout<<"end dummmmp"<<endl;
 */
     Find.clear();
 
-for(list<Particles*>::iterator it=Neighbour.begin();it!=Neighbour.end();it++){
- for(list<Particle>::iterator it2=(*it)->begin();it2!=(*it)->end();it2++){
+for(list<Particles*>::iterator it=Neighbour.begin();it!=Neighbour.end();++it){
+ for(list<Particle>::iterator it2=(*it)->begin();it2!=(*it)->end();++it2){
   if( Distance2(*it2)<pow(h,2)){
    Find.push_back(*it2);
   }

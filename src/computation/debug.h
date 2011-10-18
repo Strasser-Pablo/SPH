@@ -18,7 +18,7 @@ using namespace std;
  * @return void
  **/
 void  inline DumpNeighbour(list<Particles *> & a){
-  for(list<Particles *>::iterator it=a.begin();it!=a.end();it++){
+  for(list<Particles *>::iterator it=a.begin();it!=a.end();++it){
    (*it)->Dump(false); 
   }
 }
@@ -30,7 +30,7 @@ void  inline DumpNeighbour(list<Particles *> & a){
  * @return void
  **/
 void  inline GDump(list<Key<DIM> > & a){
-  for(list<Key<DIM> >::iterator it=a.begin();it!=a.end();it++){
+  for(list<Key<DIM> >::iterator it=a.begin();it!=a.end();++it){
    it->Dump(); 
   }
 }

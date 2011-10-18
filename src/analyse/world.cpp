@@ -19,7 +19,7 @@ m_finish=true;
   }
 }
 
-void World::Do()
+void World::Do() const
 {
 
 }

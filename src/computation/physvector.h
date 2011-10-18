@@ -52,14 +52,14 @@ public:
      * @param A Other vector
      * @return double Distance.
      **/
-    inline double Distance(const physvector<3> A) const;
+    inline double Distance(const physvector<3>& A) const;
     /**
      * @brief Get the square euclidian distance \f$(x-x2)^2+(y-y2)^2+(z-z2)^2\f$
      *
      * @param A Other vector
      * @return double Distance
      **/
-    inline  double Distance2(const physvector<3> A) const;
+    inline  double Distance2(const physvector<3>& A) const;
           /**
      * @brief Calculate the euclidian norm \f$\sqrt{x^2+y^2+z^2}\f$
      *
@@ -91,13 +91,13 @@ public:
      * @return void
      **/
     inline void Get(double &x,double &y,double &z) const;
-    inline  physvector<3> operator+(const physvector<3> A) const;
-     inline  double operator*(const physvector<3> A) const;
-    inline physvector<3> operator-(const physvector<3> A) const;
+    inline  physvector<3> operator+(const physvector<3>& A) const;
+     inline  double operator*(const physvector<3>& A) const;
+    inline physvector<3> operator-(const physvector<3>& A) const;
         inline physvector<3> operator-() const;
-    inline void operator=( const physvector<3> A);
-    inline void operator+=(const physvector<3> A);
-    inline void operator-=(const physvector<3> A);
+    inline void operator=( const physvector<3> &A);
+    inline void operator+=(const physvector<3> &A);
+    inline void operator-=(const physvector<3> &A);
      inline  void operator*=(const double c);
          inline physvector<3> operator/(const double c) const;
         /**
@@ -108,8 +108,8 @@ public:
      * @return :ostream&
      **/
     friend std::ostream& operator<< (std::ostream& stream, const physvector<3>& A );
-    friend inline physvector< 3> operator*(const double c,const physvector<3> a);
-     friend inline physvector< 3> operator*(const physvector<3> a,const double c);
+    friend inline physvector< 3> operator*(const double c,const physvector<3>& a);
+     friend inline physvector< 3> operator*(const physvector<3>& a,const double c);
 
      inline Key<3> ToKey(double h);
 
@@ -153,14 +153,14 @@ public:
      * @param A Other vector
      * @return double Distance.
      **/
-    inline  double Distance(const physvector<2> A) const;
+    inline  double Distance(const physvector<2>& A) const;
     /**
      * @brief Get the square euclidian distance \f$(x-x2)^2+(y-y2)^2\f$
      *
      * @param A Other vector
      * @return double Distance
      **/
-    inline  double Distance2(const physvector<2> A) const;
+    inline  double Distance2(const physvector<2>& A) const;
 
     /**
      * @brief Calculate the euclidian norm \f$\sqrt{x^2+y^2}\f$
@@ -190,11 +190,11 @@ public:
      * @return void
      **/
     inline void Get(double &x,double &y) const;
-    inline physvector<2> operator+(const physvector<2> A)const;
-    inline physvector<2> operator-(const physvector<2> A) const;
-    inline  void operator=(const physvector<2> A);
-    inline void operator+=(const physvector<2> A)  ;
-    inline  void operator-=(const physvector<2> A);
+    inline physvector<2> operator+(const physvector<2>& A)const;
+    inline physvector<2> operator-(const physvector<2> &A) const;
+    inline  void operator=(const physvector<2> &A);
+    inline void operator+=(const physvector<2> &A)  ;
+    inline  void operator-=(const physvector<2> &A);
     inline  void operator*=(const double c);
     inline physvector<2> operator/(const double c) const;
     /**
@@ -205,8 +205,8 @@ public:
      * @return :ostream&
      **/
     friend std::ostream & operator<< (std::ostream& stream, const physvector<2>& A );
-    friend inline physvector< 2> operator*(const double c,const physvector<2> a) ;
-    friend inline physvector< 2> operator*(const physvector<2> a,const double c) ;
+    friend inline physvector< 2> operator*(const double c,const physvector<2>& a) ;
+    friend inline physvector< 2> operator*(const physvector<2> &a,const double c) ;
 
      inline Key<2> ToKey(double h);
 #ifndef DOXYGEN

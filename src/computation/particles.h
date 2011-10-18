@@ -89,7 +89,7 @@ public:
      **/
     void Update(  Particles_List*  list);
 
-     bool operator==(const Particles parts) const;
+     bool operator==(const Particles& parts) const;
 
      void Dump(bool voisin=true);
 

@@ -33,7 +33,7 @@ Particles::Particles():m_type(none)
 void Particles::ComputeDensity()
 {
 
-    for (list<Particle>::iterator it=begin();it!=end();it++) {
+    for (list<Particle>::iterator it=begin();it!=end();++it) {
 
             (*it)->ComputeDensity();
     }
@@ -57,7 +57,7 @@ list<Particles*> Particles::GetNeighbour(){
 bool Particles::PreComputeMove(double dt)
 {
     bool ret=false;
-    for (list<Particle>::iterator it=begin();it!=end();it++) {
+    for (list<Particle>::iterator it=begin();it!=end();++it) {
         ret=(*it)->PreComputeMove( dt)|| ret;
     }
     return ret;
@@ -76,7 +76,7 @@ void Particles::Update( Particles_List*  plist)
 
 }
 
-bool Particles::operator==(const Particles parts) const
+bool Particles::operator==(const Particles& parts) const
 {
 return this==&parts;
 }
@@ -85,7 +85,7 @@ return this==&parts;
 void Particles::Dump(bool voisin)
 {
   cout<<"begin Particles"<<endl;
-for(Particles::iterator it=begin();it!=end();it++){
+for(Particles::iterator it=begin();it!=end();++it){
  (*it)->Dump();
 }
 if(voisin){
@@ -103,7 +103,7 @@ push_back(part);
 }
 
 void Particles::InitializeCG(){
-for(Particles::iterator it=begin();it!=end();it++){
+for(Particles::iterator it=begin();it!=end();++it){
     double b=(*it)->GetB();
     (*it)->SetP(0);
 (*it)->SetRprec(b);
@@ -113,12 +113,12 @@ for(Particles::iterator it=begin();it!=end();it++){
 }
 
   void Particles::CalculateAlphaPart(double &num,double &denom){
-for(Particles::iterator it=begin();it!=end();it++){
+for(Particles::iterator it=begin();it!=end();++it){
  num+=(*it)->MultRZprec();
  Particles voisin;
  (*it)->GetVoisin(voisin);
  double p=(*it)->GetP1();
- for(Particles::iterator it2=voisin.begin();it!=voisin.end();it++){
+ for(Particles::iterator it2=voisin.begin();it!=voisin.end();++it){
  denom+=CalculateA(*it,*it2,voisin)*p*(*it2)->GetP1();
  }
 }
@@ -127,12 +127,12 @@ for(Particles::iterator it=begin();it!=end();it++){
  void Particles::CalculateBetaPart(double &num,bool &b,double alpha){
 
 
-for(Particles::iterator it=begin();it!=end();it++){
+for(Particles::iterator it=begin();it!=end();++it){
 double p=(*it)->GetP1();
 (*it)->AddP(alpha*p);
  Particles voisin;
  (*it)->GetVoisin(voisin);
-for(Particles::iterator it2=voisin.begin();it!=voisin.end();it++){
+for(Particles::iterator it2=voisin.begin();it!=voisin.end();++it){
 (*it)->AddR(-alpha*CalculateA(*it,*it2,voisin)*(*it2)->GetP());
  }
  (*it)->SetZ((*it)->GetR());
@@ -142,7 +142,7 @@ for(Particles::iterator it2=voisin.begin();it!=voisin.end();it++){
  }
 
 void Particles::CalculateP1(double beta){
-for(Particles::iterator it=begin();it!=end();it++){
+for(Particles::iterator it=begin();it!=end();++it){
  double p1=(*it)->GetP1();
   double z=(*it)->GetZ();
   (*it)->SetP1(z+beta*p1);
@@ -153,12 +153,13 @@ for(Particles::iterator it=begin();it!=end();it++){
 double CalculateA(const Particle& A,const Particle& B,Particles & voisin){
 double ret=0;
 if(A->Equal(B)){
-for(Particles::iterator it=voisin.begin();it!=voisin.end();it++){
+for(Particles::iterator it=voisin.begin();it!=voisin.end();++it){
 ret+=CalculateABas(A,*it);
 }
 }else{
 ret=-CalculateABas(A,B);
 }
+return ret;
 }
 
 double CalculateABas(const Particle& A,const Particle& B){

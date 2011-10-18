@@ -22,7 +22,7 @@ void Particles_List::AddNeighbour(Key< 3 > k)
     list<Particles*> n;
 
     Particles* pa0=&m_list[k];
-    for (list<Key<DIM> >::iterator it=l.begin(); it!=l.end(); it++)
+    for (list<Key<DIM> >::iterator it=l.begin(); it!=l.end(); ++it)
     {
 
         if (m_list.count(*it)>0)

@@ -115,6 +115,7 @@ m_speed+=Force()*dt/2;
 m_pos+=m_speed*dt;
 ComputeDensity();
 double rap=(m_density0-m_density)/m_density0;
+m_b=rap/2/m_density;
 return abs(rap)>0.01;
 }
 return false;

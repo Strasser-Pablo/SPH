@@ -163,4 +163,19 @@ for(Particles::iterator it=begin();it!=end();++it){
 }
 }
 
+void Particles::SetB_Speed(){
+for(Particles::iterator it=begin();it!=end();++it){
+		 if(!(*it)->GetBoundary()){
+ (*it)->SetB_Speed();
+		 }
+}
+}
 
+
+void Particles::PreparePosition(bool& b){
+for(Particles::iterator it=begin();it!=end();++it){
+		 if(!(*it)->GetBoundary()){
+ (*it)->PreparePosition(b);
+		 }
+ }
+}

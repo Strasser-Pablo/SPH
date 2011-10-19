@@ -100,6 +100,9 @@ public:
  void Add(Particle part);
 
  inline void GetNeighbour(list<Particles *> & neigh);
+ 
+ void SetB_Speed();
+void PreparePosition(bool &b);
 };
 
 

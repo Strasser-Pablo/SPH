@@ -113,7 +113,7 @@ inline double MultRZ() const;
 inline double MultRZprec() const;
 
 inline void UpdateRZ() ;
-
+inline void PreparePosition(bool &b);
 inline bool OKR() const;
       /**
    * @brief Default Constructor

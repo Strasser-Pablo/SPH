@@ -74,6 +74,9 @@ double m_density0;
   bool m_fixed;
 public:
 //For conjugate gradiant
+inline double CalculateA(const Particle& B,Particles & voisin)const;
+
+inline double CalculateABas(const Particle& B)const;
 
 inline bool GetBoundary() const;
 

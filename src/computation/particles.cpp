@@ -13,8 +13,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include "debug.h"
 using namespace std;
 
- inline double CalculateA(const Particle& A,const Particle& B,Particles & voisin);
-   inline double CalculateABas(const Particle& A,const Particle& B);
+
 Particles::Particles(ParticleType type): list<Particle>(),m_type(type)
 {
 
@@ -119,7 +118,7 @@ for(Particles::iterator it=begin();it!=end();++it){
  (*it)->GetVoisin(voisin);
  double p=(*it)->GetP1();
  for(Particles::iterator it2=voisin.begin();it!=voisin.end();++it){
- denom+=CalculateA(*it,*it2,voisin)*p*(*it2)->GetP1();
+ denom+=(*it)->CalculateA(*it2,voisin)*p*(*it2)->GetP1();
  }
 }
 }
@@ -133,7 +132,7 @@ double p=(*it)->GetP1();
  Particles voisin;
  (*it)->GetVoisin(voisin);
 for(Particles::iterator it2=voisin.begin();it!=voisin.end();++it){
-(*it)->AddR(-alpha*CalculateA(*it,*it2,voisin)*(*it2)->GetP());
+(*it)->AddR(-alpha*(*it)->CalculateA(*it2,voisin)*(*it2)->GetP());
  }
  (*it)->SetZ((*it)->GetR());
  b=(*it)->OKR()&&b;
@@ -150,19 +149,4 @@ for(Particles::iterator it=begin();it!=end();++it){
 }
 }
 
-double CalculateA(const Particle& A,const Particle& B,Particles & voisin){
-double ret=0;
-if(A->Equal(B)){
-for(Particles::iterator it=voisin.begin();it!=voisin.end();++it){
-ret+=CalculateABas(A,*it);
-}
-}else{
-ret=-CalculateABas(A,B);
-}
-return ret;
-}
 
-double CalculateABas(const Particle& A,const Particle& B){
-physvector<DIM> r=A->GetPos()-B->GetPos();
-return (1/A->GetDensity()+1/B->GetDensity())*Kernel_grad_spline5(r,h)*r/r.Norm2()/(A->Distance(B)*(A->GetM()*A->GetDensity()+B->GetM()*B->GetDensity()));
-}

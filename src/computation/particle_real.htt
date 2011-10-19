@@ -287,3 +287,21 @@ voisin=m_voisin;
 bool ParticleReal::OKR() const{
 return m_r<0.001;
 }
+
+
+double ParticleReal::CalculateA(const Particle& B,Particles & voisin)const{
+double ret=0;
+if(Equal(B)){
+for(Particles::iterator it=voisin.begin();it!=voisin.end();++it){
+ret+=CalculateABas(*it);
+}
+}else{
+ret=-CalculateABas(B);
+}
+return ret;
+}
+
+double ParticleReal::CalculateABas(const Particle& B)const{
+physvector<DIM> r=GetPos()-B->GetPos();
+return (1/GetDensity()+1/B->GetDensity())*Kernel_grad_spline5(r,h)*r/r.Norm2()/(Distance(B)*(GetM()*GetDensity()+B->GetM()*B->GetDensity()));
+}

@@ -314,6 +314,9 @@ return ret;
 }
 
 double ParticleReal::CalculateABas(const Particle& B)const{
+	if(Equal(B)){
+	return 0;	
+	}
 physvector<DIM> r=GetPos()-B->GetPos();
 return (1/GetDensity()+1/B->GetDensity())*Kernel_grad_spline5(r,h)*r/r.Norm2()/(Distance(B)*(GetM()*GetDensity()+B->GetM()*B->GetDensity()));
 }

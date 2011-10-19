@@ -140,7 +140,7 @@ double p=(*it)->GetP1();
  Particles voisin;
  (*it)->GetVoisin(voisin);
  (*it)->SetR((*it)->GetRprec());
-for(Particles::iterator it2=voisin.begin();it!=voisin.end();++it){
+for(Particles::iterator it2=voisin.begin();it2!=voisin.end();++it2){
 	 if(!(*it2)->GetBoundary()){
 (*it)->AddR(-alpha*(*it)->CalculateA(*it2,voisin)*(*it2)->GetP1());
  }

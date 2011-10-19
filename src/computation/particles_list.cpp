@@ -61,11 +61,12 @@ void Particles_List::Prepare()
     }
 }
 
-double Particles_List::CalculateAlpha(double &num){
+double Particles_List::CalculateAlpha(double &num,bool &b){
     double denom;
 for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.CalculateAlphaPart(num,denom);
     }
+	b=num==0 && denom==0;
 return num/denom;
 }
 
@@ -88,10 +89,13 @@ for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it)
 void Particles_List::ConjugateGradiant(){
 InitializeCG();
 bool bcont=false;
-
+bool b;
 while(!bcont){
     double num=0;
-double alpha=CalculateAlpha(num);
+double alpha=CalculateAlpha(num,b);
+if(b){
+	break;
+}
 double beta=CalculateBeta(num,bcont,alpha);
 CalculateP1(beta);
 }

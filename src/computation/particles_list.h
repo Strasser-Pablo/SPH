@@ -21,7 +21,7 @@ class Particles_List{
 protected:
 public:
  void InitializeCG();
-double CalculateAlpha(double &num);
+double CalculateAlpha(double &num,bool &b);
 double CalculateBeta(double &denom,bool &b,double alpha);
 void CalculateP1(double bet);
 void ConjugateGradiant();

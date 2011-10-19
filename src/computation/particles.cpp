@@ -179,3 +179,11 @@ for(Particles::iterator it=begin();it!=end();++it){
 		 }
  }
 }
+
+void Particles::Calculate0Density(){
+	for(Particles::iterator it=begin();it!=end();++it){
+		 if(!(*it)->GetBoundary()){
+ (*it)->Calculate0Density();
+		 }
+ }
+}

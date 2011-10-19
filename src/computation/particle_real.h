@@ -76,6 +76,8 @@ public:
 //For conjugate gradiant
 inline double CalculateA(const Particle& B,Particles & voisin)const;
 
+inline void Calculate0Density();
+
 inline double CalculateABas(const Particle& B)const;
 
 inline bool GetBoundary() const;
@@ -126,7 +128,7 @@ inline bool OKR() const;
      * @param type Particle type
      * @param m Particle mass
      **/
-    inline ParticleReal(physvector<DIM> pos,ParticleType type,double r,double rho_0,bool fixed=false,bool boundary=false);
+    inline ParticleReal(physvector<DIM> pos,ParticleType type,double rho_0,bool fixed=false,bool boundary=false);
 
         /**
      * @brief Create a individual Particle with givent property
@@ -136,7 +138,7 @@ inline bool OKR() const;
      * @param type Particle type
      * @param m Particle mass
      **/
-      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double r,double rho_0,bool fixed=false,bool boundary=false);
+      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double rho_0,bool fixed=false,bool boundary=false);
     /**
      * @brief Calculate the Distance square of the Particle
      *

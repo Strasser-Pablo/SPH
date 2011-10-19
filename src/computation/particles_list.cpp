@@ -124,3 +124,8 @@ for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++)
     }
  }
 
+void Particles_List::Calculate0Density(){
+	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+        it->second.Calculate0Density();
+    }
+}

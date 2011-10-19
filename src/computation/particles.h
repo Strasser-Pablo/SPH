@@ -28,7 +28,7 @@ class Particles: public std::list<Particle>
     ParticleType m_type;
     list<Particles*> m_neighbour;
 public:
-
+	void Calculate0Density();
     void InitializeCG();
     void CalculateBetaPart(double &num,bool & b,double alpha);
     void CalculateAlphaPart(double &num,double &denom);

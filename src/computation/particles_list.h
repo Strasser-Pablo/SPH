@@ -20,6 +20,7 @@ class Particles_List{
   double m_t;
 protected:
 public:
+void Calculate0Density();
  void InitializeCG();
 double CalculateAlpha(double &num,bool &b);
 double CalculateBeta(double &denom,bool &b,double alpha);

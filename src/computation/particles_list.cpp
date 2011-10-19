@@ -90,7 +90,7 @@ InitializeCG();
 bool bcont=false;
 
 while(!bcont){
-    double num;
+    double num=0;
 double alpha=CalculateAlpha(num);
 double beta=CalculateBeta(num,bcont,alpha);
 CalculateP1(beta);

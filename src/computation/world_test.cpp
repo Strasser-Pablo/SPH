@@ -22,21 +22,12 @@ void World_test::Do()
 
 
 
-      for(int x=0;x<10;x++){
- for(int y=0;y<10;y++){
-
-Add(ParticleReal(physvector< 3  >(0,x+20,y),physvector< 3  >(0,0,0),water,0.5,1000));
- }
- }
-
-
-   for(int x=0;x<10;x++){
- for(int y=0;y<10;y++){
-
-Add(ParticleReal(physvector< 3  >(0,x,y),physvector< 3  >(0,10,0),water,0.5,10000));
- }
- }
-
+Add(ParticleReal(physvector< 3  >(0,0,0),physvector< 3  >(0,0,0),water,1000,false,true));
+ Add(ParticleReal(physvector< 3  >(h/3,0,0),physvector< 3  >(0,0,0),water,1000));
+ Add(ParticleReal(physvector< 3  >(2*h/3,0,0),physvector< 3  >(0,0,0),water,1000));
+ Add(ParticleReal(physvector< 3  >(h,0,0),physvector< 3  >(0,0,0),water,1000,false,true));
+ 
+m_list.Calculate0Density();
 
  for(int k=0;k<200;k++){
   cout<<"k "<<k<<endl;

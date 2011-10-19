@@ -31,6 +31,7 @@ class ParticleReal
     double m_r;
     ParticleType m_type;
 public:
+	inline void PreparePosition(bool &b);
     /**
     * @brief Default Constructor
     **/

@@ -238,6 +238,9 @@ m_p=val;
   void ParticleReal::AddR(double val){
 m_r+=val;
  }
+ void ParticleReal::AddRprec(double val){
+m_rprec+=val;
+ }
  void ParticleReal::AddP1(double val){
 m_p1+=val;
 }

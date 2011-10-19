@@ -102,6 +102,7 @@ inline double GetP() const;
 inline void SetP(double val);
 
 inline void AddR(double val);
+inline void AddRprec(double val);
 inline void AddP1(double val);
 inline void AddP(double val);
 

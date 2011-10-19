@@ -274,6 +274,8 @@ m_zprec=val;
  void ParticleReal::UpdateRZ(){
 m_rprec=m_r;
 m_zprec=m_z;
+m_r=0;
+m_z=0;
 }
 
 

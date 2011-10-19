@@ -103,23 +103,30 @@ push_back(part);
 
 void Particles::InitializeCG(){
 for(Particles::iterator it=begin();it!=end();++it){
+	if(!(*it)->GetBoundary()){
     double b=(*it)->GetB();
     (*it)->SetP(0);
+	(*it)->SetR(0);
 (*it)->SetRprec(b);
 (*it)->SetZprec(b);
 (*it)->SetP1(b);
 }
 }
+}
 
   void Particles::CalculateAlphaPart(double &num,double &denom){
 for(Particles::iterator it=begin();it!=end();++it){
+	if(!(*it)->GetBoundary()){
  num+=(*it)->MultRZprec();
  Particles voisin;
  (*it)->GetVoisin(voisin);
  double p=(*it)->GetP1();
- for(Particles::iterator it2=voisin.begin();it!=voisin.end();++it){
+ for(Particles::iterator it2=voisin.begin();it2!=voisin.end();++it2){
+	 if(!(*it)->GetBoundary()){
  denom+=(*it)->CalculateA(*it2,voisin)*p*(*it2)->GetP1();
+	 }
  }
+}
 }
 }
 
@@ -127,25 +134,32 @@ for(Particles::iterator it=begin();it!=end();++it){
 
 
 for(Particles::iterator it=begin();it!=end();++it){
+	if(!(*it)->GetBoundary()){
 double p=(*it)->GetP1();
 (*it)->AddP(alpha*p);
  Particles voisin;
  (*it)->GetVoisin(voisin);
+ (*it)->SetR((*it)->GetRprec());
 for(Particles::iterator it2=voisin.begin();it!=voisin.end();++it){
-(*it)->AddR(-alpha*(*it)->CalculateA(*it2,voisin)*(*it2)->GetP());
+	 if(!(*it2)->GetBoundary()){
+(*it)->AddR(-alpha*(*it)->CalculateA(*it2,voisin)*(*it2)->GetP1());
  }
+}
  (*it)->SetZ((*it)->GetR());
  b=(*it)->OKR()&&b;
  num+=(*it)->MultRZ();
  }
+}
  }
 
 void Particles::CalculateP1(double beta){
 for(Particles::iterator it=begin();it!=end();++it){
+	if(!(*it)->GetBoundary()){
  double p1=(*it)->GetP1();
   double z=(*it)->GetZ();
   (*it)->SetP1(z+beta*p1);
   (*it)->UpdateRZ();
+}
 }
 }
 

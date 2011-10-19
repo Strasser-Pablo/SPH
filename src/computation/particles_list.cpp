@@ -9,6 +9,9 @@ void Particles_List::Compute()
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         ret=it->second.PreComputeMove(DT)||ret;
     }
+	if(ret){
+	CorrectDensity();	
+	}
     m_t+=DT;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.Update(this);
@@ -93,3 +96,27 @@ double beta=CalculateBeta(num,bcont,alpha);
 CalculateP1(beta);
 }
 }
+
+void Particles_List::CorrectDensity(){
+bool bcont=true;
+while(bcont){
+    bcont=false;
+ConjugateGradiant();
+SetB_Speed();
+ConjugateGradiant();
+PreparePosition(bcont);
+ }
+}
+
+void Particles_List::SetB_Speed(){
+for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+        it->second.SetB_Speed();
+    }
+}
+
+void Particles_List::PreparePosition(bool &b){
+for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+        it->second.PreparePosition(b);
+    }
+ }
+

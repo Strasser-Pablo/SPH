@@ -61,6 +61,11 @@ void ConjugateGradiant();
 
       template<class Archive>
    inline  void write(Archive & ar) const;
+   
+   private:
+ void  CorrectDensity();
+ void SetB_Speed();
+ void PreparePosition(bool &b);
 };
 
 

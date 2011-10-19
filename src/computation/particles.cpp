@@ -122,7 +122,7 @@ for(Particles::iterator it=begin();it!=end();++it){
  (*it)->GetVoisin(voisin);
  double p=(*it)->GetP1();
  for(Particles::iterator it2=voisin.begin();it2!=voisin.end();++it2){
-	 if(!(*it)->GetBoundary()){
+	 if(!(*it2)->GetBoundary()){
  denom+=(*it)->CalculateA(*it2,voisin)*p*(*it2)->GetP1();
 	 }
  }

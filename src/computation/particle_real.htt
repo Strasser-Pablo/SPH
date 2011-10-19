@@ -297,7 +297,7 @@ voisin=m_voisin;
 }
 
 bool ParticleReal::OKR() const{
-return m_r<0.001;
+return abs(m_r)<0.001;
 }
 
 

@@ -87,9 +87,9 @@ for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it)
 
 void Particles_List::ConjugateGradiant(){
 InitializeCG();
-bool bcont=true;
+bool bcont=false;
 
-while(bcont){
+while(!bcont){
     double num;
 double alpha=CalculateAlpha(num);
 double beta=CalculateBeta(num,bcont,alpha);

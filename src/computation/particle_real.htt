@@ -308,3 +308,32 @@ double ParticleReal::CalculateABas(const Particle& B)const{
 physvector<DIM> r=GetPos()-B->GetPos();
 return (1/GetDensity()+1/B->GetDensity())*Kernel_grad_spline5(r,h)*r/r.Norm2()/(Distance(B)*(GetM()*GetDensity()+B->GetM()*B->GetDensity()));
 }
+
+void ParticleReal::SetB_Speed() {
+	physvector<DIM> temp;
+	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); ++it) {
+		if(!Equal(*it)) {
+			if(!GetBoundary()) {
+				physvector<DIM> r=GetPos()-(*it)->GetPos();
+				temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
+			}
+		}
+	}
+	m_pos+=temp;
+	double ret=0;
+	double eta=Mat_Const(m_type).eta;
+	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); ++it) {
+		if(!Equal(*it)) {
+			if(!GetBoundary()) {
+				double eta2=Mat_Const((*it)->m_type).eta;
+				physvector<DIM> r=GetPos()-(*it)->GetPos();
+				double v=(GetSpeed()*eta+(*it)->GetSpeed()*eta2)/(eta+eta2)*r/r.Norm()/2;
+				ret+=(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(r,h)*r/r.Norm2()*v;
+			}
+		}
+	}
+	m_b=ret;
+
+	m_p=0;
+}
+

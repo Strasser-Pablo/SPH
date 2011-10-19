@@ -106,6 +106,8 @@ inline void AddRprec(double val);
 inline void AddP1(double val);
 inline void AddP(double val);
 
+inline void SetB_Speed();
+
 inline double MultRZ() const;
 
 inline double MultRZprec() const;

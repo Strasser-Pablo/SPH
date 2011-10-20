@@ -113,19 +113,19 @@ PreparePosition(bcont);
 }
 
 void Particles_List::SetB_Speed(){
-for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.SetB_Speed();
     }
 }
 
 void Particles_List::PreparePosition(bool &b){
-for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.PreparePosition(b);
     }
  }
 
 void Particles_List::Calculate0Density(){
-	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.Calculate0Density();
     }
 }

@@ -325,7 +325,7 @@ void ParticleReal::SetB_Speed() {
 		if(!Equal(*it)) {
 			if(!GetBoundary()) {
 				physvector<DIM> r=GetPos()-(*it)->GetPos();
-				temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
+				temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
 			}
 		}
 	}
@@ -352,7 +352,7 @@ void ParticleReal::PreparePosition(bool &b) {
 	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); it++) {
 		if(!(*it)->GetBoundary()) {
 			physvector<DIM> r=GetPos()-(*it)->GetPos();
-			temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(GetM()*GetDensity()*((*it)->GetP()+2)+(*it)->GetM()*(*it)->GetDensity()*(GetP()+2))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
+			temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP()+2)+(*it)->GetM()*(*it)->GetDensity()*(GetP()+2))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
 		}
 	}
 	ComputeDensity();

@@ -21,12 +21,23 @@ void World_test::Do()
 
 
 
-
-Add(ParticleReal(physvector< 3  >(0,0,0),physvector< 3  >(0,0,0),water,1000,false,true));
- Add(ParticleReal(physvector< 3  >(h/3,0,0),physvector< 3  >(0,0,0),water,1000));
- Add(ParticleReal(physvector< 3  >(2*h/3,0,0),physvector< 3  >(0,0,0),water,1000));
- Add(ParticleReal(physvector< 3  >(h,0,0),physvector< 3  >(0,0,0),water,1000,false,true));
- 
+int Nx=10;
+int Ny=10;
+for(int i=0;i<Nx+1;i++){
+	Add(ParticleReal(physvector< 3  >(i*h/3,0,0),physvector< 3  >(0,0,0),water,1000,false,true));
+}
+  
+for(int j=1;j<Ny;j++){
+	Add(ParticleReal(physvector< 3  >(0,j*h/3,0),physvector< 3  >(0,0,0),water,1000,false,true));
+	for(int i=1;i<Nx;i++){
+	Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3,0),physvector< 3  >(0,0,0),water,1000));
+	}
+	Add(ParticleReal(physvector< 3  >(h/3*Nx,j*h/3,0),physvector< 3  >(0,0,0),water,1000,false,true));
+	}
+	
+	for(int i=0;i<Nx+1;i++){
+	Add(ParticleReal(physvector< 3  >(i*h/3,Ny*h/3,0),physvector< 3  >(0,0,0),water,1000,false,true));
+}
 m_list.Calculate0Density();
 
  for(int k=0;k<200;k++){

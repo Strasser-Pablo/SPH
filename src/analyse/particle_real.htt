@@ -94,7 +94,7 @@ ar &BOOST_SERIALIZATION_NVP(m_type);
 ar &BOOST_SERIALIZATION_NVP(m_m);
 m_rho=m_density*m_m;
 //m_r=pow(3/(4*M_PI*m_density),1./3);
-m_r=0.1;
+m_r=0.01;
 cout<<"rho "<<m_rho<<" m "<< m_m<<" m_r "<<m_r<<" m_p "<<m_p<<endl;
 }
 
@@ -106,18 +106,3 @@ return m_r;
 }
 
 
-void ParticleReal::PreparePosition(bool &b) {
-	physvector<DIM> temp;
-	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); it++) {
-		if(!(*it)->GetBoundary()) {
-			physvector<DIM> r=GetPos()-(*it)->GetPos();
-			temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(GetM()*GetDensity()*((*it)->GetP()+2)+(*it)->GetM()*(*it)->GetDensity()*(GetP()+2))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
-		}
-	}
-	ComputeDensity();
-	m_speed+=temp;
-	double rap=(m_density0-m_density)/m_density0;
-	b=b||abs(rap)>0.01;
-	m_b=rap/2/m_density;
-	m_p=0;
-}

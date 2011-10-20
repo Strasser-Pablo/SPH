@@ -118,7 +118,7 @@ if(GetBoundary()){
 return false;	
 }
 
-return abs(rap)>0.01;
+return abs(rap)>0.0001;
   }
 
 return false;
@@ -295,7 +295,7 @@ voisin=m_voisin;
 }
 
 bool ParticleReal::OKR() const{
-return abs(m_r)<0.001;
+return abs(m_r)<0.000001;
 }
 
 
@@ -316,17 +316,20 @@ double ParticleReal::CalculateABas(const Particle& B)const{
 	return 0;	
 	}
 physvector<DIM> r=GetPos()-B->GetPos();
-return (1/GetDensity()+1/B->GetDensity())*Kernel_grad_spline5(r,h)*r/r.Norm2()/(Distance(B)*(GetM()*GetDensity()+B->GetM()*B->GetDensity()));
+double ret=(1/GetDensity()+1/B->GetDensity())*Kernel_grad_spline5(r,h)*r/r.Norm2()/(Distance(B)*(GetM()*GetDensity()+B->GetM()*B->GetDensity()));
+if(isnan(ret)){
+	cout<<"PPPPPPPPPPPPRRRRRROB NAN"<<endl;
+	ret=0;
+}
+return ret;
 }
 
 void ParticleReal::SetB_Speed() {
 	physvector<DIM> temp;
 	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); ++it) {
 		if(!Equal(*it)) {
-			if(!GetBoundary()) {
 				physvector<DIM> r=GetPos()-(*it)->GetPos();
 				temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
-			}
 		}
 	}
 	m_pos+=temp;
@@ -350,17 +353,19 @@ void ParticleReal::SetB_Speed() {
 void ParticleReal::PreparePosition(bool &b) {
 	physvector<DIM> temp;
 	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); it++) {
-		if(!(*it)->GetBoundary()) {
 			physvector<DIM> r=GetPos()-(*it)->GetPos();
-			temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP()+2)+(*it)->GetM()*(*it)->GetDensity()*(GetP()+2))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
+			temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
 		}
-	}
+	
 	ComputeDensity();
 	m_speed+=temp;
 	double rap=(m_density0-m_density)/m_density0;
-	b=b||abs(rap)>0.01;
+	b=b||abs(rap)>0.0001;
 	m_b=rap/2/m_density;
 	m_p=0;
+	if(GetBoundary()){
+		b=false;
+	}
 }
 
 void ParticleReal::Calculate0Density(){

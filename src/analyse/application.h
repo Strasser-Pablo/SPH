@@ -15,6 +15,7 @@ double m_cam_z;
 double m_vert_x;
 double m_vert_y;
 double m_vert_z;
+bool m_pause;
 public:
   Application();
   int Run();

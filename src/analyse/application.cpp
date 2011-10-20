@@ -4,7 +4,7 @@
 #include <GL/glu.h>
 const int N=1;
 const int EVENT_FRAME_TIMER=1;
-Application::Application():m_status(0),m_cont(true),m_look_x(0),m_look_y(0),m_look_z(0),m_cam_x(5),m_cam_y(0),m_cam_z(0),m_vert_x(0),m_vert_y(1),m_vert_z(0)
+Application::Application():m_status(0),m_cont(true),m_look_x(0),m_look_y(0),m_look_z(0),m_cam_x(5),m_cam_y(0),m_cam_z(0),m_vert_x(0),m_vert_y(1),m_vert_z(0),m_pause(true)
 {
     SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER);
     atexit(SDL_Quit);
@@ -21,7 +21,7 @@ int Application::Run()
 {
 
     SDL_Event event;
-    //SDL_AddTimer(500, TimerFrames, this);
+    SDL_AddTimer(100, TimerFrames, this);
     Draw();
 
     while (SDL_WaitEvent(&event))
@@ -39,7 +39,7 @@ int Application::Run()
             switch (event.key.keysym.sym)
             {
             case SDLK_SPACE:
-                Next();
+                m_pause=!m_pause;
                 break;
             case SDLK_UP:
 	      m_look_y+=0.5;
@@ -146,7 +146,9 @@ void Application::HandleUserEvent(SDL_Event& event)
 {
     switch (event.user.code) {
     case EVENT_FRAME_TIMER:
+	if(!m_pause){
         Next();
+	}
         break;
     }
 }

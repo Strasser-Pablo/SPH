@@ -106,8 +106,6 @@ public:
  
  void SetB_Speed();
 void PreparePosition(bool &b);
-
-void FindBoundary();
 };
 
 

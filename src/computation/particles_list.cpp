@@ -148,6 +148,6 @@ void Particles_List::FindBoundary(){
 			break;
 			}
 		}
-	}
+	};
 }
 }

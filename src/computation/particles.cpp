@@ -194,3 +194,4 @@ bool Particles::GetBoundary()const{
 	void Particles::SetBoundary(bool b){
 		m_boundary=b;
 	}
+

@@ -21,9 +21,9 @@ void World_test::Do()
 
 
 
-int Nx=10;
-int Ny=10;
-int Nz=10;
+int Nx=15;
+int Ny=15;
+int Nz=15;
 for(int i=0;i<Nx;i++){
 	for(int j=0;j<Ny;j++){
 		for(int k=0;k<Nz;k++){

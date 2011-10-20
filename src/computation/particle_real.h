@@ -32,7 +32,6 @@ class ParticleReal
     double m_p1;
     double m_px;
     double m_pv;
-	bool m_boundary;
     double m_p;
     double m_b;
 
@@ -82,6 +81,7 @@ inline double CalculateABas(const Particle& B)const;
 
 inline bool GetBoundary() const;
 
+
 inline double GetB() const;
 inline void SetB(double val);
 
@@ -128,7 +128,7 @@ inline bool OKR() const;
      * @param type Particle type
      * @param m Particle mass
      **/
-    inline ParticleReal(physvector<DIM> pos,ParticleType type,double rho_0,bool fixed=false,bool boundary=false);
+    inline ParticleReal(physvector<DIM> pos,ParticleType type,double rho_0,bool fixed=false);
 
         /**
      * @brief Create a individual Particle with givent property
@@ -138,7 +138,7 @@ inline bool OKR() const;
      * @param type Particle type
      * @param m Particle mass
      **/
-      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double rho_0,bool fixed=false,bool boundary=false);
+      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double rho_0,bool fixed=false);
     /**
      * @brief Calculate the Distance square of the Particle
      *

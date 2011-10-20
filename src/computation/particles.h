@@ -26,9 +26,12 @@ using namespace std;
 class Particles: public std::list<Particle>
 {
     ParticleType m_type;
+	bool m_boundary;
     list<Particles*> m_neighbour;
 public:
 	void Calculate0Density();
+	bool GetBoundary() const;
+	void SetBoundary(bool b);
     void InitializeCG();
     void CalculateBetaPart(double &num,bool & b,double alpha);
     void CalculateAlphaPart(double &num,double &denom);
@@ -103,6 +106,8 @@ public:
  
  void SetB_Speed();
 void PreparePosition(bool &b);
+
+void FindBoundary();
 };
 
 

@@ -41,7 +41,7 @@ public:
    *
    * @return :list< Key< 2 > > List of key
    **/
-  inline list<Key<2> > GetNeighbour();
+  inline list<Key<2> > GetNeighbour() const;
 
  /**
    * @brief < operator for key. Test the inegality from x to y. If the first component is the same, test the next.
@@ -79,7 +79,7 @@ class Key<3>{
      *
      * @return :list< Key< 3 > > List of Key
      **/
-inline list<Key<3> > GetNeighbour();
+inline list<Key<3> > GetNeighbour() const;
   /**
    * @brief < operator for key. Test the inegality from x to z. If the first component is the same, test the next.
    **/

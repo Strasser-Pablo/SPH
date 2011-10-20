@@ -10,7 +10,7 @@ Key<2>::Key(int x, int y):m_x(x),m_y(y)
 
 }
 
-list<Key<2> > Key<2>::GetNeighbour()
+list<Key<2> > Key<2>::GetNeighbour() const
 {
 list<Key<2> > list;
 
@@ -27,7 +27,7 @@ Key< 3  >::Key(int x, int y, int z):m_x(x),m_y(y),m_z(z)
 
 }
 
-list< Key< 3 > > Key< 3  >::GetNeighbour()
+list< Key< 3 > > Key< 3  >::GetNeighbour() const
 {
 list<Key<3> > list;
 

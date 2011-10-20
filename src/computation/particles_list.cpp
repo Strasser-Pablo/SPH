@@ -129,3 +129,25 @@ void Particles_List::Calculate0Density(){
         it->second.Calculate0Density();
     }
 }
+
+void Particles_List::FindBoundary(){
+	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+        if(it->second.empty()){
+			list<Key<DIM> > l=it->first.GetNeighbour();
+			for(list<Key<DIM> >::iterator it2=l.begin();it2!=l.end();++it2){
+			if(m_list.count(*it2)>0){
+			m_list[*it2].SetBoundary(true);	
+			}
+		}
+    }
+	else{
+		list<Key<DIM> > l=it->first.GetNeighbour();
+		for(list<Key<DIM> >::iterator it2=l.begin();it2!=l.end();++it2){
+			if(m_list.count(*it2)==0){
+			m_list[it->first].SetBoundary(true);	
+			break;
+			}
+		}
+	}
+}
+}

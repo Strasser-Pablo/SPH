@@ -338,7 +338,7 @@ void ParticleReal::SetB_Speed() {
 				double eta2=Mat_Const((*it)->m_type).eta;
 				physvector<DIM> r=GetPos()-(*it)->GetPos();
 				double v=(GetSpeed()*eta+(*it)->GetSpeed()*eta2)/(eta+eta2)*r/r.Norm()/2;
-				ret+=(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(r,h)*r/r.Norm2()*v;
+				ret+=(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(r,h)*r/r.Norm()*v;
 			}
 		}
 	}

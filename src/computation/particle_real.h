@@ -74,7 +74,7 @@ double m_density0;
   bool m_fixed;
 public:
 //For conjugate gradiant
-inline double CalculateA(const Particle& B,Particles & voisin)const;
+inline double CalculateA(const Particle& B,const Particles & voisin)const;
 
 inline void Calculate0Density();
 
@@ -255,7 +255,7 @@ inline bool OKR() const;
 
 
   void SetContainerParticles(Particles * container);
-inline void GetVoisin( Particles & voisin) const;
+inline void GetVoisin(const Particles * & voisin) const;
 private:
 
  void UpdateVoisin();

@@ -290,8 +290,8 @@ return m_b;
 m_b=val;
 }
 
-void ParticleReal::GetVoisin( Particles & voisin) const {
-voisin=m_voisin;
+void ParticleReal::GetVoisin(const Particles *& voisin) const {
+voisin=&m_voisin;
 }
 
 bool ParticleReal::OKR() const{
@@ -299,10 +299,10 @@ return abs(m_r)<0.000001;
 }
 
 
-double ParticleReal::CalculateA(const Particle& B,Particles & voisin)const{
+double ParticleReal::CalculateA(const Particle& B,const Particles & voisin)const{
 double ret=0;
 if(Equal(B)){
-for(Particles::iterator it=voisin.begin();it!=voisin.end();++it){
+for(Particles::const_iterator it=voisin.begin();it!=voisin.end();++it){
 ret+=CalculateABas(*it);
 }
 }else{

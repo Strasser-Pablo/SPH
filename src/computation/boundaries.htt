@@ -2,7 +2,19 @@
 
 Boundaries<2>::Boundaries(const Key<2> & k1, const list<Key<2 > > & key_list):m_all(false)
 {
-	for(list<Key<2> >::const_iterator it=key_list.begin(); it!=key_list.end(); ++it)
+AddBoundaries(k1,key_list);
+}
+
+
+Boundaries<3>::Boundaries(const Key<3> & k1, const list<Key<3 > > & key_list):m_all(false)
+{
+	AddBoundaries(k1,key_list);
+}
+
+void Boundaries<2>::AddBoundaries(const Key<2> & k1, const list<Key<2 > > & key_list)
+{
+	clear();
+for(list<Key<2> >::const_iterator it=key_list.begin(); it!=key_list.end(); ++it)
 		{
 			int x=it->GetX()- k1.GetX();
 			int y=it->GetY()- k1.GetY();
@@ -14,11 +26,12 @@ Boundaries<2>::Boundaries(const Key<2> & k1, const list<Key<2 > > & key_list):m_
 						}
 				}
 		}
-	Update();
+	Update();	
 }
 
-Boundaries<3>::Boundaries(const Key<3> & k1, const list<Key<3 > > & key_list):m_all(false)
+void Boundaries<3>::AddBoundaries(const Key<3> & k1, const list<Key<3 > > & key_list)
 {
+	clear();
 	for(list<Key<3> >::const_iterator it=key_list.begin(); it!=key_list.end(); ++it)
 		{
 			int x=it->GetX()- k1.GetX();
@@ -105,17 +118,31 @@ void Boundaries<3>::AddBoundary(const Key<3>& k1,const Key<3>& k2)
 
 void Boundaries<3>::RemoveBoundary(const Key<3>& k1,const Key<3>& k2)
 {
+	Update();
+	if(m_all){
+	list<Key<3> > l=k1.GetNeighbour();
+		AddBoundaries(k1,l);
+		m_all=false;
+	}
 	int x=k2.GetX()-k1.GetX();
 	int y=k2.GetY()-k1.GetY();
 	int z=k2.GetZ()-k1.GetZ();
 	Boundary<3> B(x,y,z);
 	remove(begin(),end(),B);
+	Update();
 }
 
 void Boundaries<2>::RemoveBoundary(const Key<2>& k1,const Key<2>& k2)
 {
+	Update();
+	if(m_all){
+	list<Key<2> > l=k1.GetNeighbour();
+		AddBoundaries(k1,l);
+		m_all=false;
+	}
 	int x=k2.GetX()-k1.GetX();
 	int y=k2.GetY()-k1.GetY();
 	Boundary<2> B(x,y);
 	remove(begin(),end(),B);
+	Update();
 }

@@ -45,7 +45,7 @@ void Particles_List::AddNeighbour(Key< 3 > k)
             }
         }
     }
-
+	m_list[k].SetKey(k);
     m_list[k].SetNeighbour(n);
 	Boundaries<DIM> B(k,l);
 	m_list[k].SetBoundary(B);

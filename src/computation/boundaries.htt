@@ -148,13 +148,17 @@ void Boundaries<2>::RemoveBoundary(const Key<2>& k1,const Key<2>& k2)
 }
 
 void Boundaries<2>::Dump()const{
+	cout<<"["<<endl;
 	for(Boundaries<2>::const_iterator it=begin();it!=end();++it){
 		it->Dump();
 	}
+cout<<"["<<endl;
 }
 
 void Boundaries<3>::Dump()const{
+	cout<<"["<<endl;
 	for(Boundaries<3>::const_iterator it=begin();it!=end();++it){
 		it->Dump();
 	}
+	cout<<"]"<<endl;
 }

@@ -1,5 +1,7 @@
 #ifndef BOUNDARY_H
 #define BOUNDARY_H
+#include <iostream>
+using namespace std;
 template<int n=DIM>
 class Boundary{
   Boundary(){};
@@ -12,6 +14,7 @@ class Boundary<2>{
 public:
 inline	Boundary(int x,int y);
 inline bool operator==(const Boundary &B) const;
+inline void Dump()const;
 };
 
 template<>
@@ -22,6 +25,7 @@ class Boundary<3>{
 public:
 inline	Boundary(int x,int y,int z);
 inline bool operator==(const Boundary &B) const;
+inline void Dump()const;
 };
 
 #include "boundary.htt"

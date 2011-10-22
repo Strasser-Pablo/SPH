@@ -5,6 +5,10 @@
 * @brief Contain implementation for inline a template for class Key
 */
 
+Key<2>::Key(){
+	
+}
+
 Key<2>::Key(int x, int y):m_x(x),m_y(y)
 {
 
@@ -114,4 +118,7 @@ int Key<3>::GetY() const{
 
 int Key<3>::GetZ() const{
 	return m_z;
+}
+
+Key<3>::Key(){
 }

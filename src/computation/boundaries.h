@@ -19,10 +19,11 @@ class Boundaries<2> :public vector<Boundary<2> >
 public:
 	inline Boundaries(const Key<2>& k1,const list<Key<2> >& key_list);
 	inline Boundaries();
-	
+	inline bool HasBoundary();
+inline void AddBoundary(Key<2> &k1,Key<2> &k2);
 private:
-inline Update();
-inline bool HasBoundary();
+inline void Update();
+
 };
 
 template<>
@@ -32,9 +33,11 @@ class Boundaries<3> :public vector<Boundary<3> >
 public:
 	inline Boundaries(const Key<3> & k1,const list<Key<3> >& key_list);
 	inline Boundaries();
+	inline bool HasBoundary();
+inline void AddBoundary(Key<3> &k1,Key<3> &k2);
 private:
-inline Update();
-inline bool HasBoundary();
+inline void Update();
+
 };
 #include "boundaries.htt"
 #endif // BOUNDARIES_H

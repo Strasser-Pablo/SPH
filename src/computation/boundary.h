@@ -11,6 +11,7 @@ class Boundary<2>{
 	int m_y;
 public:
 inline	Boundary(int x,int y);
+inline bool operator==(const Boundary &B) const;
 };
 
 template<>
@@ -20,6 +21,7 @@ class Boundary<3>{
 	int m_z;
 public:
 inline	Boundary(int x,int y,int z);
+inline bool operator==(const Boundary &B) const;
 };
 
 #include "boundary.htt"

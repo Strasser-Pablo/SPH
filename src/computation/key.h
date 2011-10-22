@@ -29,6 +29,7 @@ class Key<2>{
   int m_x;
   int m_y;
 public:
+inline Key();
   /**
    * @brief Construct a 2d Key
    *
@@ -67,7 +68,8 @@ class Key<3>{
   int m_x;
   int m_y;
   int m_z;
-  public:
+public:
+  inline Key();
     /**
      * @brief Construct a 3d Key
      *

@@ -30,7 +30,10 @@ class Particles: public std::list<Particle>
     ParticleType m_type;
 	Boundaries<DIM> m_boundary;
     list<Particles*> m_neighbour;
+	Key<DIM> m_key;
 public:
+	void SetKey(Key<DIM> & k);
+    Key<DIM> GetKey()const;
 	void Calculate0Density();
 	Boundaries<DIM> GetBoundary() const;
 	void SetBoundary(Boundaries<DIM> & b);
@@ -56,7 +59,7 @@ public:
     *
     **/
     Particles();
-
+	Particles(Key<DIM> &k);
     /**
      * @brief Compute the pressure and density for all Particle in this container
      *

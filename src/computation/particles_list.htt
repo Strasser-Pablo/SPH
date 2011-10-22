@@ -32,16 +32,23 @@ void Particles_List::AddNeighbour(Key< 3 > k)
             Particles*   pa=&m_list[*it];
             n.push_front(pa);
             list<Particles*>   templist=pa->GetNeighbour();
+			Boundaries<DIM> B=pa->GetBoundary();
             //verify if element is in list if it's not add it
             if ( find(templist.begin(),templist.end(),pa0)==templist.end())
             {
                 templist.push_front(pa0);
                 pa->SetNeighbour(templist);
+				Key<DIM> k1=pa->GetKey();
+				Key<DIM> k2=pa0->GetKey();
+				B.AddBoundary(k1,k2);
+				pa->SetBoundary(B);
             }
         }
     }
 
     m_list[k].SetNeighbour(n);
+	Boundaries<DIM> B(k,l);
+	m_list[k].SetBoundary(B);
 }
 
 

@@ -19,6 +19,11 @@ Particles::Particles(ParticleType type): list<Particle>(),m_type(type)
 
 }
 
+Particles::Particles(Key<DIM> & K):m_key(K)
+{
+
+}
+
 Particles::Particles(const Particles& A):m_type(A.m_type),list<Particle>(A){
 
 }
@@ -195,3 +200,10 @@ Boundaries<DIM> Particles::GetBoundary()const{
 		m_boundary=b;
 	}
 
+
+void Particles::SetKey(Key<DIM> & k){
+	m_key=k;
+}
+Key<DIM> Particles::GetKey()const{
+	return m_key;
+}

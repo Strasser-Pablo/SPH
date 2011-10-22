@@ -11,6 +11,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include "particle.h"
 #include "particles_list.h"
 #include "debug.h"
+#include <algorithm>
 using namespace std;
 
 
@@ -53,7 +54,7 @@ void Particles::SetNeighbour(list< Particles *> list )
     m_neighbour=list;
 }
 
-list<Particles*> Particles::GetNeighbour(){
+list<Particles*> Particles::GetNeighbour()const{
   return m_neighbour;
 }
 
@@ -78,7 +79,7 @@ void Particles::Update( Particles_List*  plist)
       plist->Update(it2,this);
 	}
  if(empty()){
-	 plist->RemoveParticles();
+	 plist->RemoveParticles(this);
  }
 }
 
@@ -211,9 +212,13 @@ Key<DIM> Particles::GetKey()const{
 }
 
 
-void RemoveParticlesNeighbour(const Particles *& part){
-	remove(m_neighbour.begin(),m_neighbour.end(),part);
+void Particles::RemoveParticlesNeighbour(const Particles * part){
+	for(list<Particles*>::iterator it=m_neighbour.begin();it!=m_neighbour.end();it++)
+	{if(*it==part){
+		m_neighbour.erase(it);
+	}
+	}
 	Key<DIM> k1=part->GetKey();
 	Key<DIM> k2=GetKey();
-	m_boudary.RemoveBoundary(k2,k1);
+	m_boundary.RemoveBoundary(k2,k1);
 }

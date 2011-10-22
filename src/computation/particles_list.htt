@@ -66,12 +66,13 @@ void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
     }
 }
 
-void Particle_List::RemoveParticles(const Particles &part){
- list<Particles*> & l=part.GetNeighbour();
-for(list<Particles*>::iterator it=l.begin(),it!=l.end(),it++){
-	(*it)->RemoveParticlesNeighbour(&part);
+void Particles_List::RemoveParticles(const Particles* part){
+ list<Particles*> l;
+ part->GetNeighbour(l);
+for(list<Particles*>::iterator it=l.begin();it!=l.end();it++){
+	(*it)->RemoveParticlesNeighbour(part);
 }
-m_list.erase(part.GetKey());
+m_list.erase(part->GetKey());
 }
 
 template<class Archive>

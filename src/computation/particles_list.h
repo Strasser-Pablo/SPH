@@ -57,7 +57,7 @@ void ConjugateGradiant();
   inline  void AddNeighbour(Key<DIM> k);
   inline void Update(list<Particle>::iterator & it,Particles * part);
   void Dump();
-  inline void RemoveParticles(const Particles & Parts);
+  inline void RemoveParticles(const Particles * Parts);
 
 
       template<class Archive>

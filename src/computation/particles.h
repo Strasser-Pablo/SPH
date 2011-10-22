@@ -32,7 +32,7 @@ class Particles: public std::list<Particle>
     list<Particles*> m_neighbour;
 	Key<DIM> m_key;
 public:
-	RemoveParticlesNeighbour(const Particles *& part);
+	void RemoveParticlesNeighbour(const Particles * part);
 	void SetKey(Key<DIM> & k);
     Key<DIM> GetKey()const;
 	void Calculate0Density();
@@ -88,7 +88,7 @@ public:
      **/
     void SetNeighbour(list<Particles*> list);
 
-    list<Particles*> GetNeighbour();
+    list<Particles*> GetNeighbour()const;
 
     /**
      * @brief Update in wish container is the particle for every particle in container
@@ -108,7 +108,7 @@ public:
 
  void Add(Particle part);
 
- inline void GetNeighbour(list<Particles *> & neigh);
+ inline void GetNeighbour(list<Particles *> & neigh)const;
  
  void SetB_Speed();
 void PreparePosition(bool &b);
@@ -131,7 +131,7 @@ for(Particles::const_iterator it=begin();it!=end();it++){
 }
 }
 
-  void Particles::GetNeighbour( list<Particles *> &  neigh){
+  void Particles::GetNeighbour( list<Particles *> &  neigh)const{
   neigh=m_neighbour;
   }
 

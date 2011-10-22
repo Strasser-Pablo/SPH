@@ -95,5 +95,13 @@ void Particles_List::write(Archive& ar) const
     #endif //DOXYGEN
 }
 
-
+   void Particles_List::DumpBoundary()const {
+	    for(map< Key<DIM>, Particles >::const_iterator it=m_list.begin(); it!=m_list.end(); it++)
+    {
+		cout<<"Key"<<endl;
+        it->second.GetKey().Dump();
+		cout<<"Boundary"<<endl;
+		it->second.GetBoundary().Dump();
+    }
+   }
 

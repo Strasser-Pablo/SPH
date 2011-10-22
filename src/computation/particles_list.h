@@ -58,7 +58,7 @@ void ConjugateGradiant();
   inline void Update(list<Particle>::iterator & it,Particles * part);
   void Dump();
   inline void RemoveParticles(const Particles * Parts);
-
+  inline void DumpBoundary()const ;
 
       template<class Archive>
    inline  void write(Archive & ar) const;

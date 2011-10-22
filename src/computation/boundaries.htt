@@ -59,3 +59,13 @@ void Boundaries<3>::Update()
 			clear();
 		}
 }
+
+void Boundaries<2>::HasBoundary()
+{
+	return m_all;
+}
+
+void Boundaries<3>::HasBoundary()
+{
+	return m_all;
+}

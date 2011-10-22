@@ -22,6 +22,7 @@ public:
 	
 private:
 inline Update();
+inline bool HasBoundary();
 };
 
 template<>
@@ -33,6 +34,7 @@ public:
 	inline Boundaries();
 private:
 inline Update();
+inline bool HasBoundary();
 };
 #include "boundaries.htt"
 #endif // BOUNDARIES_H

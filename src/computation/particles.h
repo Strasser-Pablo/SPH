@@ -32,6 +32,7 @@ class Particles: public std::list<Particle>
     list<Particles*> m_neighbour;
 	Key<DIM> m_key;
 public:
+	RemoveParticlesNeighbour(const Particles *& part);
 	void SetKey(Key<DIM> & k);
     Key<DIM> GetKey()const;
 	void Calculate0Density();

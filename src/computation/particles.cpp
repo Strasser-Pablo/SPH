@@ -77,7 +77,9 @@ void Particles::Update( Particles_List*  plist)
       it++;
       plist->Update(it2,this);
 	}
-
+ if(empty()){
+	 plist->RemoveParticles();
+ }
 }
 
 bool Particles::operator==(const Particles& parts) const
@@ -206,4 +208,12 @@ void Particles::SetKey(Key<DIM> & k){
 }
 Key<DIM> Particles::GetKey()const{
 	return m_key;
+}
+
+
+void RemoveParticlesNeighbour(const Particles *& part){
+	remove(m_neighbour.begin(),m_neighbour.end(),part);
+	Key<DIM> k1=part->GetKey();
+	Key<DIM> k2=GetKey();
+	m_boudary.RemoveBoundary(k2,k1);
 }

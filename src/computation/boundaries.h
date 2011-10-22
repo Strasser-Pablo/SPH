@@ -20,7 +20,8 @@ public:
 	inline Boundaries(const Key<2>& k1,const list<Key<2> >& key_list);
 	inline Boundaries();
 	inline bool HasBoundary();
-inline void AddBoundary(Key<2> &k1,Key<2> &k2);
+inline void AddBoundary(const Key<2> &k1,const Key<2> &k2);
+inline void RemoveBoundary(const Key<2> &k1,const Key<2> &k2);
 private:
 inline void Update();
 
@@ -34,7 +35,8 @@ public:
 	inline Boundaries(const Key<3> & k1,const list<Key<3> >& key_list);
 	inline Boundaries();
 	inline bool HasBoundary();
-inline void AddBoundary(Key<3> &k1,Key<3> &k2);
+inline void AddBoundary(const Key<3> &k1,const Key<3> &k2);
+inline void RemoveBoundary(const Key<3> &k1,const Key<3> &k2);
 private:
 inline void Update();
 

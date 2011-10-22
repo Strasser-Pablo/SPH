@@ -71,7 +71,7 @@ bool Boundaries<3>::HasBoundary()
 	return m_all;
 }
 
-void Boundaries<2>::AddBoundary(Key<2>& k1,Key<2>& k2)
+void Boundaries<2>::AddBoundary(const Key<2>& k1,const Key<2>& k2)
 {
 	int x=k2.GetX()-k1.GetX();
 	int y=k2.GetY()-k1.GetY();
@@ -86,7 +86,7 @@ void Boundaries<2>::AddBoundary(Key<2>& k1,Key<2>& k2)
 		push_back(B);
 	}
 }
-void Boundaries<3>::AddBoundary(Key<3>& k1,Key<3>& k2)
+void Boundaries<3>::AddBoundary(const Key<3>& k1,const Key<3>& k2)
 {
 	int x=k2.GetX()-k1.GetX();
 	int y=k2.GetY()-k1.GetY();
@@ -101,4 +101,21 @@ void Boundaries<3>::AddBoundary(Key<3>& k1,Key<3>& k2)
 	if(find(begin(),end(),B)==end()){
 		push_back(B);
 	}
+}
+
+void Boundaries<3>::RemoveBoundary(const Key<3>& k1,const Key<3>& k2)
+{
+	int x=k2.GetX()-k1.GetX();
+	int y=k2.GetY()-k1.GetY();
+	int z=k2.GetZ()-k1.GetZ();
+	Boundary<3> B(x,y,z);
+	remove(begin(),end(),B);
+}
+
+void Boundaries<2>::RemoveBoundary(const Key<2>& k1,const Key<2>& k2)
+{
+	int x=k2.GetX()-k1.GetX();
+	int y=k2.GetY()-k1.GetY();
+	Boundary<2> B(x,y);
+	remove(begin(),end(),B);
 }

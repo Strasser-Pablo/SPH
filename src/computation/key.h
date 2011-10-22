@@ -54,6 +54,8 @@ public:
    * @return void
    **/
   inline void Dump() const;
+  inline int GetX() const;
+  inline int GetY()const ;
 };
 
 /**
@@ -91,6 +93,10 @@ inline bool operator<(const Key<3> A) const;
  * @return void
  **/
 inline void Dump() const;
+
+ inline int GetX()const ;
+ inline int GetY()const ;
+inline int GetZ()const ;
 };
 
 

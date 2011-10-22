@@ -14,16 +14,16 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 using namespace std;
 
 
-Particles::Particles(ParticleType type): list<Particle>(),m_type(type),m_boundary(false)
+Particles::Particles(ParticleType type): list<Particle>(),m_type(type)
 {
 
 }
 
-Particles::Particles(const Particles& A):m_type(A.m_type),list<Particle>(A),m_boundary(false) {
+Particles::Particles(const Particles& A):m_type(A.m_type),list<Particle>(A){
 
 }
 
-Particles::Particles():m_type(none),m_boundary(false)
+Particles::Particles():m_type(none)
 {
 
 }
@@ -188,10 +188,10 @@ void Particles::Calculate0Density(){
  }
 }
 
-bool Particles::GetBoundary()const{
+Boundaries<DIM> Particles::GetBoundary()const{
 	return m_boundary;
 }
-	void Particles::SetBoundary(bool b){
+	void Particles::SetBoundary(Boundaries<DIM> & b){
 		m_boundary=b;
 	}
 

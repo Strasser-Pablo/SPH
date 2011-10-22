@@ -23,8 +23,10 @@ ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,Particle
 }
 
 bool ParticleReal::GetBoundary() const{
-	assert(m_container!=0);
-return m_container->GetBoundary();	
+	//assert(m_container!=0);
+//return m_container->GetBoundary();
+//TODO
+return false;
 }
 
 

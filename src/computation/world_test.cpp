@@ -31,7 +31,6 @@ for(int i=0;i<Nx;i++){
 }
 	}
 }
- m_list.FindBoundary();
 m_list.Calculate0Density();
 
  for(int k=0;k<0;k++){

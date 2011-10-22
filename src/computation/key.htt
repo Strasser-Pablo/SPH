@@ -95,3 +95,23 @@ void Key< 3  >::Dump() const
 {
 cout<<"Key 3d "<<m_x<<" "<<m_y<<" "<<m_z<<endl;
 }
+
+int Key<2>::GetX() const{
+	return m_x;
+}
+
+int Key<2>::GetY() const{
+	return m_y;
+}
+
+int Key<3>::GetX() const{
+	return m_x;
+}
+
+int Key<3>::GetY() const{
+	return m_y;
+}
+
+int Key<3>::GetZ() const{
+	return m_z;
+}

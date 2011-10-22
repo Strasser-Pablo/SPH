@@ -62,7 +62,6 @@ void ConjugateGradiant();
 
       template<class Archive>
    inline  void write(Archive & ar) const;
-    void FindBoundary();
    private:
  void  CorrectDensity();
  void SetB_Speed();

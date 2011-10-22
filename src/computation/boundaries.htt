@@ -1,0 +1,61 @@
+
+Boundaries<2>::Boundaries(const Key<2> & k1, const list<Key<2 > > & key_list):m_all(false)
+{
+	for(list<Key<2> >::const_iterator it=key_list.begin(); it!=key_list.end(); ++it)
+		{
+			int x=it->GetX()- k1.GetX();
+			int y=it->GetY()- k1.GetY();
+			if(abs(x)<1&&abs(y)<1)
+				{
+					if(x*y!=0)
+						{
+							push_back(Boundary<2>(x,y));
+						}
+				}
+		}
+	Update();
+}
+
+Boundaries<3>::Boundaries(const Key<3> & k1, const list<Key<3 > > & key_list):m_all(false)
+{
+	for(list<Key<3> >::const_iterator it=key_list.begin(); it!=key_list.end(); ++it)
+		{
+			int x=it->GetX()- k1.GetX();
+			int y=it->GetY()- k1.GetY();
+			int z=it->GetZ()- k1.GetZ();
+			if(abs(x)<1&&abs(y)<1&&abs(z)<1)
+				{
+					if(x*y*z!=0)
+						{
+							push_back(Boundary<3>(x,y,z));
+						}
+				}
+		}
+	Update();
+}
+
+Boundaries<2>::Boundaries():m_all(false)
+{
+}
+
+Boundaries<3>::Boundaries():m_all(false)
+{
+}
+
+void Boundaries<2>::Update()
+{
+	if(Size()==8)
+		{
+			m_all=true;
+			clear();
+		}
+}
+
+void Boundaries<3>::Update()
+{
+	if(Size()==26)
+		{
+			m_all=true;
+			clear();
+		}
+}

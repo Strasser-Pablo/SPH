@@ -14,6 +14,8 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
+#include "boundaries.h"
+
 
 class Particle;
 class Particles_List;
@@ -26,12 +28,12 @@ using namespace std;
 class Particles: public std::list<Particle>
 {
     ParticleType m_type;
-	bool m_boundary;
+	Boundaries<DIM> m_boundary;
     list<Particles*> m_neighbour;
 public:
 	void Calculate0Density();
-	bool GetBoundary() const;
-	void SetBoundary(bool b);
+	Boundaries<DIM> GetBoundary() const;
+	void SetBoundary(Boundaries<DIM> & b);
     void InitializeCG();
     void CalculateBetaPart(double &num,bool & b,double alpha);
     void CalculateAlphaPart(double &num,double &denom);

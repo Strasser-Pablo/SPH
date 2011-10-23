@@ -22,7 +22,10 @@ for(list<Particles*>::iterator it=Neighbour.begin();it!=Neighbour.end();++it){
 
 }
 
-
+if(m_container->GetBoundary().HasBoundary()){
+Boundaries<DIM> bound=m_container->GetBoundary();
+cout<<"has boundary"<<endl;
+}
 }
 
 

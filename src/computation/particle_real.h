@@ -34,7 +34,7 @@ class ParticleReal
     double m_pv;
     double m_p;
     double m_b;
-
+	bool m_boundary;
     Particles* m_container;
     Particles  m_voisin;
 
@@ -72,6 +72,7 @@ double m_density0;
   **/
   bool m_fixed;
 public:
+inline void SetBoundary(bool b);
 //For conjugate gradiant
 inline double CalculateA(const Particle& B,Particles & voisin)const;
 

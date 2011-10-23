@@ -18,7 +18,7 @@ for(list<Key<2> >::const_iterator it=key_list.begin(); it!=key_list.end(); ++it)
 		{
 			int x=it->GetX()- k1.GetX();
 			int y=it->GetY()- k1.GetY();
-			if(abs(x)<=1&&abs(y)<=1&&x!=0&&y!=0)
+			if(abs(x)<=1&&abs(y)<=1&&(x!=0||y!=0))
 				{
 							push_back(Boundary<2>(x,y));
 				}
@@ -34,7 +34,7 @@ void Boundaries<3>::AddBoundaries(const Key<3> & k1, const list<Key<3 > > & key_
 			int x=it->GetX()- k1.GetX();
 			int y=it->GetY()- k1.GetY();
 			int z=it->GetZ()- k1.GetZ();
-			if(abs(x)<=1&&abs(y)<=1&&abs(z)<=1&&x!=0&&y!=0)
+			if(abs(x)<=1&&abs(y)<=1&&abs(z)<=1&&(x!=0||y!=0||z!=0))
 				{
 							push_back(Boundary<3>(x,y,z));
 				}

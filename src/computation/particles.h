@@ -2,7 +2,7 @@
 Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplinaire
 */
 #include "particle.h"
-
+#include "voisin.h"
 #ifndef PARTICLES_H
 #define PARTICLES_H
 #include <list>

@@ -1,10 +1,12 @@
 /*
 Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplinaire
 */
-#include "voisin.h"
+
 #include "particle.h"
+#include "voisin.h"
 #ifndef PARTICLES_H
 #define PARTICLES_H
+
 #include <list>
 #include "type.h"
 #include "const.h"

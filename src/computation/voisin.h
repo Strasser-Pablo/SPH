@@ -1,9 +1,9 @@
 
-#ifndef VOISIN_H
-#define VOISIN_H
+#ifndef VOISIN_ITERATOR
+#define VOISIN_ITERATOR
 #include <list>
+class particles;
 
-class iterator_particles;
 using namespace std;
 class Particles;
 class Voisin_Iterator;

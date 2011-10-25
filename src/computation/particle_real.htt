@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "pressure.h"
+#include "voisin.h"
 ParticleReal::ParticleReal():m_fixed(false),m_container(0),m_type(none),m_density0(0),m_density(0),m_m(0),m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(false)
 {
 
@@ -87,7 +88,7 @@ physvector< DIM > ParticleReal::GetPos() const
 void ParticleReal::ComputeDensity()
 {
     double rho=0;
-    for (list<Particle>::const_iterator it=m_voisin.begin();it!=m_voisin.end();++it) {
+    for (Voisin::iterator it=m_voisin->begin();it!=(m_voisin->end());++it) {
         rho+=Kernel_spline5(GetPos()-(*it)->GetPos(),h);
 
     }
@@ -152,9 +153,11 @@ void ParticleReal::serialize(Archive& ar, const unsigned int version)
 physvector<DIM> ParticleReal::ComputeSurface_Force()
 {
 physvector<DIM> temp;
-for(Particles::const_iterator it=m_voisin.begin();it!=m_voisin.end();++it){
+/*
+for(Particles::const_iterator it=m_voisin->begin_particles();it!=m_voisin->end_particles();++it){
  //temp+= Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(m_surface_tens/pow(GetDensity(),2)+(*it)->m_surface_tens/pow((*it)->GetDensity(),2));
 }
+ */
 return temp;
 }
 //Todo: To Rewrite
@@ -183,12 +186,15 @@ physvector< DIM > ParticleReal::Color_Grad(ParticleType A,ParticleType B)const
   if(A==B){
    return temp;
   }
-for(Particles::const_iterator it=m_voisin.begin();it!=m_voisin.end();++it){
+/*
+ Todo 
+  for(Particles::const_iterator it=m_voisin.begin();it!=m_voisin.end();++it){
   if((*it)->m_type==B){
    temp+=1./pow((*it)->GetDensity(),2)*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h);
   }
+   
 }
-
+*/
 #ifdef DOXYGEN
 ParticleReal p;
 p.GetDensity();
@@ -293,8 +299,8 @@ return m_b;
 m_b=val;
 }
 
-void ParticleReal::GetVoisin( Particles & voisin) const {
-voisin=m_voisin;
+void ParticleReal::GetVoisin( Voisin & voisin) const {
+voisin=*m_voisin;
 }
 
 bool ParticleReal::OKR() const{
@@ -302,10 +308,10 @@ return abs(m_r)<0.000001;
 }
 
 
-double ParticleReal::CalculateA(const Particle& B,Particles & voisin)const{
+double ParticleReal::CalculateA(const Particle& B)const{
 double ret=0;
 if(Equal(B)){
-for(Particles::iterator it=voisin.begin();it!=voisin.end();++it){
+for(Voisin::iterator it=m_voisin->begin();it!=m_voisin->end();++it){
 ret+=CalculateABas(*it);
 }
 }else{
@@ -329,7 +335,7 @@ return ret;
 
 void ParticleReal::SetB_Speed() {
 	physvector<DIM> temp;
-	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); ++it) {
+	for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
 		if(!Equal(*it)) {
 				physvector<DIM> r=GetPos()-(*it)->GetPos();
 				temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
@@ -338,7 +344,7 @@ void ParticleReal::SetB_Speed() {
 	m_pos+=temp;
 	double ret=0;
 	double eta=Mat_Const(m_type).eta;
-	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); ++it) {
+	for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
 		if(!Equal(*it)) {
 			if(!GetBoundary()) {
 				double eta2=Mat_Const((*it)->m_type).eta;
@@ -355,7 +361,7 @@ void ParticleReal::SetB_Speed() {
 
 void ParticleReal::PreparePosition(bool &b) {
 	physvector<DIM> temp;
-	for(Particles::const_iterator it=m_voisin.begin(); it!=m_voisin.end(); it++) {
+	for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); it++) {
 			physvector<DIM> r=GetPos()-(*it)->GetPos();
 			temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
 		}

@@ -4,6 +4,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 
 #ifndef PARTICLE_REAL_H
 #define PARTICLE_REAL_H
+
 #include "type.h"
 #include "physvector.h"
 #include "const.h"
@@ -12,7 +13,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include "particles.h"
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
-
+class Voisin;
 /**
  * \file particle_real.h Contain Header for class Particle_Real, containing the particle.
  *
@@ -36,7 +37,7 @@ class ParticleReal
     double m_b;
 	bool m_boundary;
     Particles* m_container;
-    Particles  m_voisin;
+    Voisin*  m_voisin;
 
   /**
    * @brief Position
@@ -74,7 +75,7 @@ double m_density0;
 public:
 inline void SetBoundary(bool b);
 //For conjugate gradiant
-inline double CalculateA(const Particle& B,Particles & voisin)const;
+inline double CalculateA(const Particle& B)const;
 
 inline void Calculate0Density();
 
@@ -256,7 +257,7 @@ inline bool OKR() const;
 
 
   void SetContainerParticles(Particles * container);
-inline void GetVoisin( Particles & voisin) const;
+inline void GetVoisin( Voisin & voisin) const;
 private:
 
 /**

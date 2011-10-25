@@ -6,9 +6,9 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
  *
  */
 
-
-#include "particles.h"
 #include "particle.h"
+#include "particles.h"
+
 #include "particles_list.h"
 #include "debug.h"
 #include <algorithm>
@@ -127,12 +127,11 @@ for(Particles::iterator it=begin();it!=end();++it){
 for(Particles::iterator it=begin();it!=end();++it){
 	if(!(*it)->GetBoundary()){
  num+=(*it)->MultRZprec();
- Particles voisin;
- (*it)->GetVoisin(voisin);
+
  double p=(*it)->GetP1();
- for(Particles::iterator it2=voisin.begin();it2!=voisin.end();++it2){
+ for(Voisin::iterator it2=m_neighbour.begin();it2!=m_neighbour.end();++it2){
 	 if(!(*it2)->GetBoundary()){
- denom+=(*it)->CalculateA(*it2,voisin)*p*(*it2)->GetP1();
+ denom+=(*it)->CalculateA(*it2)*p*(*it2)->GetP1();
 	 }
  }
 }
@@ -146,12 +145,10 @@ for(Particles::iterator it=begin();it!=end();++it){
 	if(!(*it)->GetBoundary()){
 double p=(*it)->GetP1();
 (*it)->AddP(alpha*p);
- Particles voisin;
- (*it)->GetVoisin(voisin);
  (*it)->SetR((*it)->GetRprec());
-for(Particles::iterator it2=voisin.begin();it2!=voisin.end();++it2){
+for(Voisin::iterator it2=m_neighbour.begin();it2!=m_neighbour.end();++it2){
 	 if(!(*it2)->GetBoundary()){
-(*it)->AddR(-alpha*(*it)->CalculateA(*it2,voisin)*(*it2)->GetP1());
+(*it)->AddR(-alpha*(*it)->CalculateA(*it2)*(*it2)->GetP1());
  }
 }
  (*it)->SetZ((*it)->GetR());

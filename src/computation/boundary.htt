@@ -1,0 +1,27 @@
+
+Boundary<3>::Boundary(int x,int y,int z):m_x(x),m_y(y),m_z(z)
+{
+
+}
+
+
+Boundary<2>::Boundary(int x,int y):m_x(x),m_y(y)
+{
+
+}
+
+bool Boundary<2>::operator==(const Boundary &B) const{
+ return m_x==B.m_x&&m_y==B.m_y;
+}
+
+bool Boundary<3>::operator==(const Boundary &B) const{
+ return m_x==B.m_x&&m_y==B.m_y;	
+}
+
+void Boundary<2>::Dump()const{
+	cout<<m_x<<" "<<m_y<<endl;
+}
+
+void Boundary<3>::Dump()const{
+	cout<<m_x<<" "<<m_y<<" "<<m_z<<endl;
+}

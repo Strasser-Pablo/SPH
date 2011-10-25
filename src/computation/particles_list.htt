@@ -32,21 +32,23 @@ void Particles_List::AddNeighbour(Key< 3 > k)
             //element found, add element in neighbour of the two element
             Particles*   pa=&m_list[*it];
             n.push_front(pa);
-            list<Particles*>   templist=pa->GetNeighbour();
+            list<Particles*>   templist=pa->GetNeighbour().GetParticlesVect();
 			Boundaries<DIM> B=pa->GetBoundary();
 			l2.push_back(pa->GetKey());
             //verify if element is in list if it's not add it
             if ( find(templist.begin(),templist.end(),pa0)==templist.end())
             {
-                templist.push_front(pa0);
-                pa->SetNeighbour(templist);
+                templist.push_back(pa0);
+				Voisin V(templist);
+                pa->SetNeighbour(V);
 				Key<DIM> k1=pa->GetKey();
 				B.AddBoundary(k1,k);
 				pa->SetBoundary(B);
             }
         }
     }
-    m_list[k].SetNeighbour(n);
+	Voisin V(n);
+    m_list[k].SetNeighbour(V);
 	Boundaries<DIM> B(k,l2);
 	m_list[k].SetBoundary(B);
 }
@@ -67,8 +69,9 @@ void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
 }
 
 void Particles_List::RemoveParticles(const Particles* part){
- list<Particles*> l;
- part->GetNeighbour(l);
+	Voisin v;
+ part->GetNeighbour(v);
+ list<Particles*> l=v.GetParticlesVect();
 for(list<Particles*>::iterator it=l.begin();it!=l.end();it++){
 	(*it)->RemoveParticlesNeighbour(part);
 }

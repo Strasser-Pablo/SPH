@@ -49,12 +49,12 @@ void Particles::ComputeDensity()
 
 
 
-void Particles::SetNeighbour(list< Particles *> list )
+void Particles::SetNeighbour(Voisin& list )
 {
     m_neighbour=list;
 }
 
-list<Particles*> Particles::GetNeighbour()const{
+Voisin Particles::GetNeighbour()const{
   return m_neighbour;
 }
 
@@ -97,7 +97,8 @@ for(Particles::iterator it=begin();it!=end();++it){
 }
 if(voisin){
 cout<<"dump of neighbour"<<endl;
-DumpNeighbour(m_neighbour);
+//todo correct it
+//DumpNeighbour(m_neighbour);
 cout<<"end dump of neighbour"<<endl;
 }
 cout<<"end Particles"<<endl;
@@ -213,7 +214,7 @@ Key<DIM> Particles::GetKey()const{
 
 
 void Particles::RemoveParticlesNeighbour(const Particles * part){
-	for(list<Particles*>::iterator it=m_neighbour.begin();it!=m_neighbour.end();it++)
+	for(Voisin::iterator_particles it=m_neighbour.begin_particles();it!=m_neighbour.end_particles();++it)
 	{if(*it==part){
 		m_neighbour.erase(it);
 	}

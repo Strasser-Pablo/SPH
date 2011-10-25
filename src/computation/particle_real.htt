@@ -87,7 +87,6 @@ physvector< DIM > ParticleReal::GetPos() const
 void ParticleReal::ComputeDensity()
 {
     double rho=0;
-    UpdateVoisin();
     for (list<Particle>::const_iterator it=m_voisin.begin();it!=m_voisin.end();++it) {
         rho+=Kernel_spline5(GetPos()-(*it)->GetPos(),h);
 

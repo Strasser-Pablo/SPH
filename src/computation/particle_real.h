@@ -259,7 +259,6 @@ inline bool OKR() const;
 inline void GetVoisin( Particles & voisin) const;
 private:
 
- void UpdateVoisin();
 /**
    * @brief Compute the surface force
    *

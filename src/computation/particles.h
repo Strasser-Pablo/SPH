@@ -1,8 +1,8 @@
 /*
 Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplinaire
 */
-#include "particle.h"
 #include "voisin.h"
+#include "particle.h"
 #ifndef PARTICLES_H
 #define PARTICLES_H
 #include <list>
@@ -29,7 +29,7 @@ class Particles: public std::list<Particle>
 {
     ParticleType m_type;
 	Boundaries<DIM> m_boundary;
-    list<Particles*> m_neighbour;
+    Voisin m_neighbour;
 	Key<DIM> m_key;
 public:
 	void RemoveParticlesNeighbour(const Particles * part);
@@ -86,9 +86,9 @@ public:
      * @param list of Neighbour
      * @return void
      **/
-    void SetNeighbour(list<Particles*> list);
+    void SetNeighbour(Voisin& list);
 
-    list<Particles*> GetNeighbour()const;
+    Voisin GetNeighbour()const;
 
     /**
      * @brief Update in wish container is the particle for every particle in container
@@ -108,7 +108,7 @@ public:
 
  void Add(Particle part);
 
- inline void GetNeighbour(list<Particles *> & neigh)const;
+ inline void GetNeighbour(Voisin& neigh)const;
  
  void SetB_Speed();
 void PreparePosition(bool &b);
@@ -131,7 +131,7 @@ for(Particles::const_iterator it=begin();it!=end();it++){
 }
 }
 
-  void Particles::GetNeighbour( list<Particles *> &  neigh)const{
+  void Particles::GetNeighbour( Voisin &  neigh)const{
   neigh=m_neighbour;
   }
 

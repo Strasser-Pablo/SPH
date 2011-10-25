@@ -21,9 +21,9 @@ void World_test::Do()
 
 
 
-int Nx=15;
-int Ny=15;
-int Nz=15;
+int Nx=2;
+int Ny=2;
+int Nz=2;
 for(int i=0;i<Nx;i++){
 	for(int j=0;j<Ny;j++){
 		for(int k=0;k<Nz;k++){
@@ -33,7 +33,7 @@ for(int i=0;i<Nx;i++){
 }
 m_list.Calculate0Density();
 
- for(int k=0;k<0;k++){
+ for(int k=0;k<100;k++){
   cout<<"k "<<k<<endl;
 
 

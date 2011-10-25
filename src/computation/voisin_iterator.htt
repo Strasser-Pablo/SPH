@@ -6,8 +6,12 @@ Voisin_Iterator::Voisin_Iterator(list<Particles*>& lparticles,list<Particles*>::
 Voisin_Iterator Voisin_Iterator::operator++(){
 	++m_particle;
 	if(m_particle==(*m_particles)->end()){
+		if(m_particles!=m_lpart.end()){
 	++m_particles;
+		}
+		if(m_particles!=m_lpart.end()){
 	m_particle=(*m_particles)->begin();
+		}
 	}
 	return *this;
 }

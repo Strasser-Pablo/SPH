@@ -90,7 +90,6 @@ void ParticleReal::ComputeDensity()
     double rho=0;
     for (Voisin::iterator it=m_voisin->begin();it!=(m_voisin->end());++it) {
         rho+=Kernel_spline5(GetPos()-(*it)->GetPos(),h);
-
     }
 
     SetDensity(rho);

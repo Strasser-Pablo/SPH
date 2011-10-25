@@ -15,6 +15,8 @@ public:
 inline	Boundary(int x,int y);
 inline bool operator==(const Boundary &B) const;
 inline void Dump()const;
+inline int GetMirorID() const;
+inline void Get( int &x,int &y)const;
 };
 
 template<>
@@ -26,6 +28,8 @@ public:
 inline	Boundary(int x,int y,int z);
 inline bool operator==(const Boundary &B) const;
 inline void Dump()const;
+inline int GetMirorID() const;
+inline void Get( int &x,int &y,int &z)const;
 };
 
 #include "boundary.htt"

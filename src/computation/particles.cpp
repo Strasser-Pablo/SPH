@@ -37,12 +37,27 @@ Particles::Particles():m_type(none)
 
 void Particles::ComputeDensity()
 {
-
+	vector<physvector<DIM> > V;
+  if(m_boundary.HasBoundary()){
+		m_boundary.GetExteriorDirection(V);
+			}
+			int s=V.size();
+			vector<Particle*> vpart(s);
+	vector<double> mincalc(s,-20000000);
     for (list<Particle>::iterator it=begin();it!=end();++it) {
-
             (*it)->ComputeDensity();
+			(*it)->SetBoundary(false);
+			for(int i=0;i<s;++i){
+				double temp=V[i]*(*it)->GetPos();
+				if(temp>mincalc[i]){
+					mincalc[i]=temp;
+					vpart[i]=&(*it);
+				}
+			}
     }
-
+for(int i=0;i<s;++i){
+	(*(vpart[i]))->SetBoundary(true);
+}
 }
 
 
@@ -188,9 +203,7 @@ for(Particles::iterator it=begin();it!=end();++it){
 
 void Particles::Calculate0Density(){
 	for(Particles::iterator it=begin();it!=end();++it){
-		 if(!(*it)->GetBoundary()){
  (*it)->Calculate0Density();
-		 }
  }
 }
 

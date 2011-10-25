@@ -156,3 +156,59 @@ void Boundaries<3>::Dump()const{
 	}
 	cout<<"]"<<endl;
 }
+
+void Boundaries<2>::GetExteriorDirection(vector< physvector<2> >& v)const{
+	bool b[4];
+	int ipos[4];
+	for(int i=0;i<4;i++){
+		b[i]=false;
+	}
+	for(Boundaries<2>::const_iterator it=begin();it!=end();++it){
+		int itemp=it->GetMirorID();
+		if(!b[itemp]){
+	b[itemp]=true;
+	ipos[itemp]=distance(begin(),it);
+	}
+	else{
+		b[itemp]=false;
+	}
+}
+v.clear();
+for(int i=0;i<4;i++){
+		if(b[i]){
+			Boundary<2> temp=*(begin()+ipos[i]);
+			int xtemp,ytemp;
+			temp.Get(xtemp,ytemp);
+			physvector<2> pv(double(-xtemp),double(-ytemp));
+			v.push_back(pv);
+		}
+	}
+}
+
+void Boundaries<3>::GetExteriorDirection(vector< physvector<3> >& v)const{
+	bool b[14];
+	int ipos[14];
+	for(int i=0;i<14;i++){
+		b[i]=false;
+	}
+	for(Boundaries<3>::const_iterator it=begin();it!=end();++it){
+		int itemp=it->GetMirorID();
+		if(!b[itemp]){
+	b[itemp]=true;
+	ipos[itemp]=distance(begin(),it);
+	}
+	else{
+		b[itemp]=false;
+	}
+}
+v.clear();
+for(int i=0;i<14;i++){
+		if(b[i]){
+			Boundary<3> temp=*(begin()+ipos[i]);
+			int xtemp,ytemp,ztemp;
+			temp.Get(xtemp,ytemp,ztemp);
+			physvector<3> pv(double(-xtemp),double(-ytemp),double(-ztemp));
+			v.push_back(pv);
+		}
+	}
+}

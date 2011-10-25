@@ -220,3 +220,7 @@ void Particles::RemoveParticlesNeighbour(const Particles * part){
 	Key<DIM> k2=GetKey();
 	m_boundary.RemoveBoundary(k2,k1);
 }
+
+void Particles::GetNeighbour(Voisin *& vois){
+	vois=&m_neighbour;
+}

@@ -91,6 +91,7 @@ public:
     void SetNeighbour(Voisin& list);
 
     Voisin GetNeighbour()const;
+	 void GetNeighbour(Voisin *& vois);
 
     /**
      * @brief Update in wish container is the particle for every particle in container

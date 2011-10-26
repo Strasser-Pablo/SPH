@@ -70,12 +70,12 @@ void Boundaries<3>::Update()
 
 bool Boundaries<2>::HasBoundary()
 {
-	return m_all;
+	return !m_all;
 }
 
 bool Boundaries<3>::HasBoundary()
 {
-	return m_all;
+	return !m_all;
 }
 
 void Boundaries<2>::AddBoundary(const Key<2>& k1,const Key<2>& k2)

@@ -360,11 +360,10 @@ void ParticleReal::SetB_Speed() {
 
 void ParticleReal::PreparePosition(bool &b) {
 	physvector<DIM> temp;
-	for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); it++) {
+	for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
 			physvector<DIM> r=GetPos()-(*it)->GetPos();
 			temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
 		}
-	
 	ComputeDensity();
 	m_speed+=temp;
 	double rap=(m_density0-m_density)/m_density0;

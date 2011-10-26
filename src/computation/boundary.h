@@ -1,6 +1,7 @@
 #ifndef BOUNDARY_H
 #define BOUNDARY_H
 #include <iostream>
+	#include "const.h"
 using namespace std;
 template<int n=DIM>
 class Boundary{

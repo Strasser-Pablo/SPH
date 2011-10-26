@@ -16,3 +16,4 @@ message("Documentation will no be created because Doxygen was no found.
 endif()
 
 target_link_libraries (	   computation ${Boost_LIBRARIES})
+install (TARGETS computation DESTINATION bin)

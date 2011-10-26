@@ -40,8 +40,11 @@ void Particles::ComputeDensity()
 	vector<physvector<DIM> > V;
   if(m_boundary.HasBoundary()){
 		m_boundary.GetExteriorDirection(V);
+			}else{
+				//cout<<"noboundary"<<endl;
 			}
 			int s=V.size();
+			cout<<s<<endl;
 			vector<Particle*> vpart(s);
 	vector<double> mincalc(s,-20000000);
     for (list<Particle>::iterator it=begin();it!=end();++it) {
@@ -56,6 +59,7 @@ void Particles::ComputeDensity()
 			}
     }
 for(int i=0;i<s;++i){
+	//cout<<"set Boundary true"<<endl;
 	(*(vpart[i]))->SetBoundary(true);
 }
 }

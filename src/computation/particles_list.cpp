@@ -2,16 +2,20 @@
 #include "const.h"
 void Particles_List::Compute()
 {
+	cout<<"compute"<<endl;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.ComputeDensity();
     }
+	cout<<"compute2"<<endl;
      bool ret=false;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         ret=it->second.PreComputeMove(DT)||ret;
     }
+	cout<<"compute3"<<endl;
 	if(ret){
 	CorrectDensity();	
 	}
+	cout<<"compute4"<<endl;
     m_t+=DT;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.Update(this);
@@ -104,6 +108,7 @@ CalculateP1(beta);
 void Particles_List::CorrectDensity(){
 bool bcont=true;
 while(bcont){
+	cout<<"correct loop"<<endl;
     bcont=false;
 ConjugateGradiant();
 SetB_Speed();

@@ -25,3 +25,5 @@ endif()
 target_link_libraries (	   analyse ${Boost_LIBRARIES})
 target_link_libraries (	   analyse ${SDL_LIBRARY})
 TARGET_LINK_LIBRARIES( analyse ${OPENGL_LIBRARIES})
+
+install(TARGETS analyse  DESTINATION bin)

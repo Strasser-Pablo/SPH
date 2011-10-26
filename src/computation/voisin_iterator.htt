@@ -15,7 +15,7 @@ Voisin_Iterator Voisin_Iterator::operator++(){
 	}
 	return *this;
 }
-
+//TODO to correct make segmentation fault.
 Voisin_Iterator Voisin_Iterator::operator++(int){
 	Voisin_Iterator vois(*this);
 	++m_particle;

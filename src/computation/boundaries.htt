@@ -163,7 +163,6 @@ void Boundaries<2>::GetExteriorDirection(vector< physvector<2> >& v)const{
 	for(int i=0;i<4;i++){
 		b[i]=false;
 	}
-	
 	for(Boundaries<2>::const_iterator it=begin();it!=end();++it){
 		int itemp=it->GetMirorID();
 		if(!b[itemp]){
@@ -177,27 +176,50 @@ void Boundaries<2>::GetExteriorDirection(vector< physvector<2> >& v)const{
 
 
 v.clear();
+bool b2[4];
+for(int i=0;i<4;i++){
+		b2[i]=false;
+	}
 if(!empty()){
 for(int i=0;i<4;i++){
 		if(b[i]){
 			Boundary<2> temp=*(begin()+ipos[i]);
 			int xtemp,ytemp;
 			temp.Get(xtemp,ytemp);
-			physvector<2> pv(double(-xtemp),double(-ytemp));
-			v.push_back(pv);
+			if(xtemp<0){
+				b2[0]=true;
+			}else if(xtemp>0){
+				b2[1]=true;
+			}
+			if(ytemp<0){
+				b2[2]=true;
+			}else if(ytemp>0){
+				b2[3]=true;
+			}
 		}
 
 	}
+	
+	if(b2[0]){
+		v.push_back(physvector<2>(1.0,0.0));
+	}
+	if(b2[1]){
+		v.push_back(physvector<2>(-1.0,0.0));
+	}
+	if(b2[2]){
+		v.push_back(physvector<2>(0.0,1.0));
+	}
+	if(b2[3]){
+		v.push_back(physvector<2>(0.0,-1.0));
+	}
 }else{
-for(int i=-1;i<=1;i++){
-	for(int j=-1;j<=1;j++){
-		if(!(i==0&&j==0)){
-		physvector<2> pv(i*1.0,j*1.0);
-		v.push_back(pv);
+
+		v.push_back(physvector<2>(1.0,0.0));
+		v.push_back(physvector<2>(-1.0,0.0));
+		v.push_back(physvector<2>(0.0,1.0));
+		v.push_back(physvector<2>(0.0,-1.0));
 	}
-	}
-}
-}
+
 }
 
 
@@ -207,7 +229,7 @@ void Boundaries<3>::GetExteriorDirection(vector< physvector<3> >& v)const{
 	for(int i=0;i<14;i++){
 		b[i]=false;
 	}
-	if(!empty()){
+	
 	for(Boundaries<3>::const_iterator it=begin();it!=end();++it){
 		int itemp=it->GetMirorID();
 		if(!b[itemp]){
@@ -218,26 +240,62 @@ void Boundaries<3>::GetExteriorDirection(vector< physvector<3> >& v)const{
 		b[itemp]=false;
 	}
 }
-	}
+	
 v.clear();
+bool b2[6];
+for(int i=0;i<6;i++){
+		b2[i]=false;
+	}
+if(!empty()){
 for(int i=0;i<14;i++){
 		if(b[i]){
 			Boundary<3> temp=*(begin()+ipos[i]);
 			int xtemp,ytemp,ztemp;
 			temp.Get(xtemp,ytemp,ztemp);
-			physvector<3> pv(double(-xtemp),double(-ytemp),double(-ztemp));
-			v.push_back(pv);
+			if(xtemp<0){
+				b2[0]=true;
+			}else if(xtemp>0){
+				b2[1]=true;
+			}
+			if(ytemp<0){
+				b2[2]=true;
+			}else if(ytemp>0){
+				b2[3]=true;
+			}
+			if(ztemp<0){
+				b2[4]=true;
+			}else if(ztemp>0){
+				b2[5]=true;
+			}
 		}
 	}
 	
-	for(int i=-1;i<=1;i++){
-	for(int j=-1;j<=1;j++){
-		for(int k=-1;k<=1;k++){
-		if(!(i==0&&j==0&&k==0)){
-		physvector<3> pv(i*1.0,j*1.0,k*1.0);
-		v.push_back(pv);
+	if(b2[0]){
+		v.push_back(physvector<3>(1.0,0.0,0.0));
 	}
+	if(b2[1]){
+		v.push_back(physvector<3>(-1.0,0.0,0.0));
 	}
-}
-}
+	if(b2[2]){
+		v.push_back(physvector<3>(0.0,1.0,0.0));
+	}
+	if(b2[3]){
+		v.push_back(physvector<3>(0.0,-1.0,0.0));
+	}
+	if(b2[4]){
+		v.push_back(physvector<3>(0.0,0.0,1.0));
+	}
+	if(b2[5]){
+		v.push_back(physvector<3>(0.0,0.0,-1.0));
+	}
+}else{
+		v.clear();
+		v.push_back(physvector<3>(1.0,0.0,0.0));
+		v.push_back(physvector<3>(-1.0,0.0,0.0));
+		v.push_back(physvector<3>(0.0,1.0,0.0));
+		v.push_back(physvector<3>(0.0,-1.0,0.0));
+		v.push_back(physvector<3>(0.0,0.0,1.0));
+		v.push_back(physvector<3>(0.0,-0.0,-1.0));
+	}
+	
 }

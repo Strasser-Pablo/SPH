@@ -44,7 +44,6 @@ void Particles::ComputeDensity()
 				//cout<<"noboundary"<<endl;
 			}
 			int s=V.size();
-		//	cout<<s<<endl;
 	vector<double> mincalc(s,-20000000);
     for (list<Particle>::iterator it=begin();it!=end();++it) {
             (*it)->ComputeDensity();
@@ -59,9 +58,9 @@ void Particles::ComputeDensity()
  for (list<Particle>::iterator it=begin();it!=end();++it) {
 			for(int i=0;i<s;++i){
 				double temp=V[i]*(*it)->GetPos();
-				if(temp>mincalc[i]-h/3){
+				if(temp>=mincalc[i]-h/4){
 					(*it)->SetBoundary(true);
-				}
+					}
 			}
     }
 }
@@ -99,6 +98,7 @@ void Particles::Update( Particles_List*  plist)
       it++;
       plist->Update(it2,this);
 	}
+	//Todo Correcte it
  if(empty()){
 	 plist->RemoveParticles(this);
  }
@@ -230,14 +230,20 @@ Key<DIM> Particles::GetKey()const{
 
 
 void Particles::RemoveParticlesNeighbour(const Particles * part){
-	for(Voisin::iterator_particles it=m_neighbour.begin_particles();it!=m_neighbour.end_particles();++it)
-	{if(*it==part){
-		m_neighbour.erase(it);
-	}
+	Voisin::iterator_particles it=m_neighbour.begin_particles();
+
+	while(it!=m_neighbour.end_particles())
+	{Voisin::iterator_particles it2=it;
+	++it;
+		if(*it2==part){
+
+		m_neighbour.erase(it2);
+		}
 	}
 	Key<DIM> k1=part->GetKey();
 	Key<DIM> k2=GetKey();
 	m_boundary.RemoveBoundary(k2,k1);
+
 }
 
 void Particles::GetNeighbour(Voisin *& vois){

@@ -44,8 +44,7 @@ void Particles::ComputeDensity()
 				//cout<<"noboundary"<<endl;
 			}
 			int s=V.size();
-			cout<<s<<endl;
-			vector<Particle*> vpart(s);
+		//	cout<<s<<endl;
 	vector<double> mincalc(s,-20000000);
     for (list<Particle>::iterator it=begin();it!=end();++it) {
             (*it)->ComputeDensity();
@@ -54,14 +53,17 @@ void Particles::ComputeDensity()
 				double temp=V[i]*(*it)->GetPos();
 				if(temp>mincalc[i]){
 					mincalc[i]=temp;
-					vpart[i]=&(*it);
 				}
 			}
     }
-for(int i=0;i<s;++i){
-	//cout<<"set Boundary true"<<endl;
-	(*(vpart[i]))->SetBoundary(true);
-}
+ for (list<Particle>::iterator it=begin();it!=end();++it) {
+			for(int i=0;i<s;++i){
+				double temp=V[i]*(*it)->GetPos();
+				if(temp>mincalc[i]-h/3){
+					(*it)->SetBoundary(true);
+				}
+			}
+    }
 }
 
 
@@ -133,7 +135,7 @@ void Particles::InitializeCG(){
 for(Particles::iterator it=begin();it!=end();++it){
 	if(!(*it)->GetBoundary()){
     double b=(*it)->GetB();
-    (*it)->SetP(0);
+   // (*it)->SetP(0);
 	(*it)->SetR(0);
 (*it)->SetRprec(b);
 (*it)->SetZprec(b);
@@ -240,4 +242,8 @@ void Particles::RemoveParticlesNeighbour(const Particles * part){
 
 void Particles::GetNeighbour(Voisin *& vois){
 	vois=&m_neighbour;
+}
+
+bool Particles::GetIsInBoundaryRegion() const{
+	return m_boundary.HasBoundary();
 }

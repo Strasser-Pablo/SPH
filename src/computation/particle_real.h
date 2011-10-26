@@ -36,6 +36,7 @@ class ParticleReal
     double m_p;
     double m_b;
 	bool m_boundary;
+	bool m_converged;
     Particles* m_container;
     Voisin*  m_voisin;
 
@@ -293,6 +294,8 @@ private:
    **/
   inline  physvector<DIM> ComputeSurface_Tensor_ind(ParticleType A,ParticleType B) const;
  inline physvector<DIM> Force() const;
+ 
+ inline bool GetIsInBoundaryRegion()const;
  public:
   #ifndef DOXYGEN
 private:

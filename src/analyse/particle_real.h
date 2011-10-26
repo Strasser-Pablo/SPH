@@ -29,6 +29,8 @@ class ParticleReal
     double m_rho;
     double m_p;
     double m_r;
+	bool m_boundary;
+	bool m_converged;
     ParticleType m_type;
 public:
 	inline void PreparePosition(bool &b);
@@ -150,9 +152,17 @@ void ParticleReal::Draw(GLUquadric* param)
   double x,y,z;
 
   m_pos.Get(x,y,z);
-  if(m_type==water){
-       glColor3ub(0, 0, 255); 
-  }else if(m_type==Gaz){
+  if(!m_converged){
+	glColor3ub(255, 0, 0);  
+  }
+  else if(m_type==water){
+	  if(m_boundary){
+       glColor3ub(0, 0, 10); 
+	  }
+	  else{
+		   glColor3ub(0, 0, 255); 
+	  }
+	  }else if(m_type==Gaz){
        glColor3ub(0, 255, 0); 
   }
   else{

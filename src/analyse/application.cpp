@@ -21,7 +21,7 @@ int Application::Run()
 {
 
     SDL_Event event;
-    SDL_AddTimer(100, TimerFrames, this);
+    SDL_AddTimer(500, TimerFrames, this);
     Draw();
 
     while (SDL_WaitEvent(&event))
@@ -41,6 +41,9 @@ int Application::Run()
             case SDLK_SPACE:
                 m_pause=!m_pause;
                 break;
+			case SDLK_p:
+			 Next();
+			 break;
             case SDLK_UP:
 	      m_look_y+=0.5;
 	      cout<<"look y "<<m_look_y<<endl;

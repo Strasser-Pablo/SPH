@@ -68,12 +68,12 @@ void Boundaries<3>::Update()
 		}
 }
 
-bool Boundaries<2>::HasBoundary()
+bool Boundaries<2>::HasBoundary() const
 {
 	return !m_all;
 }
 
-bool Boundaries<3>::HasBoundary()
+bool Boundaries<3>::HasBoundary() const
 {
 	return !m_all;
 }

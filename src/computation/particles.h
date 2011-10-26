@@ -40,6 +40,7 @@ public:
 	void Calculate0Density();
 	Boundaries<DIM> GetBoundary() const;
 	void SetBoundary(Boundaries<DIM> & b);
+	bool GetIsInBoundaryRegion()const;
     void InitializeCG();
     void CalculateBetaPart(double &num,bool & b,double alpha);
     void CalculateAlphaPart(double &num,double &denom);

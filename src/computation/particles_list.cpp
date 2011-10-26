@@ -1,37 +1,6 @@
 #include "particles_list.h"
 #include "const.h"
-void Particles_List::Compute()
-{
-	cout<<"compute"<<endl;
-    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.ComputeDensity();
-    }
-	cout<<"compute2"<<endl;
-     bool ret=false;
-    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-        ret=it->second.PreComputeMove(DT)||ret;
-    }
-	cout<<"compute3"<<endl;
-	if(ret){
-	CorrectDensity();	
-	}
-	cout<<"compute4"<<endl;
-    m_t+=DT;
-    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.Update(this);
-    }
-
-    #if DOXYGEN
-    ParticleReal p;
-    p.ComputePressure_Density();
-    p.ComputeSurface_Tensor();
-    p.ComputeInternal_Force();
-    p.ComputeInternal_Force();
-    p.ComputeGravity_Force();
-    p.ComputeMove(DT);
-    p.Update(this);
-    #endif //DOXYGEN
-}
+  
 
 Particles_List::Particles_List():m_t(0)
 {
@@ -104,18 +73,7 @@ double beta=CalculateBeta(num,bcont,alpha);
 CalculateP1(beta);
 }
 }
-
-void Particles_List::CorrectDensity(){
-bool bcont=true;
-while(bcont){
-	cout<<"correct loop"<<endl;
-    bcont=false;
-ConjugateGradiant();
-SetB_Speed();
-ConjugateGradiant();
-PreparePosition(bcont);
- }
-}
+  
 
 void Particles_List::SetB_Speed(){
 for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {

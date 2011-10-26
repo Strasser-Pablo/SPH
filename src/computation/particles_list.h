@@ -45,7 +45,8 @@ void ConjugateGradiant();
    *
    * @return void
    **/
-  void Compute();
+    template<class Archive>
+  void Compute(Archive& ar);
 
   void Prepare();
   /**
@@ -62,8 +63,9 @@ void ConjugateGradiant();
 
       template<class Archive>
    inline  void write(Archive & ar) const;
-   private:
- void  CorrectDensity();
+private:
+    template<class Archive>
+ void  CorrectDensity(Archive& ar);
  void SetB_Speed();
  void PreparePosition(bool &b);
 

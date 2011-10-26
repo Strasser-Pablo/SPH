@@ -125,25 +125,23 @@ write(ar);
  template<class Archive>
 void Particles_List::Compute(Archive& ar)
 {
-	cout<<"compute"<<endl;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.ComputeDensity();
     }
-	cout<<"compute2"<<endl;
      bool ret=false;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         ret=it->second.PreComputeMove(DT)||ret;
     }
-	cout<<"compute3"<<endl;
 	if(ret){
 	CorrectDensity(ar);	
 	}
-	cout<<"compute4"<<endl;
     m_t+=DT;
-    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.Update(this);
+   map<Key<DIM> ,Particles>::iterator it=m_list.begin();
+   while(it!=m_list.end()){
+	   map<Key<DIM> ,Particles>::iterator it2=it;
+	   ++it;
+        it2->second.Update(this);
     }
-
     #if DOXYGEN
     ParticleReal p;
     p.ComputePressure_Density();

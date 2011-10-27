@@ -62,9 +62,11 @@ void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
         AddNeighbour(key);
     }
     Particles * pnew=&m_list[key];
+	
     if(pnew!=part)
     {
-        part->splice(part->begin(),*pnew,it);
+        pnew->splice(pnew->begin(),*part,it);
+		(*it)->SetContainerParticles(pnew);
     }
 }
 
@@ -111,6 +113,7 @@ void Particles_List::write(Archive& ar) const
  template<class Archive>
 void Particles_List::CorrectDensity(Archive& ar){
 bool bcont=true;
+cout<<"correct"<<endl;
 while(bcont){
 	cout<<"correct loop "<<m_t<<endl;
     bcont=false;
@@ -126,7 +129,7 @@ write(ar);
 void Particles_List::Compute(Archive& ar)
 {
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.ComputeDensity();
+		it->second.ComputeDensity();
     }
      bool ret=false;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {

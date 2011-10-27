@@ -92,6 +92,7 @@ void Particles::Update( Particles_List*  plist)
 {
   list<Particle>::iterator it=begin();
     while (it!=end()) {
+	
       //iterator effectly used
       list<Particle>::iterator it2=it;
       //we increase the iterator before that we splice to don't have problem when it2 is invalided

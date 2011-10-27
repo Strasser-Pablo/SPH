@@ -8,10 +8,11 @@ Voisin_Iterator Voisin_Iterator::operator++(){
 	if(m_particle==(*m_particles)->end()){
 		if(m_particles!=m_lpart.end()){
 	++m_particles;
-		}
-		if(m_particles!=m_lpart.end()){
+	if(m_particles!=m_lpart.end()){
 	m_particle=(*m_particles)->begin();
 		}
+		}
+		
 	}
 	return *this;
 }
@@ -35,5 +36,5 @@ bool Voisin_Iterator::operator ==(const Voisin_Iterator& B){
 }
 
 bool Voisin_Iterator::operator !=(const Voisin_Iterator& B){
-	return m_particle!=B.m_particle&& m_particles!=B.m_particles;
+	return m_particle!=B.m_particle|| m_particles!=B.m_particles;
 }

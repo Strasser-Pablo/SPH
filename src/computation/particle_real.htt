@@ -88,13 +88,10 @@ physvector< DIM > ParticleReal::GetPos() const
 void ParticleReal::ComputeDensity()
 {
     double rho=0;
-    for (Voisin::iterator it=m_voisin->begin();it!=(m_voisin->end());++it) {
+    for (Voisin::iterator it=m_voisin->begin();it!=m_voisin->end();++it) {
         rho+=Kernel_spline5(GetPos()-(*it)->GetPos(),h);
     }
-
     SetDensity(rho);
-
-
 }
 
 bool ParticleReal::Equal(const Particle &part)const {
@@ -332,10 +329,12 @@ double ParticleReal::CalculateABas(const Particle& B)const{
 	}
 physvector<DIM> r=GetPos()-B->GetPos();
 double ret=(1/GetDensity()+1/B->GetDensity())*Kernel_grad_spline5(r,h)*r/r.Norm2()/(Distance(B)*(GetM()*GetDensity()+B->GetM()*B->GetDensity()));
+
 if(isnan(ret)){
 	cout<<"PPPPPPPPPPPPRRRRRROB NAN"<<endl;
 	ret=0;
 }
+
 return ret;
 }
 
@@ -386,16 +385,18 @@ void ParticleReal::PreparePosition(bool &b) {
 	/*if(ret||GetIsInBoundaryRegion()){
 		ret=abs(rap)>0.0002;
 	}*/
-	b=b||ret;
-	m_b=rap/2/m_density;
 	m_converged=!ret;
 	if(GetBoundary()){
-		b=false;
+		ret=false;
 		m_converged=true;
 	}else{
 		m_p=m_px;
 		m_p=0;
 	}
+	b=b||ret;
+	m_b=rap/2/m_density;
+	
+	
 }
 
 void ParticleReal::Calculate0Density(){

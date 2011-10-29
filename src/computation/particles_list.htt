@@ -3,67 +3,157 @@
 #include <list>
 #include <algorithm>
 #include "debug.h"
-void Particles_List::Add(Particle part) {
-	Key<DIM> key=part->GetPos().ToKey(h);
-	if (m_list.count(key)==0) {
-		AddNeighbour(key);
-	}
+void Particles_List::Add(Particle part)
+{
+    Key<DIM> key=part->GetPos().ToKey(h);
+    if (m_list.count(key)==0)
+    {
+        AddNeighbour(key);
+    }
 
-	m_list[key].Add(part);
+    m_list[key].Add(part);
 }
 
 
-void Particles_List::AddNeighbour(Key< 3 > k) {
-	list<Key<DIM> > l=k.GetNeighbour();
+void Particles_List::AddNeighbour(Key< 3 > k)
+{
+    list<Key<DIM> > l=k.GetNeighbour();
+	 list<Key<DIM> > l2;
+    list<Particles*> n;
 
-	list<Particles*> n;
+    Particles* pa0=&m_list[k];
+	m_list[k].SetKey(k);
+    for (list<Key<DIM> >::iterator it=l.begin(); it!=l.end(); ++it)
+    {
 
-	Particles* pa0=&m_list[k];
-	for (list<Key<DIM> >::iterator it=l.begin(); it!=l.end(); ++it) {
-
-		if (m_list.count(*it)>0) {
-			//   cout<<"found"<<endl;
-			//element found, add element in neighbour of the two element
-			Particles*   pa=&m_list[*it];
-			n.push_front(pa);
-			list<Particles*>   templist=pa->GetNeighbour();
-			//verify if element is in list if it's not add it
-			if ( find(templist.begin(),templist.end(),pa0)==templist.end()) {
-				templist.push_front(pa0);
-				pa->SetNeighbour(templist);
-			}
-		}
-	}
-
-	m_list[k].SetNeighbour(n);
+        if (m_list.count(*it)>0)
+        {
+            //   cout<<"found"<<endl;
+            //element found, add element in neighbour of the two element
+            Particles*   pa=&m_list[*it];
+            n.push_front(pa);
+            list<Particles*>   templist=pa->GetNeighbour().GetParticlesVect();
+			Boundaries<DIM> B=pa->GetBoundary();
+			l2.push_back(pa->GetKey());
+            //verify if element is in list if it's not add it
+            if ( find(templist.begin(),templist.end(),pa0)==templist.end())
+            {
+                templist.push_back(pa0);
+				Voisin V(templist);
+                pa->SetNeighbour(V);
+				Key<DIM> k1=pa->GetKey();
+				B.AddBoundary(k1,k);
+				pa->SetBoundary(B);
+            }
+        }
+    }
+	Voisin V(n);
+    m_list[k].SetNeighbour(V);
+	Boundaries<DIM> B(k,l2);
+	m_list[k].SetBoundary(B);
 }
 
 
-void Particles_List::Update(list< Particle >::iterator& it, Particles* part) {
-	Key<DIM> key=(*it)->GetPos().ToKey(h);
-	if (m_list.count(key)==0) {
-		AddNeighbour(key);
-	}
-	Particles * pnew=&m_list[key];
-	if(pnew!=part) {
-		part->splice(part->begin(),*pnew,it);
-	}
+void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
+{
+    Key<DIM> key=(*it)->GetPos().ToKey(h);
+    if (m_list.count(key)==0)
+    {
+        AddNeighbour(key);
+    }
+    Particles * pnew=&m_list[key];
+	
+    if(pnew!=part)
+    {
+        pnew->splice(pnew->begin(),*part,it);
+		(*it)->SetContainerParticles(pnew);
+    }
+}
+
+void Particles_List::RemoveParticles(const Particles* part){
+	Voisin v;
+ part->GetNeighbour(v);
+ list<Particles*> l=v.GetParticlesVect();
+for(list<Particles*>::iterator it=l.begin();it!=l.end();it++){
+	(*it)->RemoveParticlesNeighbour(part);
+}
+m_list.erase(part->GetKey());
 }
 
 template<class Archive>
-void Particles_List::write(Archive& ar) const {
-	bool btrue=true;
-	bool bfalse=false;
-	ar<<BOOST_SERIALIZATION_NVP(btrue);
-	ar<<BOOST_SERIALIZATION_NVP(m_t);
+void Particles_List::write(Archive& ar) const
+{
+    bool btrue=true;
+    bool bfalse=false;
+    ar<<BOOST_SERIALIZATION_NVP(btrue);
+    ar<<BOOST_SERIALIZATION_NVP(m_t);
 
-	for(map< Key<DIM>, Particles >::const_iterator it=m_list.begin(); it!=m_list.end(); it++) {
-		it->second.write(ar);
+    for(map< Key<DIM>, Particles >::const_iterator it=m_list.begin(); it!=m_list.end(); it++)
+    {
+        it->second.write(ar);
+    }
+    ar<<BOOST_SERIALIZATION_NVP(bfalse);
+
+    #if DOXYGEN
+      Particles p;
+      p.write(ar);
+    #endif //DOXYGEN
+}
+
+   void Particles_List::DumpBoundary()const {
+	    for(map< Key<DIM>, Particles >::const_iterator it=m_list.begin(); it!=m_list.end(); it++)
+    {
+		cout<<"Key"<<endl;
+        it->second.GetKey().Dump();
+		cout<<"Boundary"<<endl;
+		it->second.GetBoundary().Dump();
+    }
+   }
+
+ template<class Archive>
+void Particles_List::CorrectDensity(Archive& ar){
+		FindBoundary();
+bool bcont=true;
+int i=0;
+while(bcont){
+    bcont=false;
+ConjugateGradiant();
+SetB_Speed();
+ConjugateGradiant();
+PreparePosition(bcont);
+i++;
+ }
+ cout<<"correction iteration "<<i<<endl;
+}
+
+ template<class Archive>
+void Particles_List::Compute(Archive& ar)
+{
+    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+		it->second.ComputeDensity();
+    }
+     bool ret=false;
+    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+        ret=it->second.PreComputeMove(DT)||ret;
+    }
+	if(ret){
+	CorrectDensity(ar);	
 	}
-	ar<<BOOST_SERIALIZATION_NVP(bfalse);
-
-#if DOXYGEN
-	Particles p;
-	p.write(ar);
-#endif //DOXYGEN
+    m_t+=DT;
+   map<Key<DIM> ,Particles>::iterator it=m_list.begin();
+   while(it!=m_list.end()){
+	   map<Key<DIM> ,Particles>::iterator it2=it;
+	   ++it;
+        it2->second.Update(this);
+    }
+    #if DOXYGEN
+    ParticleReal p;
+    p.ComputePressure_Density();
+    p.ComputeSurface_Tensor();
+    p.ComputeInternal_Force();
+    p.ComputeInternal_Force();
+    p.ComputeGravity_Force();
+    p.ComputeMove(DT);
+    p.Update(this);
+    #endif //DOXYGEN
 }

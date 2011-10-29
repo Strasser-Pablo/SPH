@@ -5,7 +5,7 @@
 #include "particles.h"
 
 /** \file debug.h Contain Debug uttility
- *
+ *  
  **/
 
 using namespace std;
@@ -17,10 +17,10 @@ using namespace std;
  * @param a list of neighbour
  * @return void
  **/
-void  inline DumpNeighbour(list<Particles *> & a) {
-	for(list<Particles *>::iterator it=a.begin(); it!=a.end(); ++it) {
-		(*it)->Dump(false);
-	}
+void  inline DumpNeighbour(list<Particles *> & a){
+  for(list<Particles *>::iterator it=a.begin();it!=a.end();++it){
+   (*it)->Dump(false); 
+  }
 }
 
 /**
@@ -29,10 +29,10 @@ void  inline DumpNeighbour(list<Particles *> & a) {
  * @param a list of key to dump.
  * @return void
  **/
-void  inline GDump(list<Key<DIM> > & a) {
-	for(list<Key<DIM> >::iterator it=a.begin(); it!=a.end(); ++it) {
-		it->Dump();
-	}
+void  inline GDump(list<Key<DIM> > & a){
+  for(list<Key<DIM> >::iterator it=a.begin();it!=a.end();++it){
+   it->Dump(); 
+  }
 }
 
 

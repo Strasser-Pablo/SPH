@@ -4,57 +4,62 @@
 **/
 
 
-World_test::World_test() {
+World_test::World_test()
+{
 
 }
 
-void World_test::Do() {
-	;
-// a.Dump();
-	ofstream out("default");
-	boost::archive::binary_oarchive ar(out);
+void World_test::Do()
+{
+ ;
+ // a.Dump();
+  ofstream out("default");
+  boost::archive::binary_oarchive ar(out);
 //boost::archive::xml_oarchive ar(out);
 
 
 
 
 
-
-	for(int x=0; x<10; x++) {
-		for(int y=0; y<10; y++) {
-
-			Add(ParticleReal(physvector< 3  >(0,x+20,y),physvector< 3  >(0,0,0),water,10000));
-		}
+int Nx=5;
+int Ny=5;
+int Nz=5;
+for(int i=0;i<Nx;i++){
+	for(int j=0;j<Ny;j++){
+		for(int k=0;k<Nz;k++){
+	Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3,k*h/3),physvector< 3  >(0,3,0),water,1000));
+}
 	}
+}
 
-
-	for(int x=0; x<10; x++) {
-		for(int y=0; y<10; y++) {
-
-			Add(ParticleReal(physvector< 3  >(0,x,y),physvector< 3  >(0,10,0),water,10000));
-		}
+for(int i=0;i<Nx;i++){
+	for(int j=0;j<Ny;j++){
+		for(int k=0;k<Nz;k++){
+	Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3+3*h,k*h/3),physvector< 3  >(0,0,0),water,1000));
+}
 	}
+}
+m_list.Calculate0Density();
 
-
-	for(int k=0; k<200; k++) {
-		cout<<"k "<<k<<endl;
+ for(int k=0;k<200;k++){
+  cout<<"k "<<k<<endl;
 
 
 //m_list.Dump();
 
-		m_list.Compute();
+ m_list.Compute(ar);
 // m_list.Dump();
 
-		cout<<"write"<<endl;
-		m_list.write(ar);
+cout<<"write"<<endl;
+ m_list.write(ar);
 
-	}
-
-
+   }
 
 
 
-	bool bfalse=false;
-	ar<<BOOST_SERIALIZATION_NVP(bfalse);
+
+
+bool bfalse=false;
+ar<<BOOST_SERIALIZATION_NVP(bfalse);
 //m_list.Dump();
 }

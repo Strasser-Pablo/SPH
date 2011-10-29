@@ -1,0 +1,33 @@
+#include "voisin_iterator.h"
+#include "particles.h"
+Voisin::Voisin(){
+}
+Voisin::Voisin(list<Particles*> vect):m_vect(vect){
+}
+
+list<Particles*> Voisin::GetParticlesVect()const{
+	return m_vect;
+}
+
+Voisin_Iterator Voisin::begin(){
+ return Voisin_Iterator(m_vect,m_vect.begin(),(*(m_vect.begin()))->begin());
+}
+
+Voisin_Iterator Voisin::end(){
+	return Voisin_Iterator(m_vect,m_vect.end(),(*(--m_vect.end()))->end());
+}
+
+list<Particles*>::iterator Voisin::begin_particles(){
+	return m_vect.begin();
+}
+
+
+
+list<Particles*>::iterator Voisin::end_particles(){
+	m_vect.end();
+}
+
+void Voisin::erase(list<Particles*>::iterator & it){
+	m_vect.erase(it);
+}
+

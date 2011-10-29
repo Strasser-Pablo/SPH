@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(sph)
+INCLUDE(CPack)
 find_package (Doxygen)
-add_subdirectory(src/computation ./computation EXCLUDE_FROM_ALL )
-add_subdirectory(src/analyse ./analyse EXCLUDE_FROM_ALL)
+add_subdirectory(src/computation ./computation  )
+add_subdirectory(src/analyse ./analyse )
 add_custom_target(sph ALL)
 if(${DOXYGEN_FOUND})
 add_custom_target(doc)
@@ -15,3 +16,4 @@ add_custom_target(sph_analyse)
 add_dependencies(sph_analyse analyse)
 
 add_dependencies(sph sph_analyse sph_computation)
+

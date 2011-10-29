@@ -45,6 +45,7 @@ public:
     void CalculateBetaPart(double &num,bool & b,double alpha);
     void CalculateAlphaPart(double &num,double &denom);
     void CalculateP1(double beta);
+	 bool FindBoundary(bool b) ;
     /**
      * @brief Construct a list of Particle of type type
      *

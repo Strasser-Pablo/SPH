@@ -112,17 +112,18 @@ void Particles_List::write(Archive& ar) const
 
  template<class Archive>
 void Particles_List::CorrectDensity(Archive& ar){
+		FindBoundary();
 bool bcont=true;
-cout<<"correct"<<endl;
+int i=0;
 while(bcont){
-	cout<<"correct loop "<<m_t<<endl;
     bcont=false;
 ConjugateGradiant();
 SetB_Speed();
 ConjugateGradiant();
 PreparePosition(bcont);
-write(ar);
+i++;
  }
+ cout<<"correction iteration "<<i<<endl;
 }
 
  template<class Archive>

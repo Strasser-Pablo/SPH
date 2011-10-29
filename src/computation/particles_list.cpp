@@ -63,6 +63,7 @@ void Particles_List::ConjugateGradiant(){
 InitializeCG();
 bool bcont=false;
 bool b;
+int j=0;
 while(!bcont){
     double num=0;
 double alpha=CalculateAlpha(num,b);
@@ -71,7 +72,9 @@ if(b){
 }
 double beta=CalculateBeta(num,bcont,alpha);
 CalculateP1(beta);
+j++;
 }
+cout<<"conjugate gradient nb it "<<j<<endl;
 }
   
 
@@ -91,5 +94,12 @@ void Particles_List::Calculate0Density(){
 	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
         it->second.Calculate0Density();
     }
+}
+
+void Particles_List::FindBoundary(){
+bool b=false;
+	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
+b=it->second.FindBoundary(!b);
+}
 }
 

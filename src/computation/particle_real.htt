@@ -29,6 +29,9 @@ return m_boundary;
 
 void ParticleReal::SetBoundary(bool b) {
  m_boundary=b;
+ if(b){
+	 cout<<"boundary set to true"<<endl;
+ }
 }
 
 double ParticleReal::GetM() const
@@ -307,7 +310,7 @@ voisin=*m_voisin;
 }
 
 bool ParticleReal::OKR() const{
-return abs(m_r)<0.000001;
+return abs(m_r)<0.0000001;
 }
 
 
@@ -354,19 +357,15 @@ void ParticleReal::SetB_Speed() {
 	double eta=Mat_Const(m_type).eta;
 	for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
 		if(!Equal(*it)) {
-			if(!GetBoundary()) {
 				double eta2=Mat_Const((*it)->m_type).eta;
 				physvector<DIM> r=GetPos()-(*it)->GetPos();
 				double v=(GetSpeed()*eta+(*it)->GetSpeed()*eta2)/(eta+eta2)*r/r.Norm()/2;
 				ret+=(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(r,h)*r/r.Norm()*v;
-			}
 		}
 	}
 	m_b=ret;
-if(!GetBoundary()){
-	m_p=m_pv;
 	m_p=0;
-}
+
 }
 
 void ParticleReal::PreparePosition(bool &b) {
@@ -381,18 +380,13 @@ void ParticleReal::PreparePosition(bool &b) {
 	m_speed+=temp;
 		//}
 	double rap=(m_density0-m_density)/m_density0;
-	bool ret=abs(rap)>0.0001;
+	bool ret=abs(rap)>0.01;
 	/*if(ret||GetIsInBoundaryRegion()){
 		ret=abs(rap)>0.0002;
 	}*/
 	m_converged=!ret;
-	if(GetBoundary()){
-		ret=false;
-		m_converged=true;
-	}else{
-		m_p=m_px;
+	
 		m_p=0;
-	}
 	b=b||ret;
 	m_b=rap/2/m_density;
 	

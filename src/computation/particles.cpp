@@ -37,42 +37,8 @@ Particles::Particles():m_type(none)
 
 void Particles::ComputeDensity()
 {
-	vector<physvector<DIM> > V;
-	GetKey().Dump();
-	m_boundary.Dump();
-  if(m_boundary.HasBoundary()){
-		m_boundary.GetExteriorDirection(V);
-			}else{
-				//cout<<"noboundary"<<endl;
-			}
-			int s=V.size();
-		/*	cout<<"begin v"<<endl;
-			GetKey().Dump();
-		for(int i=0;i<s;i++){
-			cout<<V[i]<<endl;
-		}
-			cout<<"end v"<<endl;
-			 */
-	vector<double> mincalc(s,-20000000);
     for (list<Particle>::iterator it=begin();it!=end();++it) {
             (*it)->ComputeDensity();
-			(*it)->SetBoundary(false);
-			for(int i=0;i<s;++i){
-				double temp=V[i]*(*it)->GetPos();
-				if(temp>mincalc[i]){
-					mincalc[i]=temp;
-				}
-			}
-    }
- for (list<Particle>::iterator it=begin();it!=end();++it) {
-	 bool b=false;
-			for(int i=0;i<s;++i){
-				double temp=V[i]*(*it)->GetPos();
-				if(temp>=(mincalc[i]-h*0.1)){
-					b=true;
-					}
-			}
-			(*it)->SetBoundary(b);
     }
 }
 
@@ -204,18 +170,14 @@ for(Particles::iterator it=begin();it!=end();++it){
 
 void Particles::SetB_Speed(){
 for(Particles::iterator it=begin();it!=end();++it){
-		 if(!(*it)->GetBoundary()){
  (*it)->SetB_Speed();
-		 }
 }
 }
 
 
 void Particles::PreparePosition(bool& b){
 for(Particles::iterator it=begin();it!=end();++it){
-		 if(!(*it)->GetBoundary()){
  (*it)->PreparePosition(b);
-		 }
  }
 }
 
@@ -265,4 +227,19 @@ void Particles::GetNeighbour(Voisin *& vois){
 
 bool Particles::GetIsInBoundaryRegion() const{
 	return m_boundary.HasBoundary();
+}
+
+bool Particles::FindBoundary(bool b) {
+	if(empty()){
+		return false;
+	}
+	else{
+		for(Particles::iterator it=begin();it!=end();it++){
+			(*it)->SetBoundary(false);
+		}
+		if(b){
+		(*begin())->SetBoundary(true);
+		}
+		return true;
+	}
 }

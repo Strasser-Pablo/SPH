@@ -68,7 +68,7 @@ private:
  void  CorrectDensity(Archive& ar);
  void SetB_Speed();
  void PreparePosition(bool &b);
-
+ void FindBoundary();
 };
 
 

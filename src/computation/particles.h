@@ -82,6 +82,7 @@ public:
      * @return void
      **/
     bool PreComputeMove(double dt);
+	   void ComputeMove(double dt);
     /**
      * @brief Set The Neighbour of the container.
      *

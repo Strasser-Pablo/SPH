@@ -237,7 +237,7 @@ inline bool OKR() const;
      **/
   inline  void ComputeDensity();
 
-
+  inline void ComputeMove(double dt);
 
   inline bool PreComputeMove(double dt);
    /**

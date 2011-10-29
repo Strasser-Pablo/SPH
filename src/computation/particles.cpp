@@ -64,6 +64,12 @@ bool Particles::PreComputeMove(double dt)
     }
     return ret;
 }
+void Particles::ComputeMove(double dt)
+{
+    for (list<Particle>::iterator it=begin();it!=end();++it) {
+        (*it)->ComputeMove( dt);
+    }
+}
 
 void Particles::Update( Particles_List*  plist)
 {

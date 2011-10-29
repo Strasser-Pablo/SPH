@@ -132,6 +132,12 @@ return ret;
 return false;
 }
 
+void ParticleReal::ComputeMove(double dt) {
+  if(!m_fixed){
+m_speed+=Force()*dt;
+m_pos+=m_speed*dt;
+}
+}
 
 void ParticleReal::Dump()const {
     cout<<"pos "<<m_pos<<" speed "<<m_speed<<endl;
@@ -224,7 +230,16 @@ else{
 
 physvector<DIM> ParticleReal::Force()const{
 //return ComputeSurface_Force()+G;
-return G;
+physvector<DIM> f;
+f+=G;
+
+if(presure_eq_state){
+for(Voisin::iterator it=m_voisin->begin();it!=m_voisin->end();++it){
+f+=m_m*0.5*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(pressure(GetDensity()*m_m,water)+pressure((*it)->GetDensity()*(*it)->m_m,water));
+}
+}
+
+return f;
 }
 
 double ParticleReal::GetR() const{

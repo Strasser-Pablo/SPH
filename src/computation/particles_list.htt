@@ -133,11 +133,19 @@ void Particles_List::Compute(Archive& ar)
 		it->second.ComputeDensity();
     }
      bool ret=false;
+	 if(presure_laplacien){
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         ret=it->second.PreComputeMove(DT)||ret;
     }
+	
 	if(ret){
 	CorrectDensity(ar);	
+	}
+	 }
+	if(presure_eq_state){
+	  for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.ComputeMove(DT);
+    }
 	}
     m_t+=DT;
    map<Key<DIM> ,Particles>::iterator it=m_list.begin();

@@ -12,7 +12,8 @@
 #define DIM_DEF 3
 const int DIM=DIM_DEF;
 
-
+const bool presure_eq_state=true;
+const bool presure_laplacien=false;
 
 
 

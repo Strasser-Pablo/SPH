@@ -32,13 +32,7 @@ for(int i=0;i<Nx;i++){
 	}
 }
 
-for(int i=0;i<Nx;i++){
-	for(int j=0;j<Ny;j++){
-		for(int k=0;k<Nz;k++){
-	Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3+3*h,k*h/3),physvector< 3  >(0,0,0),water,1000));
-}
-	}
-}
+
 m_list.Calculate0Density();
 
  for(int k=0;k<200;k++){
@@ -46,10 +40,10 @@ m_list.Calculate0Density();
 
 
 //m_list.Dump();
-
+for(int l=0;l<10;l++){
  m_list.Compute(ar);
 // m_list.Dump();
-
+}
 cout<<"write"<<endl;
  m_list.write(ar);
 

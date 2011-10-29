@@ -230,3 +230,11 @@ void physvector< 2  >::serialize(Archive& ar, const unsigned int version)
 ar&BOOST_SERIALIZATION_NVP(m_x);
 ar&BOOST_SERIALIZATION_NVP(m_y);
 }
+
+void physvector< 2  >::WritePos(fstream & out)const{
+	out<<m_x<<" "<<m_y<<endl;
+}
+
+void physvector< 3  >::WritePos(fstream & out)const{
+	out<<m_x<<" "<<m_y<<" "<<m_z<<endl;
+}

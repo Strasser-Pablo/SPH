@@ -249,3 +249,9 @@ bool Particles::FindBoundary(bool b) {
 		return true;
 	}
 }
+
+void Particles::WritePos(fstream& out)const{
+	for(Particles::const_iterator it=begin();it!=end();it++){
+			(*it)->WritePos( out);
+		}
+}

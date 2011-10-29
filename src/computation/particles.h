@@ -83,6 +83,7 @@ public:
      **/
     bool PreComputeMove(double dt);
 	   void ComputeMove(double dt);
+	  void WritePos(fstream& out) const;
     /**
      * @brief Set The Neighbour of the container.
      *

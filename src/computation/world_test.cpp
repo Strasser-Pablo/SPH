@@ -35,17 +35,16 @@ for(int i=0;i<Nx;i++){
 
 m_list.Calculate0Density();
 
- for(int k=0;k<200;k++){
+ for(int k=0;k<600;k++){
   cout<<"k "<<k<<endl;
 
-
 //m_list.Dump();
-for(int l=0;l<10;l++){
+
  m_list.Compute(ar);
 // m_list.Dump();
-}
+
 cout<<"write"<<endl;
- m_list.write(ar);
+ m_list.write();
 
    }
 

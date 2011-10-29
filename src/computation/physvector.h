@@ -5,7 +5,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #ifndef POSITION_H
 #define POSITION_H
 #include <iostream>
-
+#include <fstream>
 #include "key.h"
 
 #include <boost/archive/binary_iarchive.hpp>
@@ -112,7 +112,8 @@ public:
      friend inline physvector< 3> operator*(const physvector<3>& a,const double c);
 
      inline Key<3> ToKey(double h);
-
+		
+		inline void WritePos(fstream & out) const;
      #ifndef DOXYGEN
 private:
     friend class boost::serialization::access;
@@ -209,6 +210,7 @@ public:
     friend inline physvector< 2> operator*(const physvector<2> &a,const double c) ;
 
      inline Key<2> ToKey(double h);
+	 	inline void WritePos(fstream & out) const;
 #ifndef DOXYGEN
 private:
     friend class boost::serialization::access;
@@ -225,3 +227,4 @@ private:
 
 
 #endif // POSITION_H
+

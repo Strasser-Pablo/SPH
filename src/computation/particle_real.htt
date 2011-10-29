@@ -417,3 +417,7 @@ void ParticleReal::Calculate0Density(){
 bool ParticleReal::GetIsInBoundaryRegion()const {
 	return m_container->GetIsInBoundaryRegion();
 }
+
+void ParticleReal::WritePos(fstream &out)const{
+	m_pos.WritePos(out);
+}

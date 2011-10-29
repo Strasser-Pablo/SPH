@@ -2,7 +2,7 @@
 #include "const.h"
   
 
-Particles_List::Particles_List():m_t(0)
+Particles_List::Particles_List():m_t(0),m_n(0)
 {
 
 }

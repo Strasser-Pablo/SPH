@@ -74,6 +74,7 @@ double m_density0;
   **/
   bool m_fixed;
 public:
+inline void WritePos(fstream& out)const;
 inline void SetBoundary(bool b);
 //For conjugate gradiant
 inline double CalculateA(const Particle& B)const;

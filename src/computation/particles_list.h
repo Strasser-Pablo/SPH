@@ -18,6 +18,7 @@ class Particles_List{
 
   map<Key<DIM> ,Particles> m_list;
   double m_t;
+  int m_n;
 protected:
 public:
 void Calculate0Density();
@@ -61,8 +62,7 @@ void ConjugateGradiant();
   inline void RemoveParticles(const Particles * Parts);
   inline void DumpBoundary()const ;
 
-      template<class Archive>
-   inline  void write(Archive & ar) const;
+   inline  void write() const;
 private:
     template<class Archive>
  void  CorrectDensity(Archive& ar);

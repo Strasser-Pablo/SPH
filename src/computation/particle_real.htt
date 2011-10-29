@@ -331,7 +331,7 @@ physvector<DIM> r=GetPos()-B->GetPos();
 double ret=(1/GetDensity()+1/B->GetDensity())*Kernel_grad_spline5(r,h)*r/r.Norm2()/(Distance(B)*(GetM()*GetDensity()+B->GetM()*B->GetDensity()));
 
 if(isnan(ret)){
-	cout<<"PPPPPPPPPPPPRRRRRROB NAN"<<endl;
+	//cout<<"PPPPPPPPPPPPRRRRRROB NAN"<<endl;
 	ret=0;
 }
 
@@ -347,9 +347,9 @@ void ParticleReal::SetB_Speed() {
 				temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
 		}
 	}
-	if(!GetBoundary()){
+	//if(!GetBoundary()){
 	m_pos+=temp;
-	}
+	//}
 	double ret=0;
 	double eta=Mat_Const(m_type).eta;
 	for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
@@ -377,9 +377,9 @@ void ParticleReal::PreparePosition(bool &b) {
 			temp-=1/(GetM())*Kernel_grad_spline5(r,h)*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*(GetM()*GetDensity()*((*it)->GetP())+(*it)->GetM()*(*it)->GetDensity()*(GetP()))/(GetM()*GetDensity()+(*it)->GetM()*(*it)->GetDensity());
 		}
 	ComputeDensity();
-		if(!GetBoundary()){
+		//if(!GetBoundary()){
 	m_speed+=temp;
-		}
+		//}
 	double rap=(m_density0-m_density)/m_density0;
 	bool ret=abs(rap)>0.0001;
 	/*if(ret||GetIsInBoundaryRegion()){
@@ -401,7 +401,6 @@ void ParticleReal::PreparePosition(bool &b) {
 
 void ParticleReal::Calculate0Density(){
 	double temp=m_density0;
-	ComputeDensity();
 	m_density0=m_density;
 	m_m=temp/m_density0;
 }

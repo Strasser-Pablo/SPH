@@ -146,7 +146,7 @@ inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h ){
  }else if(d<3){
   ret=-5*pow(3-d,5);
 }else{
-
+ ret=0;
 }
 physvector<DIM> rret=ret*567/(2535*M_PI*pow(h,3))*vect/vect.Norm();
 return rret;

@@ -38,12 +38,21 @@ Particles::Particles():m_type(none)
 void Particles::ComputeDensity()
 {
 	vector<physvector<DIM> > V;
+	GetKey().Dump();
+	m_boundary.Dump();
   if(m_boundary.HasBoundary()){
 		m_boundary.GetExteriorDirection(V);
 			}else{
 				//cout<<"noboundary"<<endl;
 			}
 			int s=V.size();
+		/*	cout<<"begin v"<<endl;
+			GetKey().Dump();
+		for(int i=0;i<s;i++){
+			cout<<V[i]<<endl;
+		}
+			cout<<"end v"<<endl;
+			 */
 	vector<double> mincalc(s,-20000000);
     for (list<Particle>::iterator it=begin();it!=end();++it) {
             (*it)->ComputeDensity();
@@ -56,12 +65,14 @@ void Particles::ComputeDensity()
 			}
     }
  for (list<Particle>::iterator it=begin();it!=end();++it) {
+	 bool b=false;
 			for(int i=0;i<s;++i){
 				double temp=V[i]*(*it)->GetPos();
-				if(temp>=mincalc[i]-h/4){
-					(*it)->SetBoundary(true);
+				if(temp>=(mincalc[i]-h*0.1)){
+					b=true;
 					}
 			}
+			(*it)->SetBoundary(b);
     }
 }
 
@@ -209,6 +220,7 @@ for(Particles::iterator it=begin();it!=end();++it){
 }
 
 void Particles::Calculate0Density(){
+	ComputeDensity();
 	for(Particles::iterator it=begin();it!=end();++it){
  (*it)->Calculate0Density();
  }

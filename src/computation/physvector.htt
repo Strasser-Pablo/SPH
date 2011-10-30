@@ -238,3 +238,10 @@ void physvector< 2  >::WritePos(fstream & out)const{
 void physvector< 3  >::WritePos(fstream & out)const{
 	out<<m_x<<" "<<m_y<<" "<<m_z<<endl;
 }
+
+ physvector<3> physvector< 3  >::prod(const physvector<3>& a) const{
+	return physvector< 3  >(a.m_x*m_x,a.m_y*m_y,a.m_z*m_z);
+}
+physvector<2> physvector< 2  >::prod(const physvector<2>& a) const{
+	return physvector< 2  >(a.m_x*m_x,a.m_y*m_y);
+}

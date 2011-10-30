@@ -114,6 +114,7 @@ public:
      inline Key<3> ToKey(double h);
 		
 		inline void WritePos(fstream & out) const;
+		inline physvector<3> prod(const physvector<3>& a) const;
      #ifndef DOXYGEN
 private:
     friend class boost::serialization::access;
@@ -211,6 +212,7 @@ public:
 
      inline Key<2> ToKey(double h);
 	 	inline void WritePos(fstream & out) const;
+	inline	physvector<2> prod(const physvector<2>& a) const;
 #ifndef DOXYGEN
 private:
     friend class boost::serialization::access;

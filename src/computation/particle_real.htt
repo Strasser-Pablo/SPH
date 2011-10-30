@@ -249,6 +249,15 @@ f+=m_m*0.5*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spli
 }
 }
 
+
+
+for(Voisin::iterator it=m_voisin->begin();it!=m_voisin->end();++it){
+	if(Equal(*it)){
+		continue;
+	}
+	f+=1/GetMass()*0.001/(Distance(*it))*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h).prod((GetSpeed()-(*it)->GetSpeed()));
+}
+
 return f;
 }
 

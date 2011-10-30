@@ -26,6 +26,7 @@ using namespace std;
 class ParticleReal
 {
     //Used for conjugate gradiant
+	bool m_b_0_done;
     double m_r;
     double m_z;
     double m_zprec;
@@ -132,7 +133,7 @@ inline bool OKR() const;
      * @param type Particle type
      * @param m Particle mass
      **/
-    inline ParticleReal(physvector<DIM> pos,ParticleType type,double rho_0,bool fixed=false);
+    inline ParticleReal(physvector<DIM> pos,ParticleType type,bool fixed=false);
 
         /**
      * @brief Create a individual Particle with givent property
@@ -142,7 +143,7 @@ inline bool OKR() const;
      * @param type Particle type
      * @param m Particle mass
      **/
-      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,double rho_0,bool fixed=false);
+      inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,bool fixed=false);
     /**
      * @brief Calculate the Distance square of the Particle
      *
@@ -172,7 +173,7 @@ inline bool OKR() const;
      *
      * @return double mass
      **/
-    inline double GetM() const;
+    inline double GetMass() const;
     /**
      * @brief Get the density
      *
@@ -180,6 +181,9 @@ inline bool OKR() const;
      **/
     inline double GetDensity() const;
 
+inline double GetMassDensity() const;
+
+inline double GetPressure() const;
     /**
      * @brief Set the mass
      *

@@ -118,10 +118,33 @@ for(int i=0;i<m_n;i++){
 }
 out<<"</DataArray>"<<endl;
 out<<"</Cells>"<<endl;
+out<< "<PointData Scalars=\"Density\">"<<endl;                                                
+out<< "<DataArray type=\"Float64\" Name=\"Density\" format=\"ascii\">"<<endl;
+ for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.Density(out);
+    }
+out<< "</DataArray>"<<endl;
+out<< "<DataArray type=\"Float64\" Name=\"Pressures\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.Pressures(out);
+    }
+out<< "</DataArray>"<<endl;
+out<< "<DataArray type=\"Float64\" Name=\"Mass\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.Mass(out);
+    }
+out<< "</DataArray>"<<endl;
+out<< "<DataArray type=\"Float64\" Name=\"Mass Density\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.MassDensity(out);
+    }
+out<< "</DataArray>"<<endl;
+out<< "</PointData>"<<endl; 
 out<<"</Piece>"<<endl;
 out<<"</UnstructuredGrid>"<<endl;
 out<<"</VTKFile>"<<endl;
 out.close();
+cout<<"file num "<<filenum<<endl;
 ++filenum;
 }
 

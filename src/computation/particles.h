@@ -84,6 +84,10 @@ public:
     bool PreComputeMove(double dt);
 	   void ComputeMove(double dt);
 	  void WritePos(fstream& out) const;
+	  void Density(fstream& out) const;
+	  void Pressures(fstream& out) const;
+	  void Mass(fstream& out) const;
+	  void MassDensity(fstream& out) const;
     /**
      * @brief Set The Neighbour of the container.
      *

@@ -20,7 +20,7 @@ const bool presure_laplacien=false;
 /**
  * @brief Distance after witch kernel is 0.
  **/
-const double h=0.3;
+const double h=0.03;
 
 /**
  * @brief Time step size.

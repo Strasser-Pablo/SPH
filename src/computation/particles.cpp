@@ -188,7 +188,6 @@ for(Particles::iterator it=begin();it!=end();++it){
 }
 
 void Particles::Calculate0Density(){
-	ComputeDensity();
 	for(Particles::iterator it=begin();it!=end();++it){
  (*it)->Calculate0Density();
  }
@@ -254,4 +253,28 @@ void Particles::WritePos(fstream& out)const{
 	for(Particles::const_iterator it=begin();it!=end();it++){
 			(*it)->WritePos( out);
 		}
+}
+
+void Particles::Density(fstream &out)const{
+	for(Particles::const_iterator it=begin();it!=end();it++){
+			out<<(*it)->GetDensity()<<endl;
+		}
+}
+
+void Particles::Pressures(fstream &out)const{
+	for(Particles::const_iterator it=begin();it!=end();it++){
+		out<<(*it)->GetPressure()<<endl;
+	}
+}
+
+void Particles::Mass(fstream &out)const{
+	for(Particles::const_iterator it=begin();it!=end();it++){
+	out<<(*it)->GetMass()<<endl;
+	}
+}
+
+void Particles::MassDensity(fstream &out)const{
+	for(Particles::const_iterator it=begin();it!=end();it++){
+	out<<(*it)->GetMassDensity()<<endl;
+	}
 }

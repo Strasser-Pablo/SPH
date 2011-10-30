@@ -21,13 +21,13 @@ void World_test::Do()
 
 
 
-int Nx=5;
-int Ny=5;
-int Nz=5;
+int Nx=10;
+int Ny=1;
+int Nz=10;
 for(int i=0;i<Nx;i++){
 	for(int j=0;j<Ny;j++){
 		for(int k=0;k<Nz;k++){
-	Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3,k*h/3),physvector< 3  >(0,3,0),water,1000));
+	Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3,k*h/3),physvector< 3  >(0,1,0),water));
 }
 	}
 }
@@ -35,15 +35,24 @@ for(int i=0;i<Nx;i++){
 
 m_list.Calculate0Density();
 
- for(int k=0;k<600;k++){
-  cout<<"k "<<k<<endl;
+ for(int k=0;k<20;k++){
 
 //m_list.Dump();
-
+for(int i=0;i<9;i++){
  m_list.Compute(ar);
-// m_list.Dump();
+  m_list.write();
+}
 
-cout<<"write"<<endl;
+// m_list.Dump();
+	for(int x=0;x<Nx;x++){
+	for(int y=0;y<Ny;y++){
+		for(int z=0;z<Nz;z++){
+	Add(ParticleReal(physvector< 3  >(x*h/3,y*h/3,z*h/3),physvector< 3  >(0,1,0),water));
+}
+	}
+}
+m_list.Calculate0Density();
+cout<<"part added"<<endl;
  m_list.write();
 
    }

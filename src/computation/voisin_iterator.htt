@@ -3,6 +3,9 @@ Voisin_Iterator::Voisin_Iterator(list<Particles*>& lparticles,list<Particles*>::
 	
 }
 
+Voisin_Iterator::Voisin_Iterator(list<Particles*>& lparticles,list<Particles*>::iterator particles):m_particles(particles),m_lpart(lparticles){
+	
+}
 Voisin_Iterator Voisin_Iterator::operator++(){
 	++m_particle;
 	if(m_particle==(*m_particles)->end()){

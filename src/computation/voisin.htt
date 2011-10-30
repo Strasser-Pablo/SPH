@@ -10,10 +10,16 @@ list<Particles*> Voisin::GetParticlesVect()const{
 }
 
 Voisin_Iterator Voisin::begin(){
+	if(m_vect.empty()){
+	return	Voisin_Iterator(m_vect,m_vect.end());
+	}
  return Voisin_Iterator(m_vect,m_vect.begin(),(*(m_vect.begin()))->begin());
 }
 
 Voisin_Iterator Voisin::end(){
+	if(m_vect.empty()){
+	return	Voisin_Iterator(m_vect,m_vect.end());
+	}
 	return Voisin_Iterator(m_vect,m_vect.end(),(*(--m_vect.end()))->end());
 }
 

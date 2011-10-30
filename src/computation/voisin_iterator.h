@@ -7,6 +7,8 @@ Particles::iterator m_particle;
  list<Particles*>& m_lpart;
 public:
 inline Voisin_Iterator(list<Particles*> & lparticles,list<Particles*>::iterator  particles,Particles::iterator  particle);
+inline Voisin_Iterator(list<Particles*> & lparticles,list<Particles*>::iterator  particles);
+
 inline Voisin_Iterator operator++();
 inline Voisin_Iterator operator++(int);
 inline Particle operator*();

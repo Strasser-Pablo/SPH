@@ -34,10 +34,89 @@ Particle Voisin_Iterator::operator *(){
 	return *m_particle;
 }
 
-bool Voisin_Iterator::operator ==(const Voisin_Iterator& B){
+bool Voisin_Iterator::operator ==(const Voisin_Iterator& B)const{
 	return m_particle==B.m_particle&& m_particles==B.m_particles;
 }
 
-bool Voisin_Iterator::operator !=(const Voisin_Iterator& B){
+bool Voisin_Iterator::operator !=(const Voisin_Iterator& B)const{
 	return m_particle!=B.m_particle|| m_particles!=B.m_particles;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Voisin_Const_Iterator::Voisin_Const_Iterator(list<Particles*>& lparticles,list<Particles*>::const_iterator particles,Particles::const_iterator particle):m_particles(particles),m_particle(particle),m_lpart(lparticles){
+	
+}
+
+Voisin_Const_Iterator::Voisin_Const_Iterator(list<Particles*>& lparticles,list<Particles*>::const_iterator particles):m_particles(particles),m_lpart(lparticles){
+	
+}
+Voisin_Const_Iterator Voisin_Const_Iterator::operator++(){
+	++m_particle;
+	if(m_particle==(*m_particles)->end()){
+		if(m_particles!=m_lpart.end()){
+	++m_particles;
+	if(m_particles!=m_lpart.end()){
+	m_particle=(*m_particles)->begin();
+		}
+		}
+		
+	}
+	return *this;
+}
+//TODO to correct make segmentation fault.
+Voisin_Const_Iterator Voisin_Const_Iterator::operator++(int){
+	Voisin_Const_Iterator vois(*this);
+	++m_particle;
+	if(m_particle==(*m_particles)->end()){
+	++m_particles;
+	m_particle=(*m_particles)->begin();
+	}
+	return vois;
+}
+
+const Particle Voisin_Const_Iterator::operator *(){
+	return *m_particle;
+}
+
+bool Voisin_Const_Iterator::operator ==(const Voisin_Const_Iterator& B)const{
+	return m_particle==B.m_particle&& m_particles==B.m_particles;
+}
+
+bool Voisin_Const_Iterator::operator !=(const Voisin_Const_Iterator& B)const{
+	return m_particle!=B.m_particle|| m_particles!=B.m_particles;
+}
+
+Voisin_Const_Iterator::Voisin_Const_Iterator(Voisin_Iterator A):m_particles(A.m_particles),m_particle(A.m_particle),m_lpart(A.m_lpart){
+	
 }

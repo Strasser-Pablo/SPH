@@ -256,6 +256,8 @@ for(Voisin::iterator it=m_voisin->begin();it!=m_voisin->end();++it){
 		continue;
 	}
 	f+=1/GetMass()*0.001/(Distance(*it))*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h).prod((GetSpeed()-(*it)->GetSpeed()));
+	//f+=1/m_m*0.5*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h);
+	
 }
 
 return f;
@@ -442,14 +444,14 @@ bool ParticleReal::GetIsInBoundaryRegion()const {
 void ParticleReal::WritePos(fstream &out)const{
 	m_pos.WritePos(out);
 }
-
+//use m_force calculated in the calculus of time step.
  void ParticleReal::preComputeMove_predictor(double dt){
 	 m_pos0=m_pos;
 	 m_speed0=m_speed;
 	 m_pos0_5=m_pos0;
 	 m_speed0_5=m_speed0;
 	 m_pos+=dt/2*m_speed;
-	 m_speed+=dt/2*Force();
+	 m_speed+=dt/2*m_force;
 	 m_nb_it=0;
  }
 	 void ParticleReal::ComputeMove_predictor(double dt,bool &b){
@@ -475,3 +477,25 @@ void ParticleReal::DoMove_predictor(){
  int ParticleReal::GetNb_It()const{
 	 return m_nb_it;
  }
+ 
+  void ParticleReal::NextForceTimeStep(double &dt)const{
+	  m_force=Force();
+	double dttemp=sqrt(h/m_force.Norm());
+	if(dttemp<dt){
+		dt=dttemp;
+	}
+  }
+  
+   void ParticleReal::NextCourantVisciousTimeStep(double &dt) const{
+	  double temp=0;
+	  for(Voisin::const_iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+			double temp2=abs(h*(GetSpeed()-(*it)->GetSpeed())*(GetPos()-(*it)->GetPos())/(GetPos()-(*it)->GetPos()).Norm2());
+			if(temp2>temp){
+				temp=temp2;
+			}
+		  }
+	temp=h/(sound_speed+temp);
+	if(dt>temp){
+		dt=temp;
+	}
+  }

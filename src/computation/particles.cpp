@@ -300,3 +300,16 @@ void Particles::MassDensity(fstream &out)const{
 	out<<(*it)->GetNb_It()<<endl;
 	}  
 	  }
+	  
+	  void Particles::NextForceTimeStep(double &dt) const{
+		  for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->NextForceTimeStep(dt);
+	}   
+	  }
+	  
+	  
+	    void Particles::NextCourantVisciousTimeStep(double &dt) const{
+		  for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->NextCourantVisciousTimeStep(dt);
+	}   
+	  }

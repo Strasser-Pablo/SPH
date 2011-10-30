@@ -64,6 +64,7 @@ void ConjugateGradiant();
 
    inline  void write() const;
     void predictor_corrector_compute(double DT);
+	double NextTimeStep() const;
 private:
     template<class Archive>
  void  CorrectDensity(Archive& ar);

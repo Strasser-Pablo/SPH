@@ -123,3 +123,13 @@ it->second.DoMove_predictor();
 }
 }
 
+double Particles_List::NextTimeStep()const{
+	double dt=DT;
+	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
+it->second.NextForceTimeStep(dt);;
+}
+	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
+it->second.NextCourantVisciousTimeStep(dt);
+}	
+return 0.3*dt;	
+}

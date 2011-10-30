@@ -27,6 +27,7 @@ class ParticleReal
 {
     //Used for conjugate gradiant
 	bool m_b_0_done;
+mutable	physvector<DIM> m_force;
     double m_r;
     double m_z;
     double m_zprec;
@@ -79,6 +80,8 @@ double m_density0;
   **/
   bool m_fixed;
 public:
+inline void NextForceTimeStep(double &dt)const;
+inline void NextCourantVisciousTimeStep(double &dt) const;
 inline int GetNb_It()const;
 inline void WritePos(fstream& out)const;
 inline void SetBoundary(bool b);

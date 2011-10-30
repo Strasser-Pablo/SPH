@@ -92,6 +92,8 @@ public:
 	  void NB_it(fstream& out) const;
 	  void Mass(fstream& out) const;
 	  void MassDensity(fstream& out) const;
+	 void NextForceTimeStep(double &dt) const;
+	 void NextCourantVisciousTimeStep(double &dt) const;
     /**
      * @brief Set The Neighbour of the container.
      *

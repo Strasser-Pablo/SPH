@@ -35,7 +35,7 @@ for(int i=0;i<Nx;i++){
 
 m_list.Calculate0Density();
 
- for(int k=0;k<20;k++){
+ while(true){
 
 //m_list.Dump();
 for(int i=0;i<9;i++){

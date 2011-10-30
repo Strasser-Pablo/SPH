@@ -187,10 +187,11 @@ void Particles_List::Compute(Archive& ar)
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 		it->second.ComputeDensity();
     }
+	 double dt=NextTimeStep();
      bool ret=false;
 	 if(presure_laplacien){
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-        ret=it->second.PreComputeMove(DT)||ret;
+        ret=it->second.PreComputeMove(dt)||ret;
     }
 	
 	if(ret){
@@ -205,9 +206,10 @@ void Particles_List::Compute(Archive& ar)
     }
 	 */
 	 //predictor corrector
-	 predictor_corrector_compute(DT);
+	 predictor_corrector_compute(dt);
 	}
-    m_t+=DT;
+	cout<<"time step "<<dt<<endl;
+    m_t+=dt;
    map<Key<DIM> ,Particles>::iterator it=m_list.begin();
    while(it!=m_list.end()){
 	   map<Key<DIM> ,Particles>::iterator it2=it;

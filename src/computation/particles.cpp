@@ -278,3 +278,25 @@ void Particles::MassDensity(fstream &out)const{
 	out<<(*it)->GetMassDensity()<<endl;
 	}
 }
+
+   void Particles::preComputeMove_predictor(double dt){
+	   for(Particles::iterator it=begin();it!=end();it++){
+	(*it)->preComputeMove_predictor(dt);
+	}
+   }
+	 void Particles::ComputeMove_predictor(double dt,bool &b){
+		 for(Particles::iterator it=begin();it!=end();it++){
+	(*it)->ComputeMove_predictor(dt,b);
+	}
+	 }
+	 void Particles::DoMove_predictor(){
+		 for(Particles::iterator it=begin();it!=end();it++){
+	(*it)->DoMove_predictor();
+	}
+	 }
+	 
+	  void Particles::NB_it(fstream& out) const{
+		 for(Particles::const_iterator it=begin();it!=end();it++){
+	out<<(*it)->GetNb_It()<<endl;
+	}  
+	  }

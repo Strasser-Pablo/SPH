@@ -139,6 +139,13 @@ for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end()
         it->second.MassDensity(out);
     }
 out<< "</DataArray>"<<endl;
+
+out<< "<DataArray type=\"Int32\" Name=\"NB_it\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.NB_it(out);
+    }
+out<< "</DataArray>"<<endl;
+
 out<< "</PointData>"<<endl; 
 out<<"</Piece>"<<endl;
 out<<"</UnstructuredGrid>"<<endl;
@@ -191,9 +198,14 @@ void Particles_List::Compute(Archive& ar)
 	}
 	 }
 	if(presure_eq_state){
+		//euler
+		/*
 	  for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.ComputeMove(DT);
     }
+	 */
+	 //predictor corrector
+	 predictor_corrector_compute(DT);
 	}
     m_t+=DT;
    map<Key<DIM> ,Particles>::iterator it=m_list.begin();

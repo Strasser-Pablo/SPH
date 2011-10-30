@@ -63,6 +63,7 @@ void ConjugateGradiant();
   inline void DumpBoundary()const ;
 
    inline  void write() const;
+    void predictor_corrector_compute(double DT);
 private:
     template<class Archive>
  void  CorrectDensity(Archive& ar);

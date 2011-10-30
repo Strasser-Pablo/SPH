@@ -40,15 +40,19 @@ class ParticleReal
 	bool m_converged;
     Particles* m_container;
     Voisin*  m_voisin;
-
+int m_nb_it;
   /**
    * @brief Position
    **/
   physvector<DIM> m_pos;
+  physvector<DIM> m_pos0_5;
+   physvector<DIM> m_pos0;
   /**
    * @brief Speed
    **/
   physvector<DIM> m_speed;
+  physvector<DIM> m_speed0_5;
+  physvector<DIM> m_speed0;
   /**
    * @brief Mass
    **/
@@ -75,6 +79,7 @@ double m_density0;
   **/
   bool m_fixed;
 public:
+inline int GetNb_It()const;
 inline void WritePos(fstream& out)const;
 inline void SetBoundary(bool b);
 //For conjugate gradiant
@@ -243,7 +248,9 @@ inline double GetPressure() const;
   inline  void ComputeDensity();
 
   inline void ComputeMove(double dt);
-
+	inline void preComputeMove_predictor(double dt);
+	inline void ComputeMove_predictor(double dt,bool &b);
+	inline void DoMove_predictor();
   inline bool PreComputeMove(double dt);
    /**
    * @brief Verify that the two object represent the same particle (ie they share the same memory)

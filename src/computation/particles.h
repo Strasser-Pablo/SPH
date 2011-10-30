@@ -83,9 +83,13 @@ public:
      **/
     bool PreComputeMove(double dt);
 	   void ComputeMove(double dt);
+	    void preComputeMove_predictor(double dt);
+	 void ComputeMove_predictor(double dt,bool &b);
+	 void DoMove_predictor();
 	  void WritePos(fstream& out) const;
 	  void Density(fstream& out) const;
 	  void Pressures(fstream& out) const;
+	  void NB_it(fstream& out) const;
 	  void Mass(fstream& out) const;
 	  void MassDensity(fstream& out) const;
     /**

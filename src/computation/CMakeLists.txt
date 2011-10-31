@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(computation)
 find_package (Doxygen)
-find_package( Boost COMPONENTS serialization REQUIRED)
-link_directories ( ${Boost_LIBRARY_DIRS} )
 file(GLOB_RECURSE source_computation *.cpp )
 add_executable(computation ${source_computation})
 
@@ -15,5 +13,4 @@ message("Documentation will no be created because Doxygen was no found.
  After installation of Doxygen relaunch cmake")
 endif()
 
-target_link_libraries (	   computation ${Boost_LIBRARIES})
 install (TARGETS computation DESTINATION bin)

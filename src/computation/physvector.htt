@@ -217,20 +217,7 @@ return Key<3>(m_x/h,m_y/h,m_z/h);
 Key<2> physvector<2>::ToKey(double h){
 return Key<2>(m_x/h,m_y/h);
 }
-    template<class Archive>
-void physvector< 3  >::serialize(Archive& ar, const unsigned int version)
-{
-ar&BOOST_SERIALIZATION_NVP(m_x);
-ar&BOOST_SERIALIZATION_NVP(m_y);
-ar&BOOST_SERIALIZATION_NVP(m_z);
-}
-    template<class Archive>
-void physvector< 2  >::serialize(Archive& ar, const unsigned int version)
-{
-ar&BOOST_SERIALIZATION_NVP(m_x);
-ar&BOOST_SERIALIZATION_NVP(m_y);
-}
-
+  
 void physvector< 2  >::WritePos(fstream & out)const{
 	out<<m_x<<" "<<m_y<<endl;
 }

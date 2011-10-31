@@ -165,8 +165,7 @@ cout<<"file num "<<filenum<<endl;
     }
    }
 
- template<class Archive>
-void Particles_List::CorrectDensity(Archive& ar){
+void Particles_List::CorrectDensity(){
 		FindBoundary();
 bool bcont=true;
 int i=0;
@@ -181,8 +180,8 @@ i++;
  cout<<"correction iteration "<<i<<endl;
 }
 
- template<class Archive>
-void Particles_List::Compute(Archive& ar)
+
+void Particles_List::Compute()
 {
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 		it->second.ComputeDensity();
@@ -195,7 +194,7 @@ void Particles_List::Compute(Archive& ar)
     }
 	
 	if(ret){
-	CorrectDensity(ar);	
+	CorrectDensity();	
 	}
 	 }
 	if(presure_eq_state){

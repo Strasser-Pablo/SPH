@@ -8,8 +8,6 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include <fstream>
 #include "key.h"
 
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
  /**
    * @brief Class that cannot be used. Only spezialitation can be used.
    *
@@ -117,10 +115,7 @@ public:
 		inline physvector<3> prod(const physvector<3>& a) const;
      #ifndef DOXYGEN
 private:
-    friend class boost::serialization::access;
        #endif //DOXYGEN
-      template<class Archive>
-   inline void serialize(Archive & ar, const unsigned int version);
 
 };
 
@@ -213,12 +208,7 @@ public:
      inline Key<2> ToKey(double h);
 	 	inline void WritePos(fstream & out) const;
 	inline	physvector<2> prod(const physvector<2>& a) const;
-#ifndef DOXYGEN
-private:
-    friend class boost::serialization::access;
-    #endif //DOXYGEN
-      template<class Archive>
-   inline void serialize(Archive & ar, const unsigned int version);
+
 
 };
 

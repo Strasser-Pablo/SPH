@@ -11,14 +11,6 @@ World_test::World_test()
 
 void World_test::Do()
 {
- ;
- // a.Dump();
-  ofstream out("default");
-  boost::archive::binary_oarchive ar(out);
-//boost::archive::xml_oarchive ar(out);
-
-
-
 double uy=1;
 
 int Nx=10;
@@ -39,7 +31,7 @@ double t_next=h/3/uy;
  while(true){
 
 while(m_list.GetTime()<t_next){
- m_list.Compute(ar);
+ m_list.Compute();
   m_list.write();
    }
 t_next+=h/3/uy;
@@ -53,8 +45,4 @@ for(int i=0;i<Nx;i++){
 m_list.Calculate0Density();
  }
 
-
-bool bfalse=false;
-ar<<BOOST_SERIALIZATION_NVP(bfalse);
-//m_list.Dump();
 }

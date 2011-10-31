@@ -153,22 +153,6 @@ void ParticleReal::Dump()const {
     cout<<"pos "<<m_pos<<" speed "<<m_speed<<endl;
 }
 
-template<class Archive>
-void ParticleReal::serialize(Archive& ar, const unsigned int version)
-{
-    ar &BOOST_SERIALIZATION_NVP(m_pos);
-    ar &BOOST_SERIALIZATION_NVP(m_speed);
-    ar &BOOST_SERIALIZATION_NVP(m_density);
-    ar &BOOST_SERIALIZATION_NVP(m_p);
-    ar &BOOST_SERIALIZATION_NVP(m_type);
-    ar &BOOST_SERIALIZATION_NVP(m_m);
-	 ar &BOOST_SERIALIZATION_NVP(m_boundary);
-	 ar &BOOST_SERIALIZATION_NVP(m_converged);
-    #ifdef DOXYGEN
-    physvector<3> p;
-    p.serialize(ar,0);
-    #endif //DOXYGEN
-}
 
 
 //TODO: to rewrite

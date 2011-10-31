@@ -12,10 +12,6 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include "const.h"
 #include <map>
 #include "key.h"
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
-#include <boost/archive/xml_oarchive.hpp>
 #include "boundaries.h"
 
 
@@ -120,8 +116,7 @@ public:
      void Dump(bool voisin=true);
 
 
-      template<class Archive>
- inline  void write(Archive & ar) const;
+
 
  void Add(Particle part);
 
@@ -132,21 +127,7 @@ void PreparePosition(bool &b);
 };
 
 
-  template<class Archive>
-void Particles::write(Archive& ar) const
-{
-  const bool bt=true;
-  const bool bf=false;
-for(Particles::const_iterator it=begin();it!=end();it++){
-  ar<<boost::serialization::make_nvp("true",bt);
- ar<<boost::serialization::make_nvp("Particle_real",**it);
 
- #ifdef DOXYGEN
-  ParticleReal p;
- p.serialize(ar,0);
- #endif //DOXYGEN
-}
-}
 
   void Particles::GetNeighbour( Voisin &  neigh)const{
   neigh=m_neighbour;

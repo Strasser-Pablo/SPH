@@ -6,8 +6,7 @@
 
 #include "key.h"
 
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
+
 using namespace std;
 
   /**
@@ -46,8 +45,8 @@ void ConjugateGradiant();
    *
    * @return void
    **/
-    template<class Archive>
-  void Compute(Archive& ar);
+   
+inline  void Compute();
 
   void Prepare();
   /**
@@ -67,8 +66,8 @@ void ConjugateGradiant();
 	double NextTimeStep() const;
 inline	double GetTime() const;
 private:
-    template<class Archive>
- void  CorrectDensity(Archive& ar);
+    
+inline void  CorrectDensity();
  void SetB_Speed();
  void PreparePosition(bool &b);
  void FindBoundary();

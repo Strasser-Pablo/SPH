@@ -11,8 +11,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include <list>
 #include "particle.h"
 #include "particles.h"
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
+
 class Voisin;
 /**
  * \file particle_real.h Contain Header for class Particle_Real, containing the particle.
@@ -311,20 +310,7 @@ private:
  inline physvector<DIM> Force() const;
  
  inline bool GetIsInBoundaryRegion()const;
- public:
-  #ifndef DOXYGEN
-private:
-  friend class boost::serialization::access;
-    #endif //DOXYGEN
-      /**
-       * @brief Used to Serialize the class
-       *
-       * @param ar Archive to witch read or write
-       * @param version version number, Unused.
-       * @return void
-       **/
-        template<class Archive>
-      inline void serialize(Archive & ar, const unsigned int version);
+
 };
 
 

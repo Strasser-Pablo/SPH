@@ -28,7 +28,7 @@ for(int i=0;i<Nx;i++){
 
 m_list.Calculate0Density();
 double t_next=h/3/uy;
- while(true){
+for(int i=0;i<20;i++){
 
 while(m_list.GetTime()<t_next){
  m_list.Compute();

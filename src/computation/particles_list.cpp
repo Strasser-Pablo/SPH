@@ -16,17 +16,6 @@ void Particles_List::Dump() {
     cout<<"End Particle List"<<endl;
 }
 
-void Particles_List::Prepare()
-{
-  for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.ComputeDensity();
-    }
-
-    #if DOXYGEN
-    ParticleReal p;
-    p.ComputePressure_Density();
-    #endif //DOXYGEN
-}
 
  void Particles_List::InitializeCG(){
   for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {

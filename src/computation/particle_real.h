@@ -25,8 +25,15 @@ using namespace std;
 class ParticleReal
 {
     //Used for conjugate gradiant
+	/** 
+	 * @brief True if we have initalized the 0 density.
+	 **/
 	bool m_b_0_done;
+	/** 
+	 * @brief Cache for the value of force. For not calculating it 2 times.
+	 **/
 mutable	physvector<DIM> m_force;
+//Variable for conjugate gradient
     double m_r;
     double m_z;
     double m_zprec;
@@ -38,7 +45,13 @@ mutable	physvector<DIM> m_force;
     double m_b;
 	bool m_boundary;
 	bool m_converged;
+	/**
+	 * @brief Pointer to the container.
+	 **/
     Particles* m_container;
+		/**
+	 * @brief Point to Voisin.
+	 **/
     Voisin*  m_voisin;
 int m_nb_it;
   /**
@@ -57,10 +70,14 @@ int m_nb_it;
    * @brief Mass
    **/
   double m_m;
+  
+  double m_1_over_m;
+  
   /**
    * @brief Density of particle \f$ \sum W \f$
    **/
   double m_density;
+double m_1_over_density_2;
 
 double m_density0;
 
@@ -79,12 +96,29 @@ double m_density0;
   **/
   bool m_fixed;
 public:
+/**
+	 * @brief Calculate next time step restriction for the force.
+	 **/
 inline void NextForceTimeStep(double &dt)const;
+/**
+	 * @brief Calculate next time step restriction for the courant and viscious term.
+	 **/
 inline void NextCourantVisciousTimeStep(double &dt) const;
+/**
+	 * @brief Get the number of iteration for the predictor correction step.
+	 **/
 inline int GetNb_It()const;
+/**
+	 * @brief Write position in a file format for ParaView.
+	 * 
+	 * @param out Output to write.
+	 **/
 inline void WritePos(fstream& out)const;
 inline void SetBoundary(bool b);
 //For conjugate gradiant
+/**
+	 * @brief Calculate the A matrice for Gradient conjugate
+	 **/
 inline double CalculateA(const Particle& B)const;
 
 inline void Calculate0Density();

@@ -151,7 +151,7 @@ out<<"</Piece>"<<endl;
 out<<"</UnstructuredGrid>"<<endl;
 out<<"</VTKFile>"<<endl;
 out.close();
-cout<<"file num "<<filenum<<endl;
+cout<<"file num "<<filenum<<" nb part "<<m_n<<endl;
 ++filenum;
 }
 

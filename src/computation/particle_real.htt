@@ -244,9 +244,13 @@ physvector<DIM> f;
 f+=G;
 
 if(presure_eq_state){
+	physvector<DIM> fp;
 for(Voisin::iterator it=m_voisin->begin();it!=m_voisin->end();++it){
-f+=m_m*0.5*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(pressure(GetDensity()*m_m,water)+pressure((*it)->GetDensity()*(*it)->m_m,water));
+fp-=1/m_m*0.5*(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)*(pressure(GetDensity()*m_m,water)+pressure((*it)->GetDensity()*(*it)->m_m,water));
+//cout<<-fp<<" "<<m_m*0.5<<" "<<(1/pow(GetDensity(),2)+1/pow((*it)->GetDensity(),2))<<" "<<Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h)<<" p "<<(pressure(GetDensity()*m_m,water)+pressure((*it)->GetDensity()*(*it)->m_m,water))<<endl;
 }
+f+=fp;
+
 }
 
 
@@ -446,6 +450,7 @@ void ParticleReal::WritePos(fstream &out)const{
 }
 //use m_force calculated in the calculus of time step.
  void ParticleReal::preComputeMove_predictor(double dt){
+	   if(!m_fixed){
 	 m_pos0=m_pos;
 	 m_speed0=m_speed;
 	 m_pos0_5=m_pos0;
@@ -453,8 +458,10 @@ void ParticleReal::WritePos(fstream &out)const{
 	 m_pos+=dt/2*m_speed;
 	 m_speed+=dt/2*m_force;
 	 m_nb_it=0;
+	   }
  }
 	 void ParticleReal::ComputeMove_predictor(double dt,bool &b){
+		   if(!m_fixed){
 		m_pos0_5=m_pos;
 	 m_speed0_5=m_speed;
 	  
@@ -467,11 +474,14 @@ void ParticleReal::WritePos(fstream &out)const{
 		++m_nb_it;
 	}
 	b=b||ret;
+		   }
 }
 
 void ParticleReal::DoMove_predictor(){
+	  if(!m_fixed){
 	m_pos=2*m_pos-m_pos0;
 	m_speed=2*m_speed-m_speed0;
+	  }
 }
 
  int ParticleReal::GetNb_It()const{
@@ -479,14 +489,17 @@ void ParticleReal::DoMove_predictor(){
  }
  
   void ParticleReal::NextForceTimeStep(double &dt)const{
+	    if(!m_fixed){
 	  m_force=Force();
 	double dttemp=sqrt(h/m_force.Norm());
 	if(dttemp<dt){
 		dt=dttemp;
 	}
   }
+  }
   
    void ParticleReal::NextCourantVisciousTimeStep(double &dt) const{
+	     if(!m_fixed){
 	  double temp=0;
 	  for(Voisin::const_iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
 			double temp2=abs(h*(GetSpeed()-(*it)->GetSpeed())*(GetPos()-(*it)->GetPos())/(GetPos()-(*it)->GetPos()).Norm2());
@@ -499,3 +512,4 @@ void ParticleReal::DoMove_predictor(){
 		dt=temp;
 	}
   }
+   }

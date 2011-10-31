@@ -227,3 +227,7 @@ void Particles_List::Compute(Archive& ar)
     p.Update(this);
     #endif //DOXYGEN
 }
+
+double Particles_List::GetTime()const{
+	return m_t;
+}

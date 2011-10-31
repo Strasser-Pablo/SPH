@@ -19,7 +19,7 @@ void World_test::Do()
 
 
 
-
+double uy=1;
 
 int Nx=10;
 int Ny=1;
@@ -27,38 +27,31 @@ int Nz=10;
 for(int i=0;i<Nx;i++){
 	for(int j=0;j<Ny;j++){
 		for(int k=0;k<Nz;k++){
-	Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3,k*h/3),physvector< 3  >(0,1,0),water));
+	Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3,k*h/3),physvector< 3  >(0, uy,0),water));
 }
 	}
 }
 
 
-m_list.Calculate0Density();
 
+m_list.Calculate0Density();
+double t_next=h/3/uy;
  while(true){
 
-//m_list.Dump();
-for(int i=0;i<9;i++){
+while(m_list.GetTime()<t_next){
  m_list.Compute(ar);
   m_list.write();
-}
-
-// m_list.Dump();
-	for(int x=0;x<Nx;x++){
-	for(int y=0;y<Ny;y++){
-		for(int z=0;z<Nz;z++){
-	Add(ParticleReal(physvector< 3  >(x*h/3,y*h/3,z*h/3),physvector< 3  >(0,1,0),water));
+   }
+t_next+=h/3/uy;
+for(int i=0;i<Nx;i++){
+	for(int j=0;j<Ny;j++){
+		for(int k=0;k<Nz;k++){
+	Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3,k*h/3),physvector< 3  >(0, uy,0),water));
 }
 	}
 }
 m_list.Calculate0Density();
-cout<<"part added"<<endl;
- m_list.write();
-
-   }
-
-
-
+ }
 
 
 bool bfalse=false;

@@ -37,6 +37,7 @@ public:
 	 * @param part Real Particle to be linked with.
 	 **/
 	inline Particle(ParticleReal * part);
+	inline Particle();
 	/**
 	 * @brief Return a Pointer to the linked Particle
 	 *

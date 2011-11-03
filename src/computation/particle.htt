@@ -8,7 +8,9 @@ Particle::Particle(ParticleReal* part):m_data(part) {
 
 }
 
-
+Particle::Particle():m_data(0){
+	
+}
 
 
 ParticleReal* Particle::Get() {

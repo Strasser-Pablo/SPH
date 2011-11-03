@@ -123,7 +123,7 @@ public:
 	 * If particles were added Calculate0Density() need to be called before to have a correct result.
 	 * @return void
 	 **/
-	inline  void Compute();
+	inline  void Compute(double &dt);
 
 	/**
 	 * @brief Used for debuging purpose. Print somes usefull informations.
@@ -143,7 +143,7 @@ public:
 	 * File are in a format to be read by ParaView
 	 *
 	 **/
-	inline  void write() const;
+	inline  void write(double dt) const;
 	/**
 	 * @brief Compute the next position and speed using a predictor corrector algorithm
 	 *

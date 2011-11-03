@@ -55,6 +55,7 @@ bool b;
 int j=0;
 while(!bcont){
     double num=0;
+	cout<<"loop"<<endl;
 double alpha=CalculateAlpha(num,b);
 if(b){
 	break;
@@ -62,6 +63,7 @@ if(b){
 double beta=CalculateBeta(num,bcont,alpha);
 CalculateP1(beta);
 j++;
+cout<<"end loop"<<endl;
 }
 cout<<"conjugate gradient nb it "<<j<<endl;
 }

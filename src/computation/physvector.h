@@ -113,6 +113,7 @@ public:
 		
 		inline void WritePos(fstream & out) const;
 		inline physvector<3> prod(const physvector<3>& a) const;
+		inline bool operator<(const physvector<3> A)const;
      #ifndef DOXYGEN
 private:
        #endif //DOXYGEN
@@ -208,8 +209,8 @@ public:
      inline Key<2> ToKey(double h);
 	 	inline void WritePos(fstream & out) const;
 	inline	physvector<2> prod(const physvector<2>& a) const;
-
-
+	
+		inline bool operator<(const physvector<2> A)const;
 };
 
 

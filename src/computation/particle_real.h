@@ -24,36 +24,24 @@ using namespace std;
    **/
 class ParticleReal
 {
+	
     //Used for conjugate gradiant
-	/** 
-	 * @brief True if we have initalized the 0 density.
-	 **/
-	bool m_b_0_done;
+	
 	/** 
 	 * @brief Cache for the value of force. For not calculating it 2 times.
 	 **/
 mutable	physvector<DIM> m_force;
 //Variable for conjugate gradient
-    double m_r;
-    double m_z;
-    double m_zprec;
-    double m_rprec;
-    double m_p1;
-    double m_px;
-    double m_pv;
-    double m_p;
-    double m_b;
-	bool m_boundary;
-	bool m_converged;
-	/**
-	 * @brief Pointer to the container.
-	 **/
-    Particles* m_container;
+
+
+	
+
+
 		/**
 	 * @brief Point to Voisin.
 	 **/
     Voisin*  m_voisin;
-int m_nb_it;
+
   /**
    * @brief Position
    **/
@@ -66,35 +54,87 @@ int m_nb_it;
   physvector<DIM> m_speed;
   physvector<DIM> m_speed0_5;
   physvector<DIM> m_speed0;
-  /**
+
+  
+
+  
+
+
+
+    /**
+  * @brief A fixed particle cannot move.
+  **/
+
+
+
+ 
+     
+	  
+	
+    
+    
+    
+    
+
+    
+    
+    
+ 
+ 
+		    /**
+   * @brief Density of particle \f$ \sum W \f$
+   **/
+
+    
+	 ParticleType m_type;
+	  bool m_fixed;
+	      Particles* m_container;
+		  double m_density;
+		   /**
    * @brief Mass
    **/
   double m_m;
-  
-  double m_1_over_m;
-  
-  /**
-   * @brief Density of particle \f$ \sum W \f$
-   **/
-  double m_density;
-double m_1_over_density_2;
-
-double m_density0;
-
-
+   double m_b;
   /**
    * @brief Surface tension
    **/
-  physvector<DIM> m_surface_tens;
-  /**
+   double m_p;
+	double m_pv;
+	double m_px;
+	    double m_p1;
+		double m_r;
+		double m_rprec;
+		double m_zprec;
+		double m_z;
+		bool m_boundary;
+			bool m_converged;
+			/** 
+	 * @brief True if we have initalized the 0 density.
+	 **/
+	bool m_b_0_done;
+  int m_nb_it;
+      double m_1_over_m;
+  double m_1_over_density_2;
+
+	  	bool m_const_speed;
+		
+			/**
+	 * @brief Pointer to the container.
+	 **/
+   
+	
+	 
+	  
+	  double m_density0;
+	
+    
+	 /**
    * @brief Type of particle.
    **/
-  ParticleType m_type;
+  physvector<DIM> m_surface_tens;
+ 
 
-  /**
-  * @brief A fixed particle cannot move.
-  **/
-  bool m_fixed;
+
 public:
 /**
 	 * @brief Calculate next time step restriction for the force.
@@ -307,6 +347,8 @@ inline double GetPressure() const;
 
   void SetContainerParticles(Particles * container);
 inline void GetVoisin( Voisin & voisin) const;
+ inline void SetConstSpeed(bool b);
+ inline bool GetConstSpeed();
 private:
 
 /**
@@ -344,6 +386,8 @@ private:
  inline physvector<DIM> Force() const;
  
  inline bool GetIsInBoundaryRegion()const;
+ 
+
 
 };
 

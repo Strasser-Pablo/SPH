@@ -14,6 +14,7 @@ const int DIM=DIM_DEF;
 
 const bool presure_eq_state=true;
 const bool presure_laplacien=false;
+const bool pressure_guess_pressure=false;
 
 
 
@@ -25,7 +26,7 @@ const double h=0.03;
 /**
  * @brief Time step size.
  **/
-const double DT=0.001;
+const double DT=0.01;
 #endif // CONST_H
 
 #ifndef CONST_H_VECTOR

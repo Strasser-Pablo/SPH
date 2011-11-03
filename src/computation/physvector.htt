@@ -210,12 +210,12 @@ m_y*=c;
   return physvector< 3  > (m_x/c,m_y/c,m_z/c);
 }
 
-      Key<3> physvector<3>::ToKey(double h){
-return Key<3>(m_x/h,m_y/h,m_z/h);
+      Key<3> physvector<3>::ToKey(double _h){
+return Key<3>(int(m_x/_h),int(m_y/_h),int(m_z/_h));
 }
 
-Key<2> physvector<2>::ToKey(double h){
-return Key<2>(m_x/h,m_y/h);
+Key<2> physvector<2>::ToKey(double _h){
+return Key<2>(int(m_x/_h),int(m_y/_h));
 }
   
 void physvector< 2  >::WritePos(fstream & out)const{
@@ -231,4 +231,50 @@ void physvector< 3  >::WritePos(fstream & out)const{
 }
 physvector<2> physvector< 2  >::prod(const physvector<2>& a) const{
 	return physvector< 2  >(a.m_x*m_x,a.m_y*m_y);
+}
+
+
+
+bool physvector<2>::operator<(const physvector<2> A) const{
+  if(m_x<A.m_x){
+    return true;
+  }
+  else if(m_x>A.m_x){
+   return false;
+  }
+    if(m_y<A.m_y){
+    return true;
+  }
+  else if(m_y>A.m_y){
+   return false;
+  }
+
+
+  return false;
+}
+
+bool physvector<3>::operator<(const physvector<3> A) const{
+
+
+
+  if(m_x<A.m_x){
+    return true;
+  }
+  else if(m_x>A.m_x){
+   return false;
+  }
+    if(m_y<A.m_y){
+    return true;
+  }
+  else if(m_y>A.m_y){
+   return false;
+  }
+
+      if(m_z<A.m_z){
+    return true;
+  }
+  else if(m_z>A.m_z){
+   return false;
+  }
+  return false;
 }

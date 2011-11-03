@@ -37,8 +37,8 @@ inline double sign(double x) {
  * @param h distance h for the kernel
  * @return double Value at the given point
  **/
-inline double Kernel_Density(physvector<DIM> vect,double h ) {
-    double ret=315.0/(64*M_PI*pow(h,9))*pow(pow(h,2)-vect.Norm2(),3);
+inline double Kernel_Density(physvector<DIM> vect,double h_ ) {
+    double ret=315.0/(64*M_PI*pow(h_,9))*pow(pow(h_,2)-vect.Norm2(),3);
     if(ret<=0){
     }
     return ret;
@@ -51,28 +51,28 @@ inline double Kernel_Density(physvector<DIM> vect,double h ) {
  * @param h distance h for the kernel
  * @return double Value at the given point
  **/
-inline physvector<DIM>  Kernel_Pressure_Der(physvector<DIM> vect,double h ) {
+inline physvector<DIM>  Kernel_Pressure_Der(physvector<DIM> vect,double h_ ) {
     double x,y,z;
     double d=vect.Norm();
-    double c=pow(h-d,2);
+    double c=pow(h_-d,2);
     if(c>0){
     }
     vect.Get(x,y,z);
     if (abs(d)<0.001) {
-        x=-sign(x)*45/(M_PI*pow(h,6));
+        x=-sign(x)*45/(M_PI*pow(h_,6));
     }
     else {
-        x=-x/d*45/(M_PI*pow(h,6))*c;
+        x=-x/d*45/(M_PI*pow(h_,6))*c;
     }
     if (abs(d)<0.001) {
-        y=-sign(y)*45/(M_PI*pow(h,6));
+        y=-sign(y)*45/(M_PI*pow(h_,6));
     } else {
-        y=-y/d*45/(M_PI*pow(h,6))*c;
+        y=-y/d*45/(M_PI*pow(h_,6))*c;
     }
     if (abs(d)<0.001) {
-        z=-sign(z)*45/(M_PI*pow(h,6));
+        z=-sign(z)*45/(M_PI*pow(h_,6));
     } else {
-        z=-z/d*45/(M_PI*pow(h,6))*c;
+        z=-z/d*45/(M_PI*pow(h_,6))*c;
     }
    return physvector<DIM>(x,y,z);
 }
@@ -84,8 +84,8 @@ inline physvector<DIM>  Kernel_Pressure_Der(physvector<DIM> vect,double h ) {
  * @param h distance h for the kernel
  * @return double Value at the given point
  **/
-inline double Kernel_viscosity_laplacian(physvector<DIM> vect,double h){
- return 45/(M_PI*pow(h,6))*(h-vect.Norm2());
+inline double Kernel_viscosity_laplacian(physvector<DIM> vect,double h_){
+ return 45/(M_PI*pow(h_,6))*(h_-vect.Norm2());
 }
 
 /**
@@ -100,8 +100,8 @@ inline double Kernel_viscosity_laplacian(physvector<DIM> vect,double h){
  * @param h compact suport after witch the result is 0.
  * @return double
  **/
-inline double Kernel_spline5(physvector<DIM> vect,double h ){
- double d=(3/h*vect).Norm();
+inline double Kernel_spline5(physvector<DIM> vect,double h_ ){
+ double d=(3/h_*vect).Norm();
  double ret;
  if(d<1){
    ret=pow(3-d,5)-6*pow(2-d,5)+15*pow(1-d,5);
@@ -113,7 +113,7 @@ inline double Kernel_spline5(physvector<DIM> vect,double h ){
 }else{
    ret=0;
 }
-ret=ret*567/(2535*M_PI*pow(h,3));
+ret=ret*567/(2535*M_PI*pow(h_,3));
 return ret;
 }
 
@@ -132,8 +132,8 @@ return ret;
  * @param h compact suport
  * @return physvector< 3 >
  **/
-inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h ){
- double d=(3/h*vect).Norm();
+inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h_ ){
+ double d=(3/h_*vect).Norm();
  if(vect.Norm()==0){
   return physvector< DIM>();
  }
@@ -148,7 +148,7 @@ inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h ){
 }else{
  ret=0;
 }
-physvector<DIM> rret=ret*567/(2535*M_PI*pow(h,3))*vect/vect.Norm();
+physvector<DIM> rret=ret*567/(2535*M_PI*pow(h_,3))*vect/vect.Norm();
 return rret;
 }
 #endif // KERNEL_H

@@ -21,6 +21,9 @@ inline MatterConstant Mat_Const(ParticleType type) {
 	switch(type) {
 	case water:
 		return WaterConst;
+		break;
+	 default:
+	 return WaterConst;
 	}
 }
 

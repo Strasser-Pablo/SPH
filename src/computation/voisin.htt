@@ -30,7 +30,7 @@ list<Particles*>::iterator Voisin::begin_particles(){
 
 
 list<Particles*>::iterator Voisin::end_particles(){
-	m_vect.end();
+	return m_vect.end();
 }
 
 void Voisin::erase(list<Particles*>::iterator & it){

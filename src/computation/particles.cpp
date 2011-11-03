@@ -25,7 +25,7 @@ Particles::Particles(Key<DIM> & K):m_key(K)
 
 }
 
-Particles::Particles(const Particles& A):m_type(A.m_type),list<Particle>(A){
+Particles::Particles(const Particles& A):list<Particle>(A),m_type(A.m_type){
 
 }
 
@@ -75,7 +75,6 @@ void Particles::Update( Particles_List*  plist)
 {
   list<Particle>::iterator it=begin();
     while (it!=end()) {
-	
       //iterator effectly used
       list<Particle>::iterator it2=it;
       //we increase the iterator before that we splice to don't have problem when it2 is invalided
@@ -122,8 +121,14 @@ for(Particles::iterator it=begin();it!=end();++it){
    // (*it)->SetP(0);
 	(*it)->SetR(0);
 (*it)->SetRprec(b);
-(*it)->SetZprec(b);
-(*it)->SetP1(b);
+for(Voisin::iterator it2=m_neighbour.begin();it2!=m_neighbour.end();++it2){
+	 if(!(*it2)->GetBoundary()){
+(*it)->AddRprec(-(*it)->CalculateA(*it2)*(*it2)->GetP());
+ }
+}
+(*it)->SetZprec((*it)->GetRprec());
+(*it)->SetP1((*it)->GetRprec());
+
 }
 }
 }
@@ -211,19 +216,20 @@ Key<DIM> Particles::GetKey()const{
 
 void Particles::RemoveParticlesNeighbour(const Particles * part){
 	Voisin::iterator_particles it=m_neighbour.begin_particles();
-
 	while(it!=m_neighbour.end_particles())
-	{Voisin::iterator_particles it2=it;
+	{	cout<<"it before "<<(*it)<<endl;
+		Voisin::iterator_particles it2=it;
+		cout<<"it2 after "<<(*it2)<<endl;
 	++it;
+	cout<<"it after "<<(*it)<<endl;
 		if(*it2==part){
-
 		m_neighbour.erase(it2);
+		cout<<"it after aft "<<(*it)<<endl;
 		}
 	}
 	Key<DIM> k1=part->GetKey();
 	Key<DIM> k2=GetKey();
 	m_boundary.RemoveBoundary(k2,k1);
-
 }
 
 void Particles::GetNeighbour(Voisin *& vois){

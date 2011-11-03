@@ -167,7 +167,7 @@ void Boundaries<2>::GetExteriorDirection(vector< physvector<2> >& v)const{
 		int itemp=it->GetMirorID();
 		if(!b[itemp]){
 	b[itemp]=true;
-	ipos[itemp]=distance(begin(),it);
+	ipos[itemp]=int(distance(begin(),it));
 	}
 	else{
 		b[itemp]=false;
@@ -234,7 +234,7 @@ void Boundaries<3>::GetExteriorDirection(vector< physvector<3> >& v)const{
 		int itemp=it->GetMirorID();
 		if(!b[itemp]){
 	b[itemp]=true;
-	ipos[itemp]=distance(begin(),it);
+	ipos[itemp]=int(distance(begin(),it));
 	}
 	else{
 		b[itemp]=false;

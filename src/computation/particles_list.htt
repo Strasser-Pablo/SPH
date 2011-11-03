@@ -67,7 +67,7 @@ void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
     Particles * pnew=&m_list[key];
 	
     if(pnew!=part)
-    {
+    { 
         pnew->splice(pnew->begin(),*part,it);
 		(*it)->SetContainerParticles(pnew);
     }
@@ -84,7 +84,7 @@ m_list.erase(part->GetKey());
 }
 
 
-void Particles_List::write() const
+void Particles_List::write(double dt  ) const
 {
 static int filenum=0;
 char filename[13];
@@ -151,7 +151,18 @@ out<<"</Piece>"<<endl;
 out<<"</UnstructuredGrid>"<<endl;
 out<<"</VTKFile>"<<endl;
 out.close();
-cout<<"file num "<<filenum<<" nb part "<<m_n<<endl;
+static fstream outtot ("animation.pvd", std::fstream::binary |std::fstream::out);
+if(filenum==0){
+outtot<<"<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\">"<<endl;
+ outtot<<" <Collection>"<<endl;
+}
+ outtot<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\"0\" file=\""<<filename<<"\"/>"<<endl;
+ streampos pos;
+   pos=outtot.tellp();
+   outtot<<"</Collection>"<<endl;
+outtot<<"</VTKFile>"<<endl;
+outtot.seekp(pos);
+cout<<"file num "<<filenum<<" nb part "<<m_n<<" time "<<m_t<<" dt "<<dt<<endl;
 ++filenum;
 }
 
@@ -173,7 +184,7 @@ while(bcont){
     bcont=false;
 ConjugateGradiant();
 SetB_Speed();
-ConjugateGradiant();
+//ConjugateGradiant();
 PreparePosition(bcont);
 i++;
  }
@@ -181,12 +192,12 @@ i++;
 }
 
 
-void Particles_List::Compute()
+void Particles_List::Compute(double &dt)
 {
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 		it->second.ComputeDensity();
     }
-	 double dt=NextTimeStep();
+	  dt=NextTimeStep();
      bool ret=false;
 	 if(presure_laplacien){
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
@@ -207,7 +218,6 @@ void Particles_List::Compute()
 	 //predictor corrector
 	 predictor_corrector_compute(dt);
 	}
-	cout<<"time step "<<dt<<endl;
     m_t+=dt;
    map<Key<DIM> ,Particles>::iterator it=m_list.begin();
    while(it!=m_list.end()){

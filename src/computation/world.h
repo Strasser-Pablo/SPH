@@ -29,6 +29,7 @@ public:
 	 * @return void
 	 **/
 	inline  void  Add(ParticleReal  part);
+	inline  void  Add(ParticleReal  part,Particle & partic);
 	~World();
 };
 

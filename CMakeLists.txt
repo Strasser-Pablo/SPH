@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(sph)
+ADD_DEFINITIONS(-Wall -W -Wconversion  -Wcast-qual -Wwrite-strings  -Werror)
+ADD_DEFINITIONS(-march=native)
 INCLUDE(CPack)
 find_package (Doxygen)
 add_subdirectory(src/computation ./computation  )

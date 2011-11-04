@@ -7,6 +7,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 
 #include "type.h"
 #include "physvector.h"
+#include "tensor.h"
 #include "const.h"
 #include <list>
 #include "particle.h"
@@ -133,7 +134,7 @@ mutable	physvector<DIM> m_force;
    **/
   physvector<DIM> m_surface_tens;
  
-
+ Tensor<DIM> m_sub_grid;
 
 public:
 /**
@@ -334,7 +335,7 @@ inline double GetPressure() const;
    * @param part Particle to test
    * @return bool
    **/
-  inline bool Equal(const Particle &part) const;
+  inline bool Equal(const Particle part) const;
 
 
   /**
@@ -349,6 +350,7 @@ inline double GetPressure() const;
 inline void GetVoisin( Voisin & voisin) const;
  inline void SetConstSpeed(bool b);
  inline bool GetConstSpeed();
+ inline void CalculateSubGridTens();
 private:
 
 /**

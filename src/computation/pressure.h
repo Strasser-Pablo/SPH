@@ -12,7 +12,7 @@ using namespace std;
 
 
 const double rho0=1000;
-const double sound_speed=10;
+const double sound_speed=500;
 const double B=pow(sound_speed,2)*rho0/7.;
 inline double pressure(double rho,ParticleType A) {
 

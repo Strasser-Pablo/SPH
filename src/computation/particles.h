@@ -263,6 +263,7 @@ public:
 	 * @param b True if not converged.
      **/
 void PreparePosition(bool &b);
+void CalculateSubGridTens();
 };
 
 

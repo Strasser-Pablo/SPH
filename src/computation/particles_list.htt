@@ -197,13 +197,15 @@ void Particles_List::Compute(double &dt)
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 		it->second.ComputeDensity();
     }
+	  for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+		it->second.CalculateSubGridTens();
+    }
 	  dt=NextTimeStep();
      bool ret=false;
 	 if(presure_laplacien){
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         ret=it->second.PreComputeMove(dt)||ret;
     }
-	
 	if(ret){
 	CorrectDensity();	
 	}

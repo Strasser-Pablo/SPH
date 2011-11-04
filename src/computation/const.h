@@ -21,7 +21,7 @@ const bool pressure_guess_pressure=false;
 /**
  * @brief Distance after witch kernel is 0.
  **/
-const double h=0.03;
+const double h=0.015;
 
 /**
  * @brief Time step size.

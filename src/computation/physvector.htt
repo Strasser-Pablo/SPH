@@ -188,6 +188,10 @@ double physvector<3>::operator*(const physvector<3>& A)const{
 return A.m_x*m_x+A.m_y*m_y+A.m_z*m_z;
 }
 
+double physvector<2>::operator*(const physvector<2>& A)const{
+
+return A.m_x*m_x+A.m_y*m_y;
+}
 
 void physvector<3>::operator*=(const double c){
 m_x*=c;
@@ -277,4 +281,20 @@ bool physvector<3>::operator<(const physvector<3> A) const{
    return false;
   }
   return false;
+}
+
+bool physvector<3>::IsNull()const{
+	return m_x==0&&m_y==0&&m_z==0;
+}
+
+bool physvector<2>::IsNull()const{
+	return m_x==0&&m_y==0;
+}
+
+bool physvector<2>::operator==(const physvector<2> B)const{
+	return m_x==B.m_x&&m_y==B.m_y;
+}
+
+bool physvector<3>::operator==(const physvector<3> B)const{
+	return m_x==B.m_x&&m_y==B.m_y&&m_z==B.m_z;
 }

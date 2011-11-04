@@ -34,6 +34,7 @@ ParticleReal* Particle::operator->() {
 	return m_data;
 }
 
+
 const ParticleReal* Particle::operator->() const {
 	return m_data;
 }

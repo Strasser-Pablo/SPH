@@ -11,11 +11,11 @@ World_test::World_test()
 
 void World_test::Do()
 {
-double uy=1;
+double uy=55;
 
-int Nx=10;
+int Nx=20;
 int Ny=3;
-int Nz=10;
+int Nz=20;
 
 vector<vector<Particle> > listvect(Ny);
 for(int j=0;j<Ny;j++){
@@ -41,7 +41,6 @@ while(m_list.GetTime()<t_next){
  m_list.Compute(dt);
   m_list.write(dt);
    }
- 
 t_next+=h/3/uy;
 vector<Particle> & begvect=listvect[yloopend];
 for(int i=0;i<Nx;i++){

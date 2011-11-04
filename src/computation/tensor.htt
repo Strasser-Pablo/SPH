@@ -1,0 +1,159 @@
+
+Tensor<2>::Tensor(){
+}
+
+Tensor<2>::Tensor(physvector<2> x,physvector<2>y):m_x(x),m_y(y){
+}
+
+Tensor<3>::Tensor(){
+}
+
+Tensor<3>::Tensor(physvector<3> x,physvector<3>y,physvector<3>z):m_x(x),m_y(y),m_z(z){
+}
+
+Tensor<2> Tensor<2>::operator+(const Tensor<2>& B)const{
+	physvector<2> x=m_x+B.m_x;
+	physvector<2> y=m_y+B.m_y;
+	return Tensor<2>(x,y);
+}
+
+Tensor<3> Tensor<3>::operator+(const Tensor<3>& B)const{
+	physvector<3> x=m_x+B.m_x;
+	physvector<3>  y=m_y+B.m_y;
+	physvector<3>  z=m_z+B.m_z;
+	return Tensor<3>(x,y,z);
+}
+
+Tensor<2> Tensor<2>::operator-(const Tensor<2>& B)const{
+	physvector<2> x=m_x-B.m_x;
+	physvector<2> y=m_y-B.m_y;
+	return Tensor<2>(x,y);
+}
+
+Tensor<3> Tensor<3>::operator-(const Tensor<3>& B)const{
+	physvector<3>  x=m_x-B.m_x;
+	physvector<3>  y=m_y-B.m_y;
+	physvector<3>  z=m_z-B.m_z;
+	return Tensor<3>(x,y,z);
+}
+
+void Tensor<3>::operator+=(const Tensor<3>& B){
+	m_x+=B.m_x;
+	m_y+=B.m_y;
+	m_z+=B.m_z;
+}
+
+void Tensor<2>::operator+=(const Tensor<2>& B){
+	m_x+=B.m_x;
+	m_y+=B.m_y;
+}
+
+void Tensor<3>::operator-=(const Tensor<3>& B){
+	m_x+=B.m_x;
+	m_y+=B.m_y;
+	m_z+=B.m_z;
+}
+
+void Tensor<2>::operator-=(const Tensor<2>& B){
+	m_x+=B.m_x;
+	m_y+=B.m_y;
+}
+
+Tensor<2> operator*(const Tensor<2> &B,const double c){
+	physvector<2> x=c*B.m_x;
+	physvector<2> y=c*B.m_y;
+	return Tensor<2>(x,y);
+}
+
+Tensor<2> operator*(const double c,const Tensor<2> &B){
+	physvector<2> x=c*B.m_x;
+	physvector<2> y=c*B.m_y;
+	return Tensor<2>(x,y);
+}
+
+Tensor<3> operator*(const Tensor<3> &B,const double c){
+	physvector<3> x=c*B.m_x;
+	physvector<3> y=c*B.m_y;
+	physvector<3> z=c*B.m_z;
+	return Tensor<3>(x,y,z);
+}
+
+Tensor<3> operator*(const double c,const Tensor<3> &B){
+	physvector<3> x=c*B.m_x;
+	physvector<3> y=c*B.m_y;
+	physvector<3> z=c*B.m_z;
+	return Tensor<3>(x,y,z);
+}
+
+void Tensor<2>::MakeSymetric(){
+	double x1;
+	double x2;
+	double y1;
+	double y2;
+	m_x.Get(x1,x2);
+	m_y.Get(y1,y2);
+	m_x.Set(x1,(x2+y1)/2);
+	m_y.Set((y1+x2)/2,y2);
+}
+
+void Tensor<3>::MakeSymetric(){
+	double x1;
+	double x2;
+	double x3;
+	double y1;
+	double y2;
+	double y3;
+	double z1;
+	double z2;
+	double z3;
+	m_x.Get(x1,x2,x3);
+	m_y.Get(y1,y2,y3);
+	m_z.Get(z1,z2,z3);
+	m_x.Set(x1,(x2+y1)/2,(x3+z1)/2);
+	m_y.Set((y1+x2)/2,y2,(y3+z1)/2);
+	m_z.Set((z1+x3)/2,(z2+y3)/2,z3);
+}
+
+void Tensor<2>::operator*=(const double c){
+	m_x*=c;
+	m_y*=c;
+}
+
+void Tensor<3>::operator*=(const double c){
+	m_x*=c;
+	m_y*=c;
+    m_z*=c;
+	
+}
+
+double Tensor<2>::Norm()const{
+	return sqrt(m_x.Norm2()+m_y.Norm2());
+}
+double Tensor<3>::Norm()const {
+	return sqrt(m_x.Norm2()+m_y.Norm2()+m_z.Norm2());
+}
+
+ physvector< 2> operator*(const physvector< 2>& A,const Tensor<2>& B) {
+	 double x=A*B.m_x;
+	 double y=A*B.m_y;
+	 return physvector<2>(x,y);
+ }
+  physvector< 2> operator*(const Tensor<2>& B,const physvector< 2>& A) {
+	  double x=A*B.m_x;
+	 double y=A*B.m_y;
+	 return physvector<2>(x,y);
+  }
+  
+  
+  physvector< 3> operator*(const Tensor<3>& B,const physvector< 3>& A) {
+	  double x=A*B.m_x;
+	 double y=A*B.m_y;
+	 	 double z=A*B.m_z;
+	 return physvector<3>(x,y,z);
+  }
+  physvector< 3> operator*(const physvector< 3>& A,const Tensor<3>& B) {
+	  double x=A*B.m_x;
+	 double y=A*B.m_y;
+	 	 double z=A*B.m_z;
+	 return physvector<3>(x,y,z);
+  }

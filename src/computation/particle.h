@@ -80,6 +80,8 @@ public:
 	 * @return ParticleReal*
 	 **/
 	inline ParticleReal* operator ->();
+	
+	
 	/**
 	* @brief Allow to access member of Linked Particle.
 	*

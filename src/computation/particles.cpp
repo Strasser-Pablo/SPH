@@ -217,14 +217,11 @@ Key<DIM> Particles::GetKey()const{
 void Particles::RemoveParticlesNeighbour(const Particles * part){
 	Voisin::iterator_particles it=m_neighbour.begin_particles();
 	while(it!=m_neighbour.end_particles())
-	{	cout<<"it before "<<(*it)<<endl;
+	{	
 		Voisin::iterator_particles it2=it;
-		cout<<"it2 after "<<(*it2)<<endl;
 	++it;
-	cout<<"it after "<<(*it)<<endl;
 		if(*it2==part){
 		m_neighbour.erase(it2);
-		cout<<"it after aft "<<(*it)<<endl;
 		}
 	}
 	Key<DIM> k1=part->GetKey();
@@ -319,3 +316,10 @@ void Particles::MassDensity(fstream &out)const{
 	(*it)->NextCourantVisciousTimeStep(dt);
 	}   
 	  }
+	  
+	   void Particles::CalculateSubGridTens() {
+		  for(Particles::iterator it=begin();it!=end();it++){
+	(*it)->CalculateSubGridTens();
+	}   
+	  }
+	  

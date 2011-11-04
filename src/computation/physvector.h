@@ -111,9 +111,11 @@ public:
 
      inline Key<3> ToKey(double h);
 		
+		inline bool IsNull()const;
 		inline void WritePos(fstream & out) const;
 		inline physvector<3> prod(const physvector<3>& a) const;
 		inline bool operator<(const physvector<3> A)const;
+		inline bool operator==(const physvector<3> A)const;
      #ifndef DOXYGEN
 private:
        #endif //DOXYGEN
@@ -189,6 +191,7 @@ public:
      **/
     inline void Get(double &x,double &y) const;
     inline physvector<2> operator+(const physvector<2>& A)const;
+	 inline  double operator*(const physvector<2>& A) const;
     inline physvector<2> operator-(const physvector<2> &A) const;
     inline  void operator=(const physvector<2> &A);
     inline void operator+=(const physvector<2> &A)  ;
@@ -209,8 +212,9 @@ public:
      inline Key<2> ToKey(double h);
 	 	inline void WritePos(fstream & out) const;
 	inline	physvector<2> prod(const physvector<2>& a) const;
-	
+	inline bool IsNull()const;
 		inline bool operator<(const physvector<2> A)const;
+		inline bool operator==(const physvector<2> A)const;
 };
 
 

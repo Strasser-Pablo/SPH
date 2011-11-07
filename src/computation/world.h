@@ -29,6 +29,13 @@ public:
 	 * @return void
 	 **/
 	inline  void  Add(ParticleReal  part);
+	/**
+	 * @brief Add a real particle in the world. The particle will be copied so it can be deleted after.
+	 *
+	 * @param part Real Particle to add.
+	 * @param partic Return a particle wich point to the ParticleReal.
+	 * @return void
+	 **/
 	inline  void  Add(ParticleReal  part,Particle & partic);
 	~World();
 };

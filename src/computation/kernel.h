@@ -113,7 +113,7 @@ inline double Kernel_spline5(physvector<DIM> vect,double h_ ){
 }else{
    ret=0;
 }
-ret=ret*567/(2535*M_PI*pow(h_,3));
+ret=ret*1/(120*M_PI*pow(h_,3));
 return ret;
 }
 
@@ -148,15 +148,29 @@ inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h_ ){
 }else{
  ret=0;
 }
-physvector<DIM> rret=ret*567/(2535*M_PI*pow(h_,3))*vect/vect.Norm();
+physvector<DIM> rret=ret*1/(40*M_PI*pow(h_,4))*vect/vect.Norm();
 return rret;
 }
 
-
+/**
+ * @brief Qspline kernel Directional derivatif.
+ *
+ * With \f$ h \f$, and \f$ v \f$ the argument.
+ * \f[ s=3\left|\left|\frac{v}{h}\right|\right| \f]
+ * \f[ splin5\_grad(s)=\frac{1}{80\pi h}\frac{v}{||v||}
+ * \begin{cases} 0 & \text{if $s=0$}\\
+ * (3-s)^5-6(2-s)^5+15(1-s)^5 & \text{if $s<1$}\\
+ * (3-s)^5-6(2-s)^5& \text{if $s<2$}\\
+ * (3-s)^5& \text{if $s<3$}\\
+ *  0& \text{if $s\geq 3$} \end{cases}  \f]
+ * @param vect vector of value
+ * @param h compact suport
+ * @return double directional derivatif.
+ **/
 inline double Kernel_grad_spline5_dir(physvector<DIM> vect,double h_ ){
  double d=(3/h_*vect).Norm();
  if(vect.Norm()==0){
-  return 0;
+  return 0.0;
  }
  double ret;
  if(d<1){
@@ -169,7 +183,7 @@ inline double Kernel_grad_spline5_dir(physvector<DIM> vect,double h_ ){
 }else{
  ret=0;
 }
-return ret*567/(2535*M_PI*pow(h_,3));
+return ret*1/(40*M_PI*pow(h_,4));
 
 }
 #endif // KERNEL_H

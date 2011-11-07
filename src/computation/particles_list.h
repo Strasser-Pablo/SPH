@@ -84,7 +84,13 @@ protected:
 	 * @param b True if not converged.
 	 **/
 	void PreparePosition(bool &b);
+	
+	/**
+	 * @brief Deprecated
+	 **/
 	void FindBoundary();
+	
+	void UpdateForce()const;
 public:
 
 	/**
@@ -135,6 +141,9 @@ public:
 	 * @param parts Particles to remove.
 	 **/
 	inline void RemoveParticles(const Particles * Parts);
+	/**
+	 * @brief deprecated
+	 **/
 	inline void DumpBoundary()const ;
 	/**
 	 * @brief Output data for the current timestep to file.

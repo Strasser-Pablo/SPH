@@ -33,11 +33,6 @@ class ParticleReal
 	 **/
 mutable	physvector<DIM> m_force;
 //Variable for conjugate gradient
-
-
-	
-
-
 		/**
 	 * @brief Point to Voisin.
 	 **/
@@ -47,59 +42,57 @@ mutable	physvector<DIM> m_force;
    * @brief Position
    **/
   physvector<DIM> m_pos;
+  /**
+   * @brief Position at halfstep;
+   **/
   physvector<DIM> m_pos0_5;
+  /**
+   * @brief  Position before correction and other step.
+   **/
    physvector<DIM> m_pos0;
   /**
    * @brief Speed
    **/
   physvector<DIM> m_speed;
+  /**
+   * @brief Speed at half time step
+   **/
   physvector<DIM> m_speed0_5;
+  /**
+   * @brief  speed before correction and other step.
+   **/
   physvector<DIM> m_speed0;
-
-  
-
-  
-
-
-
-    /**
+  /**
+   * @brief Type of particle (watter, air, etc). Not a lot used.
+   **/
+ParticleType m_type;
+	    /**
   * @brief A fixed particle cannot move.
   **/
-
-
-
- 
-     
-	  
-	
-    
-    
-    
-    
-
-    
-    
-    
- 
- 
-		    /**
-   * @brief Density of particle \f$ \sum W \f$
-   **/
-
-    
-	 ParticleType m_type;
 	  bool m_fixed;
+	  /**
+	   * @brief Pointer to containing container.
+	   **/
 	      Particles* m_container;
+		     /**
+   * @brief Density of particle \f$ \sum W \f$
+   *
+   * @attention It's Density of particle, not density of mass.
+   **/
 		  double m_density;
-		   /**
+	/**
    * @brief Mass
    **/
   double m_m;
+  /**
+   * @brief Second member for solving linear equation, used it the incompressible case.
+   **/
    double m_b;
   /**
-   * @brief Surface tension
+   * @brief Pressure. Used in the incompressible case.
    **/
    double m_p;
+   //Variable used for conjugate gradient.
 	double m_pv;
 	double m_px;
 	    double m_p1;
@@ -113,19 +106,25 @@ mutable	physvector<DIM> m_force;
 	 * @brief True if we have initalized the 0 density.
 	 **/
 	bool m_b_0_done;
-  int m_nb_it;
-      double m_1_over_m;
-  double m_1_over_density_2;
-
-	  	bool m_const_speed;
-		
-			/**
-	 * @brief Pointer to the container.
+	/**
+	 * Number of iteration
 	 **/
-   
-	
-	 
-	  
+  int m_nb_it;
+  /**
+	 * Value of \f$ \frac{1}{m}\f$
+	 **/
+      double m_1_over_m;
+	   /**
+	 * Value of \f$ \frac{1}{\sigma^2}\f$
+	 **/
+  double m_1_over_density_2;
+/**
+ * @brief Indicate if speed need to remain constant.
+ **/
+	  	bool m_const_speed;
+/**
+ * @brief 0 Density of particle. Used for the incompressible case.
+ **/
 	  double m_density0;
 	
     
@@ -134,6 +133,9 @@ mutable	physvector<DIM> m_force;
    **/
   physvector<DIM> m_surface_tens;
  
+ /**
+  * @brief Tensor to - the subgrid tensor.
+  **/
  Tensor<DIM> m_sub_grid;
 
 public:
@@ -155,6 +157,11 @@ inline int GetNb_It()const;
 	 * @param out Output to write.
 	 **/
 inline void WritePos(fstream& out)const;
+/**
+ * Set if boundary.
+ * 
+ * @param b If boundary or not.
+ **/
 inline void SetBoundary(bool b);
 //For conjugate gradiant
 /**
@@ -162,13 +169,23 @@ inline void SetBoundary(bool b);
 	 **/
 inline double CalculateA(const Particle& B)const;
 
+/**
+ * @brief Choose the mass so that we have a correcte rest 0 density.
+ **/
 inline void Calculate0Density();
-
+/**
+ * @brief A sub calculus for the A matrix for the incompressible case.
+ **/
 inline double CalculateABas(const Particle& B)const;
 
+/**
+ * @brief Return if boundary or not.
+ * 
+ * @return True if boundary.
+ **/
 inline bool GetBoundary() const;
 
-
+//Used for conjugate gradient
 inline double GetB() const;
 inline void SetB(double val);
 
@@ -209,41 +226,46 @@ inline bool OKR() const;
    **/
     inline ParticleReal();
     /**
-     * @brief Create a individual Particle with givent property with initial speed 0.
+     * @brief Create a individual Particle with given property with initial speed 0.
      *
      * @param pos Particle position
      * @param type Particle type
-     * @param m Particle mass
+	 * @param fixed True if particle is fixed.
      **/
     inline ParticleReal(physvector<DIM> pos,ParticleType type,bool fixed=false);
 
         /**
-     * @brief Create a individual Particle with givent property
+     * @brief Create a individual Particle with given property
      *
      * @param pos Particle position
      * @param speed Particle speed
      * @param type Particle type
-     * @param m Particle mass
+	 * @param fixed True if particle is fixed.
      **/
       inline ParticleReal(physvector<DIM> pos,physvector<DIM> speed,ParticleType type,bool fixed=false);
     /**
      * @brief Calculate the Distance square of the Particle
      *
-     * @param A Particle to calculate distance with
-     * @return double Distance
+     * @param A Particle to calculate distance with.
+     * @return double Distance square
      **/
     inline double Distance2(const Particle & A) const;
-
+	   /**
+     * @brief Calculate the Distance of the Particle
+     *
+     * @param A Particle to calculate distance with
+     * @return double Distance.
+     **/
       inline double Distance(const Particle & A) const;
     /**
-     * @brief Give the position
+     * @brief Give the position.
      *
      * @return physvector< DIM > Postion
      **/
     inline physvector<DIM> GetPos() const;
 
     /**
-     * @brief Give the speed
+     * @brief Give the speed.
      *
      * @return physvector< DIM > Speed
      **/
@@ -251,20 +273,27 @@ inline bool OKR() const;
 
 
     /**
-     * @brief Get the mass
+     * @brief Get the mass.
      *
      * @return double mass
      **/
     inline double GetMass() const;
     /**
-     * @brief Get the density
+     * @brief Get the density.
      *
-     * @return double rho
+     * @return double Particle density.
      **/
     inline double GetDensity() const;
-
+ /**
+     * @brief Get the mass density.
+     *
+     * @return double Particle mass density.
+     **/
 inline double GetMassDensity() const;
 
+/**
+ * Get The pressure calculated from the equation of state.
+ **/
 inline double GetPressure() const;
     /**
      * @brief Set the mass
@@ -304,30 +333,39 @@ inline double GetPressure() const;
 
 
 
-	   /**
-     * @brief Get the particle of distance less than h in the list
-     *
-     * @param Neighbour list of Particles in witch look
-     * @param h distance
-     * @return Particles Found List
-     **/
-    void FindNeighbour(list< Particles* > Neighbour, double h,Particles& Find);
-    /**
+	/**
      * @brief Compute the pressure and density of the given particle using the Particles as Neighbour
      *
      * This will change the particle pressure and density.
      * The density is defined as:
      *\f[ \sigma_{i}=\sum_{j} W_{ij} \f]
      *
-     * @param FindVoisin List of Neighbour to evaluate
      * @return void
      **/
   inline  void ComputeDensity();
-
+/**
+ * @brief compute a move using euler.
+ **/
   inline void ComputeMove(double dt);
+  /**
+ * @brief Prepare a move of predictor corrector.
+ **/
 	inline void preComputeMove_predictor(double dt);
+	/**
+ * @brief Loop of predictor corrector move.
+ * 
+ * @param dt Time step to use.
+ * @param b This reference will become true if we have not converged.
+ * 			If b has a value of true, it will remain true.
+ **/
 	inline void ComputeMove_predictor(double dt,bool &b);
+		/**
+ * @brief Effectivelly do the predictor corrector move.
+ **/
 	inline void DoMove_predictor();
+	/**
+	 * @brief used in the incompressible case 
+	 **/
   inline bool PreComputeMove(double dt);
    /**
    * @brief Verify that the two object represent the same particle (ie they share the same memory)
@@ -345,12 +383,39 @@ inline double GetPressure() const;
    **/
   inline void Dump() const;
 
-
+/**
+ * @brief Set to the particles that contain this particle.
+ * 
+ * @param container Container that contain the particle.
+ **/
   void SetContainerParticles(Particles * container);
+  /**
+   * @brief Obtain the Neighbour of particle.
+   * 
+   * @param Voisin Neighbour found.
+   **/
 inline void GetVoisin( Voisin & voisin) const;
+/**
+ * @brief Set If particle is constraint to a constant speed
+ * 
+ * @param b True if constraint to constant speed.
+ **/
  inline void SetConstSpeed(bool b);
+ /**
+  * @brief Get If particle is constraint to a constant speed
+  * 
+  * @return True if particle speed is fixed.
+  **/
  inline bool GetConstSpeed();
+ /**
+  * @brief Calculate minus the Sub Grid Tensor.
+  * 		And store it.
+  **/
  inline void CalculateSubGridTens();
+ 
+ inline void WriteSpeed(fstream & out) const;
+ inline void WriteErf(fstream & out,double t) const;
+ inline void UpdateForce() const;
 private:
 
 /**
@@ -385,7 +450,13 @@ private:
    * @return physvector< 3 >
    **/
   inline  physvector<DIM> ComputeSurface_Tensor_ind(ParticleType A,ParticleType B) const;
+ /**
+  * @brief Calculate the force.
+  * 
+  * @return Force of the particle.
+  **/
  inline physvector<DIM> Force() const;
+ 
  
  inline bool GetIsInBoundaryRegion()const;
  

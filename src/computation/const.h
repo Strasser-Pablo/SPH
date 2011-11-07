@@ -21,12 +21,12 @@ const bool pressure_guess_pressure=false;
 /**
  * @brief Distance after witch kernel is 0.
  **/
-const double h=0.015;
+const double h=0.003;
 
 /**
  * @brief Time step size.
  **/
-const double DT=0.01;
+const double DT=0.1;
 #endif // CONST_H
 
 #ifndef CONST_H_VECTOR
@@ -39,7 +39,7 @@ const double DT=0.01;
 /**
  * @brief Vector G for gravity. It's value is \f$ -9.81 e_y \f$ .
  **/
-const  physvector<DIM> G=physvector<DIM>(0,-9.81,0);
+const  physvector<DIM> G=physvector<DIM>(0,-9,81,0);
 #endif
 
 #if DIM_DEF==2

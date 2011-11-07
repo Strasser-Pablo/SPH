@@ -29,6 +29,9 @@ class Particles: public std::list<Particle>
 	 * @brief Type of particle in container. Unused for the moment. 
 	 **/
     ParticleType m_type;
+	/**
+	 * @brief Deprecated.
+	 **/ 
 	Boundaries<DIM> m_boundary;
 	/**
 	 * @brief Neighbour of the particles. Used to loop with the neighbouring particle.
@@ -56,8 +59,17 @@ public:
  *  Calculus will only happen once per particle.
  **/
 	void Calculate0Density();
+	/**
+	 * @brief deprecated.
+	 **/
 	Boundaries<DIM> GetBoundary() const;
+	/**
+	 * @brief deprecated.
+	 **/
 	void SetBoundary(Boundaries<DIM> & b);
+	/**
+	 * @brief deprecated
+	 **/
 	bool GetIsInBoundaryRegion()const;
 	/**
 	 * @brief Initialize conjugate gradient for the used in the incompressible algorithm.
@@ -83,6 +95,9 @@ public:
 	 * @param beta Calculated value of beta.
 	 **/
     void CalculateP1(double beta);
+	/**
+	 * @deprecated
+	 **/
 	 bool FindBoundary(bool b) ;
     /**
      * @brief Construct a list of Particle of type type
@@ -263,7 +278,15 @@ public:
 	 * @param b True if not converged.
      **/
 void PreparePosition(bool &b);
+/**
+ * @brief Calculate minus the Sub Grid Tensor.
+ **/
 void CalculateSubGridTens();
+
+
+void WriteSpeed(fstream & out) const;
+void WriteErf(fstream &out,double t) const;
+void UpdateForce() const;
 };
 
 

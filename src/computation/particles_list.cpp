@@ -105,6 +105,7 @@ it->second.preComputeMove_predictor(DT);
 bool b=true;
 while(b){
 	b=false;
+UpdateForce();
 for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
 it->second.ComputeMove_predictor(DT,b);
 }
@@ -116,6 +117,7 @@ it->second.DoMove_predictor();
 
 double Particles_List::NextTimeStep()const{
 	double dt=DT;
+	UpdateForce();
 	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
 it->second.NextForceTimeStep(dt);;
 }
@@ -123,4 +125,11 @@ it->second.NextForceTimeStep(dt);;
 it->second.NextCourantVisciousTimeStep(dt);
 }	
 return 0.3*dt;	
+}
+
+
+void Particles_List::UpdateForce()const{
+		for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
+it->second.UpdateForce();
+}
 }

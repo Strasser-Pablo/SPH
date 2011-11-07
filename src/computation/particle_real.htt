@@ -27,9 +27,6 @@ return m_boundary;
 
 void ParticleReal::SetBoundary(bool b) {
  m_boundary=b;
- if(b){
-	 cout<<"boundary set to true"<<endl;
- }
 }
 
 double ParticleReal::GetMass() const
@@ -120,7 +117,6 @@ inline physvector<DIM> ParticleReal::GetSpeed() const {
 
 bool ParticleReal::PreComputeMove(double dt) {
   if(!m_fixed){
-
 m_speed+=Force()*dt/2;
 m_pos+=m_speed*dt;
 ComputeDensity();
@@ -236,12 +232,9 @@ physvector<DIM> unit=(GetPos()-(*it)->GetPos())/(GetPos()-(*it)->GetPos()).Norm(
 if(presure_eq_state){
 f-=0.5*A*(pressure(GetDensity()*m_m,water)+pressure((*it)->GetDensity()*(*it)->m_m,water))*unit;
 }
-f+=0.001*A/Distance(*it)*((GetSpeed()-(*it)->GetSpeed()));
-f+=0.5*GetDensity()*B*unit*m_sub_grid;
+f+=0.001*A/Distance(*it)*(GetSpeed()-(*it)->GetSpeed());
+f-=0.5*B*(m_sub_grid+(*it)->m_sub_grid)*unit;
 }
-
-
-
 return f;
 }
 
@@ -448,8 +441,12 @@ void ParticleReal::WritePos(fstream &out)const{
 	  }
 	m_pos=m_pos0+dt/2*m_speed;
 	bool ret=false;
+	if(m_pos.Norm2()!=0){
 	ret=ret||(m_pos-m_pos0_5).Norm2()/m_pos.Norm2()>0.0000000001;
+	}
+	if(m_speed.Norm2()!=0){
 	ret=ret||(m_speed-m_speed0_5).Norm2()/m_speed.Norm2()>0.0000000001;
+	}
 	if(ret){
 		++m_nb_it;
 	}
@@ -470,13 +467,10 @@ void ParticleReal::DoMove_predictor(){
  
   void ParticleReal::NextForceTimeStep(double &dt)const{
 	    if(!m_fixed&&!m_const_speed){
-	  m_force=Force();
 	double dttemp=sqrt(h/m_force.Norm());
 	if(dttemp<dt){
 		dt=dttemp;
 	}
-  }else if(m_const_speed){
-	m_force=physvector<DIM>();  
   }
   }
   
@@ -527,11 +521,25 @@ void ParticleReal::SetConstSpeed(bool b){
 	 double uy;
 	 double uz;
 	 (*it)->GetSpeed().Get(ux,uy,uz);
-	 x=temp*(ux+u0x);
-	 y=temp*(uy+u0y);
-	 z=temp*(uz+u0z);
+	 x+=temp*(ux+u0x);
+	 y+=temp*(uy+u0y);
+	 z+=temp*(uz+u0z);
  }
  m_sub_grid=GetDensity()*Tensor<3>(x,y,z);
  m_sub_grid.MakeSymetric();
- m_sub_grid*=2*pow(0.1*h,2)*sqrt(2)*m_sub_grid.Norm();
+ m_sub_grid*=-2*pow(0.1*h,2)*sqrt(2)*m_sub_grid.Norm();
  }
+ 
+  void ParticleReal::WriteSpeed(fstream & out) const{
+	 m_speed.WritePos(out);
+ }
+ 
+  void ParticleReal::UpdateForce() const{
+	m_force=Force();  
+  }
+  
+  void ParticleReal::WriteErf(fstream & out,double t) const{
+	  double x; double y; double z;
+	  m_pos.Get(x,y,z);
+	  out<<-erf(x/sqrt(4E-6*t))<<endl;
+  }

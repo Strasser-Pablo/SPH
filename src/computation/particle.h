@@ -37,6 +37,11 @@ public:
 	 * @param part Real Particle to be linked with.
 	 **/
 	inline Particle(ParticleReal * part);
+	/**
+	 * @brief default constructor.
+	 * 
+	 * @attention No verification when dereferencing.
+	 **/
 	inline Particle();
 	/**
 	 * @brief Return a Pointer to the linked Particle

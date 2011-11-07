@@ -108,11 +108,28 @@ public:
     friend std::ostream& operator<< (std::ostream& stream, const physvector<3>& A );
     friend inline physvector< 3> operator*(const double c,const physvector<3>& a);
      friend inline physvector< 3> operator*(const physvector<3>& a,const double c);
-
+	/**
+	 * @brief Convert the physvector position to key with the good index given by h spacing.
+	 * 
+	 * @param h 
+	 * @return Key<3> Key in wish container this position is.
+	 **/
      inline Key<3> ToKey(double h);
-		
+		/**
+		 * @brief Return true if it's a null vector.
+		 **/
 		inline bool IsNull()const;
+			/**
+		 * @brief Write position to stream. In a format compatible with paraview.
+		 * 
+		 * @param out Stream to output.
+		 **/
 		inline void WritePos(fstream & out) const;
+			/**
+		 * @brief Component by component product.
+		 * 
+		 * @param out Stream to output.
+		 **/
 		inline physvector<3> prod(const physvector<3>& a) const;
 		inline bool operator<(const physvector<3> A)const;
 		inline bool operator==(const physvector<3> A)const;
@@ -208,10 +225,31 @@ public:
     friend std::ostream & operator<< (std::ostream& stream, const physvector<2>& A );
     friend inline physvector< 2> operator*(const double c,const physvector<2>& a) ;
     friend inline physvector< 2> operator*(const physvector<2> &a,const double c) ;
-
+		/**
+	 * @brief Convert the physvector position to key with the good index given by h spacing.
+	 * 
+	 * @param h 
+	 * @return Key<2> Key in wish container this position is.
+	 **/
      inline Key<2> ToKey(double h);
+	 /**
+	  * @brief Write position to output stream in a format compatible with paraview.
+	  * 
+	  * @param out output stream.
+	  **/
 	 	inline void WritePos(fstream & out) const;
+		/**
+		 * @brief Component by component product.
+		 * 
+		 * @param a Vector to with we make the product.
+		 * @return Return the product component by component.
+		 **/
 	inline	physvector<2> prod(const physvector<2>& a) const;
+	/**
+	 * @brief Return if we are a null vector.
+	 * 
+	 * @return True if null vector.
+	 **/
 	inline bool IsNull()const;
 		inline bool operator<(const physvector<2> A)const;
 		inline bool operator==(const physvector<2> A)const;

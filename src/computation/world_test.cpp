@@ -11,12 +11,31 @@ World_test::World_test()
 
 void World_test::Do()
 {
-double uy=55;
-
-int Nx=20;
+double uy=50;
+/*
+int Nx=5;
 int Ny=3;
-int Nz=20;
+int Nz=3;
 
+for(int i=0;i<Nx;i++){
+	for(int j=0;j<Ny;j++){
+		for(int k=0;k<Nz;k++){
+			Add(ParticleReal(physvector< 3  >(-(i+0.5)*h/3,j*h/3,k*h/3),physvector< 3  >(0, uy,0),water));
+			Add(ParticleReal(physvector< 3  >((i+0.5)*h/3,j*h/3,k*h/3),physvector< 3  >(0, -uy,0),water));
+		}
+	}
+}
+m_list.Calculate0Density();
+
+while(true){
+	double dt;
+ m_list.Compute(dt);
+  m_list.write(dt);
+   }
+*/
+int Nx=10;
+int Ny=3;
+int Nz=10;
 vector<vector<Particle> > listvect(Ny);
 for(int j=0;j<Ny;j++){
 	vector<Particle> begvect(Nx*Nz);
@@ -30,6 +49,8 @@ for(int i=0;i<Nx;i++){
 listvect[j]=begvect;
 }
 int yloopend=2;
+
+
 
 
 m_list.Calculate0Density();

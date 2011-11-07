@@ -146,6 +146,18 @@ for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end()
     }
 out<< "</DataArray>"<<endl;
 
+out<< "<DataArray type=\"Float64\"  Name=\"Speed\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.WriteSpeed(out);
+    }
+out<< "</DataArray>"<<endl;
+
+/*out<< "<DataArray type=\"Float64\"  Name=\"erf\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.WriteErf(out,m_t);
+    }
+out<< "</DataArray>"<<endl;
+ */
 out<< "</PointData>"<<endl; 
 out<<"</Piece>"<<endl;
 out<<"</UnstructuredGrid>"<<endl;

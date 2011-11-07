@@ -45,8 +45,6 @@ inline double surface_Const(ParticleType A,ParticleType B) {
 
 
 
-/**
- * @brief Function to initialize constant for Material
- */
+
 
 #endif // CONST_H

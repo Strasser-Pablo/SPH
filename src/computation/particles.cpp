@@ -323,3 +323,20 @@ void Particles::MassDensity(fstream &out)const{
 	}   
 	  }
 	  
+	  void Particles::WriteSpeed(fstream & out) const{
+		    for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->WriteSpeed(out);
+	}   
+	  }
+	  
+	  void Particles::UpdateForce() const{
+			    for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->UpdateForce();
+	}   
+	  }
+	  
+	    void Particles::WriteErf(fstream & out,double t) const{
+			    for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->WriteErf(out,t);
+	}   
+	  }

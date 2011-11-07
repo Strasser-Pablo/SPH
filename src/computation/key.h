@@ -29,6 +29,9 @@ class Key<2>{
   int m_x;
   int m_y;
 public:
+ /**
+   * @brief Default constructor, make nothing.
+   **/
 inline Key();
   /**
    * @brief Construct a 2d Key
@@ -55,7 +58,17 @@ inline Key();
    * @return void
    **/
   inline void Dump() const;
+  /**
+   * @brief Get the x component.
+   * 
+   * @return int x component.
+   **/
   inline int GetX() const;
+  /**
+   * @brief Get the y component.
+   * 
+   * @return int y component.
+   **/
   inline int GetY()const ;
 };
 
@@ -69,6 +82,9 @@ class Key<3>{
   int m_y;
   int m_z;
 public:
+/**
+ * @brief Default constructor make nothing.
+ **/
   inline Key();
     /**
      * @brief Construct a 3d Key
@@ -96,8 +112,23 @@ inline bool operator<(const Key<3> A) const;
  **/
 inline void Dump() const;
 
+/**
+ * @brief Get the x value.
+ * 
+ * @return int x value.
+ **/
  inline int GetX()const ;
+ /**
+ * @brief Get the y value.
+ * 
+ * @return int y value.
+ **/
  inline int GetY()const ;
+  /**
+ * @brief Get the z value.
+ * 
+ * @return int z value.
+ **/
 inline int GetZ()const ;
 };
 

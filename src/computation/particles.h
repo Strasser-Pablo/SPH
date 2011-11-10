@@ -286,6 +286,11 @@ void CalculateSubGridTens();
 
 void WriteSpeed(fstream & out) const;
 void WriteErf(fstream &out,double t) const;
+void WriteForce(fstream &out) const;
+void WriteForceGravity(fstream &out) const;
+void WriteForcePressure(fstream &out) const;
+void WriteForceViscosity(fstream &out) const;
+void WriteForceTurbulence(fstream &out) const;
 void UpdateForce() const;
 };
 

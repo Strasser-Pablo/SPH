@@ -1,33 +1,181 @@
 /** \mainpage 
 *
-* \section Introduction
+* \section intro Introduction
 * 
 * The Goal of this work is to simulate the Jet d'Eau.
 * For this, we use the Smooth %Particle Hydrodynamique methode (SPH).
 * 
-* This method is a Particul based method. In does nothing have to do with the CERN. 
+* This method is a Particule based method. It does  nothing have to do with the CERN. 
 * This name come from the fact that we simulate with particles that carry information.
 * 
-* \section Navier-Stocks equation
+* \section equation  Navier-Stocks equation
 * 
 * \f[ \rho\left( \frac{\partial }{\partial t}+\mathbf{u}\cdot \nabla\right)\mathbf u 
 * =-\nabla p+\mu \Delta \mathbf u+\mathbf f \f]
 * 
-* With as additional condition an equation of state \f$ p(\rho)\f$ or
+* With as additional condition an equation of state \f$ p(\rho)\f$ and
 * a condition of incompresibility \f$ \nabla \cdot u=0 \f$.
 * 
 * For all quantity \f$ \phi(t,x(t)) \f$ we have:
-* \f[  \frac{d  }{d t} \phi(t,x(t))=\left( \frac{\partial }{\partial t}+\mathbf u \cdot \nabla \right)\mathbf u\f]
+* \f[  \frac{d  }{d t} \phi(t,x(t))=\left( \frac{\partial }{\partial t}+\mathbf u \cdot \nabla \right) \phi\f]
 * 
 * This is exactly the left hand side of the Navier-Stocks equation.
 *
-* We can then rewrite it 
+* We can then rewrite it.
 * 
 * \f[ \rho\frac{d}{dt}\mathbf u 
 * =-\nabla p+\mu \Delta \mathbf u+\mathbf f \f]
 * 
 * This form is more easy to implement for a particle based method. 
-* The right hand side is a acceleration and the left hand side give the variation of density for a given particle.
-* The complicate term in the other equation are automatically taken care by the motion of the particle.
+* Because the equation written in this form is a Newton equation.
+*
+* To have a methode, we now need to give a mean to caculate derivative.
+*
+* \section sph Smooth Particles Hydrodynamics(SPH)
+* 
+* We Will now present the SPH method. The SPH method is a method where we have 
+* algorithm that are linear on the number of particles.
+* It doesn't use mesh and have a simple mathematical and physical visualisation.
+*
+* We will first present the notion of Kernel that is a very important point.
+* A choice of Kernel is similar to choose a approximation sheme in grid method.
+* We will the show how to calculate derivative.
+* And the present the Navier-Stockes equation written in SPH form.
+* 
+* \subsection kernel Kernel
+* The key point of SPH come from the theory of interpolant.
+* A quantity \f$A\f$ can be expressed by:
+*\f[  A(r)=\int_{\Omega} A(r')\delta(r-r')dr'  \f]
+*
+* We then approximate the Dirac Delta by a smooth function \f$ W_{h}\f$.
+* Where \f$ h \f$ is a length parameter. For \f$h\to 0\f$ we need to recover a Dirac delta.
+*
+* \f[  <A(r)>=\int_{\Omega} A(r')W_h(r-r')dr'  \f]
+*
+* Where \f$<A(r)>\f$ indicate that it's the "Mean" value at point \f$ r \f$
+*
+* We then take \f$<A(r)>\f$ as an approximation to the value at point \f$ r\f$
+*
+* Before to discretize this integral, to see the precision of this approximation, we make a Taylor expansion around \f$r\f$.
+*
+* \f[A(r')=A(r)+(r'-r)\nabla A(r)+O(|r-r'|^2)\f]
+*
+* \f[<A(r)>=A(r)\int_{\Omega}w_{h}(r-r',h)dr'+\nabla A(r)\int_{\Omega}(r'-r)w_{h}(r-r')dr'+O(|r-r'|^2)\f]
+*
+* If the kernel is spherical symetric 
+* \f[w_h(r-r')=w_h(|r-r'|)\f]
+*\f[\int_{\Omega}(r'-r)w_h(|r-r'|)dr'=0\f]
+* Because it's a odd function integrated in a symetric range.
+* 
+* Generally \f$ |r-r'| \f$ is of order of \f$ h\f$ (We can think the kernel as a Gaussian).
+*
+* \f[ <A(r)>=A(r)\int_{\Omega} w_{h}(|r-r'|)dr'+O(h^2) \f]
+* 
+* If whe add as constraint that
+*
+* \f[\int w_{h}(|r-r'|)dr'=1\f]
+*
+* \f[ <A(r)>=A(r)+O(h^2) \f]
+*
+* In Conclusion our Kernel need to have the following Property to have a maximal precision.
+* - Need to converge to a Dirac delta if \f$h\to 0\f$
+* - Need to have a mean value of 1(\f$\int_{\Omega}w_{h}(r-r')dr'=1\f$).
+* - Need to be spherical symetric.
+* 
+* In this case the approximation is of order \f$h^2\f$.
+*
+* To Discretize we use a Riemann summ.
+*
+* \f[A(r)=\sum _{b}V_{b}A_bw_{h}(r-r_b)+O(h)\f]
+*
+* We the use the density to replace the volume of particle b.
+*
+* \f[ V_{b}=\frac{m_b}{\rho_b} \f]
+*
+* Note that we have to sum over all particle where \f$w_{h}(r-r_b)\f$ is not 0.
+* For this reason we generally choose Kernel of compact support allowing us to sum
+* only the neighbour.
+* 
+* In this documentation and in the code, we will take \f$h\f$ as the maximal lenght after witch it give 0.
+*
+* \subsection derivative Derivative
+* The idea in sph is to approximate derivatif in derivatif of the kernel.
+* 
+* A easy way to see it is before discretization considerate the mean of the derivatif function.
+*
+* \f[<\nabla A(r)>=\int_{\Omega} \nabla A(r')w_{h}(r-r')dr'+O(h^2)\f]
+* 
+* After integration by part and considerating that boundary ar nil.
+*\f[<\nabla A(r)>=-\int_{\Omega} A(r')\nabla w_{h}(r-r')dr'+O(h^2)\f]
+*
+* After discretization we have:
+*
+*\f[\nabla A(r_a)=\sum_{b}\frac{m_b}{\rho_b}\nabla_a w_{h}(r_a-r_b)+O(h)\f]
+*
+* Other formula are possible using equation of the forms
+*
+*\f[\rho\nabla A=\nabla(\rho A)-A\nabla \rho\f]
+* 
+* Or 
+* \f[\nabla A=\rho\nabla\left(\frac{A}{\rho}\right)+\frac{1}{\rho}A\nabla \rho\f]
+*
+* Some of the formula are symetric other are asymetric with respect to exchange of the two particles.
+*
+* \subsection equation Equation
+*
+* The Navier Stocks equation are written.
+*
+* \f[ \rho\frac{d}{dt}\mathbf u =-\nabla p+\mu \Delta \mathbf u+\mathbf f \f]
+*
+* For solving the fact that this equation need to be incompressible,
+* 2 methods are possible. We can solve a elliptic problem after a half time step.
+* And choose the pressure to correct the incompressibility.
+*
+* Or we can take a equation of state for \f$p\f$.
+*
+* A proposed equation of state is:
+* 
+* \f[B\left(\left(\frac{\rho}{\rho_{0}}\right)^\gamma-1\right)\f]
+*
+* Where
+*
+*\f[B=\frac{\rho_0 c_s^2}{\gamma}\f]
+*
+* Where \f$c_s\f$ is the speed of sound and \f$ \gamma =7\f$
+*
+* \subsection implementation Implementation
+*
+* For the implementation, the following class are important.
+*
+* - Particles_List:
+*  	  Contain the list of all particle. And is used to add particle, begin calculus.
+*     All global action begin hier.
+* - Parcticles:
+*		Represent a list of particles that are in a square of size \f$ h\f$.
+*		It's goal is to transmit calculus to make from above to the Particle.
+*		And store somes geometric information like the neighbour particles.
+* - Particle:
+*		Opaque pointer to ParticleReal. Used to be able to modify the underlying data.
+		Without taking care of need of copy.
+* - ParticleReal: 
+*		The real particle. It represent a particle with it mass, position and speed.
+*		The real work is done hier.
+*
+*    
+*
+*    The other class are more uttility class.
+*	 Hier a short description of the uttility class:
+*		-Voisin and Voisin_Iterator 
+*			Uttility class to be able to easely traverse neighbour particle.
+*			The neighbour are created from a list of Particles.
+*		-physvector
+*			Represent a vector in the mathematical sense.
+*		-Tensor
+*			Represent a rank 2 tensor. With Cannonical operation.
+*		-Key
+*			Allow to locate Particles with integer coordinate.
+*			Used as key to store Particles list.
+*
+*		\dotfile simplified_coll_graph.dot "Collaboration Graph of Principal class"
 **/
 

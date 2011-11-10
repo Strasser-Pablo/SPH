@@ -45,7 +45,7 @@ double physvector<2>::Distance2(const physvector<2>& A)const {
 
 
 double physvector<3>::Norm()const {
-    return sqrt(pow(m_x,2)+pow(-m_y,2)+pow(m_z,2));
+    return sqrt(pow(m_x,2)+pow(m_y,2)+pow(m_z,2));
 }
 
 

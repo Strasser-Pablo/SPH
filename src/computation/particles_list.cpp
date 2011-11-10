@@ -101,7 +101,6 @@ void Particles_List::predictor_corrector_compute(double DT){
 	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
 it->second.preComputeMove_predictor(DT);
 }
-
 bool b=true;
 while(b){
 	b=false;
@@ -124,7 +123,7 @@ it->second.NextForceTimeStep(dt);;
 	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
 it->second.NextCourantVisciousTimeStep(dt);
 }	
-return 0.3*dt;	
+return 0.25*dt;	
 }
 
 

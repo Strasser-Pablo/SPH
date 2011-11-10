@@ -87,8 +87,8 @@ m_list.erase(part->GetKey());
 void Particles_List::write(double dt  ) const
 {
 static int filenum=0;
-char filename[13];
-sprintf(filename,"out%05d.vtu",filenum);
+char filename[15];
+sprintf(filename,"out%07d.vtu",filenum);
 fstream out (filename, fstream::out);
 out<<"<?xml version=\"1.0\"?>"<<endl;
 out<<"<VTKFile type= \"UnstructuredGrid\"  version= \"0.1\"  byte_order= \"BigEndian\">"<<endl;                      
@@ -152,12 +152,41 @@ for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end()
     }
 out<< "</DataArray>"<<endl;
 
-/*out<< "<DataArray type=\"Float64\"  Name=\"erf\" format=\"ascii\">"<<endl;
+out<< "<DataArray type=\"Float64\"  Name=\"Force\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.WriteForce(out);
+    }
+out<< "</DataArray>"<<endl;
+
+out<< "<DataArray type=\"Float64\"  Name=\"Force_Gravity\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.WriteForceGravity(out);
+    }
+out<< "</DataArray>"<<endl;
+
+out<< "<DataArray type=\"Float64\"  Name=\"Force_Pressure\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.WriteForcePressure(out);
+    }
+out<< "</DataArray>"<<endl;
+
+out<< "<DataArray type=\"Float64\"  Name=\"Force_Viscosity\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.WriteForceViscosity(out);
+    }
+out<< "</DataArray>"<<endl;
+
+out<< "<DataArray type=\"Float64\"  Name=\"Force_Turbulence\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.WriteForceTurbulence(out);
+    }
+out<< "</DataArray>"<<endl;
+out<< "<DataArray type=\"Float64\"  Name=\"erf\" format=\"ascii\">"<<endl;
 for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.WriteErf(out,m_t);
     }
 out<< "</DataArray>"<<endl;
- */
+ 
 out<< "</PointData>"<<endl; 
 out<<"</Piece>"<<endl;
 out<<"</UnstructuredGrid>"<<endl;

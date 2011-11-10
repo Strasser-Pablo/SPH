@@ -137,6 +137,11 @@ ParticleType m_type;
   * @brief Tensor to - the subgrid tensor.
   **/
  Tensor<DIM> m_sub_grid;
+ 
+ mutable physvector<DIM> m_force_pres;
+ mutable physvector<DIM> m_force_viscious;
+ mutable physvector<DIM> m_force_turbulence;
+ mutable physvector<DIM> m_force_gravity;
 
 public:
 /**
@@ -416,6 +421,12 @@ inline void GetVoisin( Voisin & voisin) const;
  inline void WriteSpeed(fstream & out) const;
  inline void WriteErf(fstream & out,double t) const;
  inline void UpdateForce() const;
+ 
+inline void WriteForce(fstream &out) const;
+inline void WriteForceGravity(fstream &out) const;
+inline void WriteForcePressure(fstream &out) const;
+inline void WriteForceViscosity(fstream &out) const;
+inline void WriteForceTurbulence(fstream &out) const;
 private:
 
 /**

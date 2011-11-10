@@ -1,6 +1,8 @@
 #include <iostream>
 #include "world_test.h"
+#include "world_timing.h"
 #include <fenv.h>
+#include "FloatIee.h"
 using namespace std;
 /**
  * Trap that signal when nan and infinity occure.
@@ -13,6 +15,8 @@ using namespace std;
      }
 int main() {
 
-	World_test w;
-	w.Do();
+/*	World_test w;
+	w.Do();*/
+	 World_timing W;
+	 W.Do();
 }

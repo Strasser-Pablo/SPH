@@ -11,11 +11,11 @@ World_test::World_test()
 
 void World_test::Do()
 {
-double uy=50;
+double uy=55;
 /*
-int Nx=5;
-int Ny=3;
-int Nz=3;
+int Nx=10;
+int Ny=10;
+int Nz=10;
 
 for(int i=0;i<Nx;i++){
 	for(int j=0;j<Ny;j++){
@@ -33,6 +33,7 @@ while(true){
   m_list.write(dt);
    }
 */
+
 int Nx=10;
 int Ny=3;
 int Nz=10;
@@ -42,13 +43,13 @@ for(int j=0;j<Ny;j++){
 for(int i=0;i<Nx;i++){
 	
 		for(int k=0;k<Nz;k++){
-			Add(ParticleReal(physvector< 3  >(i*h/3,j*h/3,k*h/3),physvector< 3  >(0, uy,0),water),begvect[i+k*Nz]);
+			Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.*h/3+h/6,j*h/3,k*h/3-Nz/2.*h/3+h/6),physvector< 3  >(0, uy,0),water),begvect[i+k*Nz]);
 			begvect[i+k*Nz]->SetConstSpeed(true);
 }
 }
 listvect[j]=begvect;
 }
-int yloopend=2;
+int yloopend=Ny-1;
 
 
 
@@ -68,7 +69,7 @@ for(int i=0;i<Nx;i++){
 	
 		for(int k=0;k<Nz;k++){
 			begvect[i+k*Nz]->SetConstSpeed(false);
-			Add(ParticleReal(physvector< 3  >(i*h/3,0,k*h/3),physvector< 3  >(0, uy,0),water),begvect[i+k*Nz]);
+			Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.0*h/3+h/6,0,k*h/3-Nz/2.*h/3+h/6),physvector< 3  >(0, uy,0),water),begvect[i+k*Nz]);
 			begvect[i+k*Nz]->SetConstSpeed(true);
 }
 }

@@ -13,7 +13,7 @@ using namespace std;
 
 const double rho0=1000;
 const double sound_speed=1435;
-const double B=pow(sound_speed,2)*rho0/7.;
+const double B=pow(sound_speed,2)*rho0/7.*0.1;
 /**
  * @brief Calculate pressure from the density and particle type.
  * 

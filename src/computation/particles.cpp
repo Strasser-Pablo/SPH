@@ -340,3 +340,33 @@ void Particles::MassDensity(fstream &out)const{
 	(*it)->WriteErf(out,t);
 	}   
 	  }
+	  
+	  void Particles::WriteForce(fstream & out) const{
+			    for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->WriteForce(out);
+	}    
+	  }
+	  
+	  void Particles::WriteForceViscosity(fstream & out) const{
+			    for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->WriteForceViscosity(out);
+	}    
+	  }
+	  
+	  void Particles::WriteForceGravity(fstream & out) const{
+			    for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->WriteForceGravity(out);
+	}    
+	  }
+	  
+	  void Particles::WriteForcePressure(fstream & out) const{
+			    for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->WriteForcePressure(out);
+	}    
+	  }
+	  
+	    void Particles::WriteForceTurbulence(fstream & out) const{
+			    for(Particles::const_iterator it=begin();it!=end();it++){
+	(*it)->WriteForceTurbulence(out);
+	}    
+	  }

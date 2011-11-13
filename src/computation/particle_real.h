@@ -466,10 +466,10 @@ private:
   * 
   * @return Force of the particle.
   **/
- inline physvector<DIM> Force() const;
+ inline physvector<DIM> Force() const __attribute__ ((hot));
  
  
- inline bool GetIsInBoundaryRegion()const;
+
  
 
 

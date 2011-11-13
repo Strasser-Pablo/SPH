@@ -5,13 +5,14 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
  * @brief Implementation file for particles.
  *
  */
-
+#include <cstdio>
 #include "particle.h"
 #include "particles.h"
 
 #include "particles_list.h"
 #include "debug.h"
 #include <algorithm>
+
 using namespace std;
 
 
@@ -198,12 +199,8 @@ void Particles::Calculate0Density(){
  }
 }
 
-Boundaries<DIM> Particles::GetBoundary()const{
-	return m_boundary;
-}
-	void Particles::SetBoundary(Boundaries<DIM> & b){
-		m_boundary=b;
-	}
+
+
 
 
 void Particles::SetKey(Key<DIM> & k){
@@ -224,18 +221,13 @@ void Particles::RemoveParticlesNeighbour(const Particles * part){
 		m_neighbour.erase(it2);
 		}
 	}
-	Key<DIM> k1=part->GetKey();
-	Key<DIM> k2=GetKey();
-	m_boundary.RemoveBoundary(k2,k1);
 }
 
 void Particles::GetNeighbour(Voisin *& vois){
 	vois=&m_neighbour;
 }
 
-bool Particles::GetIsInBoundaryRegion() const{
-	return m_boundary.HasBoundary();
-}
+
 
 bool Particles::FindBoundary(bool b) {
 	if(empty()){

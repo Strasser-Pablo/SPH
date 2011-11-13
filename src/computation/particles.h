@@ -12,7 +12,7 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include "const.h"
 #include <map>
 #include "key.h"
-#include "boundaries.h"
+
 
 
 class Particle;
@@ -29,10 +29,7 @@ class Particles: public std::list<Particle>
 	 * @brief Type of particle in container. Unused for the moment. 
 	 **/
     ParticleType m_type;
-	/**
-	 * @brief Deprecated.
-	 **/ 
-	Boundaries<DIM> m_boundary;
+
 	/**
 	 * @brief Neighbour of the particles. Used to loop with the neighbouring particle.
 	 **/
@@ -59,18 +56,9 @@ public:
  *  Calculus will only happen once per particle.
  **/
 	void Calculate0Density();
-	/**
-	 * @brief deprecated.
-	 **/
-	Boundaries<DIM> GetBoundary() const;
-	/**
-	 * @brief deprecated.
-	 **/
-	void SetBoundary(Boundaries<DIM> & b);
-	/**
-	 * @brief deprecated
-	 **/
-	bool GetIsInBoundaryRegion()const;
+
+
+
 	/**
 	 * @brief Initialize conjugate gradient for the used in the incompressible algorithm.
 	 **/

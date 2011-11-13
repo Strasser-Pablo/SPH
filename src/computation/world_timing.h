@@ -18,7 +18,21 @@ using namespace std;
 * @brief This class created the position of particle and say when to output. And in witch file.
 *
 **/
-class World_timing:public World {
+class World_timing_elem:public World {
+
+public:
+	/**
+	* Default constructor outfile is default
+	*/
+	World_timing_elem();
+	/**
+	* Make the calculation.
+	*\return void Nothing
+	*/
+	void Do(int N,fstream & out);
+};
+
+class World_timing{
 
 public:
 	/**

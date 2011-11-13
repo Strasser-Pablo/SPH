@@ -129,7 +129,7 @@ public:
 	 * If particles were added Calculate0Density() need to be called before to have a correct result.
 	 * @return void
 	 **/
-	inline  void Compute(double &dt);
+	  void Compute(double &dt);
 
 	/**
 	 * @brief Used for debuging purpose. Print somes usefull informations.
@@ -141,10 +141,7 @@ public:
 	 * @param parts Particles to remove.
 	 **/
 	inline void RemoveParticles(const Particles * Parts);
-	/**
-	 * @brief deprecated
-	 **/
-	inline void DumpBoundary()const ;
+
 	/**
 	 * @brief Output data for the current timestep to file.
 	 *

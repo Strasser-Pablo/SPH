@@ -186,4 +186,24 @@ inline double Kernel_grad_spline5_dir(physvector<DIM> vect,double h_ ){
 return ret*1/(40*M_PI*pow(h_,4));
 
 }
+
+inline double Kernel_grad_spline5_dir(physvector<DIM> vect,double vnorm,double h_ ){
+ double d=3/h_*vnorm;
+ if(vect.Norm()==0){
+  return 0.0;
+ }
+ double ret;
+ if(d<1){
+   ret=(-5*pow(3-d,4)+30*pow(2-d,4)-75*pow(1-d,4));
+ }
+ else if(d<2){
+      ret=(-5*pow(3-d,4)+30*pow(2-d,4));
+ }else if(d<3){
+  ret=-5*pow(3-d,5);
+}else{
+ ret=0;
+}
+return ret*1/(40*M_PI*pow(h_,4));
+
+}
 #endif // KERNEL_H

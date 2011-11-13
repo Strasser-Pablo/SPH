@@ -220,28 +220,28 @@ else{
 
 physvector<DIM> ParticleReal::Force()const{
 	
-	//cout<<"force "<<GetPos()<<" "<<this<<" "<<GetDensity()*m_m<<" "<<pressure(GetDensity()*m_m,water)<<endl;
-//return ComputeSurface_Force()+G;
-m_force_gravity=physvector<DIM>();
-m_force_pres =physvector<DIM>();
-m_force_turbulence=physvector<DIM>();
-m_force_viscious=physvector<DIM>();
+m_force_gravity.To0();
+m_force_pres.To0();
+m_force_turbulence.To0();
+m_force_viscious.To0();
 
 m_force_gravity+=G;
 for(Voisin::iterator it=m_voisin->begin();it!=m_voisin->end();++it){
 	if(Equal(*it)){
 		continue;
 	}
-double B=(m_1_over_density_2+(*it)->m_1_over_density_2)*Kernel_grad_spline5_dir(GetPos()-(*it)->GetPos(),h);
+	physvector<3> r=GetPos()-(*it)->GetPos();
+	double norm=r.Norm();
+double B=(m_1_over_density_2+(*it)->m_1_over_density_2)*Kernel_grad_spline5_dir(r,norm,h);
 double A=m_1_over_m*B;
-physvector<DIM> unit=(GetPos()-(*it)->GetPos())/(GetPos()-(*it)->GetPos()).Norm();
+r*=1/norm;
 if(presure_eq_state){
 	
-m_force_pres-=0.5*A*(pressure(GetDensity()*m_m,water)+pressure((*it)->GetDensity()*(*it)->m_m,water))*unit;
+m_force_pres-=0.5*A*(pressure(GetDensity()*m_m,water)+pressure((*it)->GetDensity()*(*it)->m_m,water))*r;
 //cout<<(*it)->GetPos()<<" "<<pressure((*it)->GetDensity()*(*it)->m_m,water)<<" "<<(*it)->GetDensity()*(*it)->m_m<<" "<<0.5*A*(pressure(GetDensity()*m_m,water)+pressure((*it)->GetDensity()*(*it)->m_m,water))*unit<<endl;
 }
-m_force_viscious+=0.001*A/Distance(*it)*(GetSpeed()-(*it)->GetSpeed());
-m_force_turbulence-=0.5*B*(m_sub_grid+(*it)->m_sub_grid)*unit;
+m_force_viscious+=0.001*A/norm*(GetSpeed()-(*it)->GetSpeed());
+m_force_turbulence-=0.5*B*(m_sub_grid+(*it)->m_sub_grid)*r;
 }
 return m_force_gravity+m_force_pres+m_force_turbulence+m_force_viscious;
 }
@@ -416,15 +416,12 @@ void ParticleReal::Calculate0Density(){
 	if(m_b_0_done){
 		return;
 	}
-	 cout.precision(17);
 	m_density0=m_density;
 	m_m=1000/m_density0;
 	m_1_over_m=1/m_m;
 }
 
-bool ParticleReal::GetIsInBoundaryRegion()const {
-	return m_container->GetIsInBoundaryRegion();
-}
+
 
 void ParticleReal::WritePos(fstream &out)const{
 	m_pos.WritePos(out);

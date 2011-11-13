@@ -4,6 +4,7 @@
 #include "world.h"
 #include "particles_list.h"
 #include <fstream>
+#include <vector>
 
 
 /**

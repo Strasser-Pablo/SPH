@@ -133,6 +133,7 @@ public:
 		inline physvector<3> prod(const physvector<3>& a) const;
 		inline bool operator<(const physvector<3> A)const;
 		inline bool operator==(const physvector<3> A)const;
+		inline void To0();
      #ifndef DOXYGEN
 private:
        #endif //DOXYGEN
@@ -253,6 +254,7 @@ public:
 	inline bool IsNull()const;
 		inline bool operator<(const physvector<2> A)const;
 		inline bool operator==(const physvector<2> A)const;
+		inline void To0();
 };
 
 

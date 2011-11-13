@@ -298,3 +298,14 @@ bool physvector<2>::operator==(const physvector<2> B)const{
 bool physvector<3>::operator==(const physvector<3> B)const{
 	return m_x==B.m_x&&m_y==B.m_y&&m_z==B.m_z;
 }
+
+void physvector<3>::To0(){
+	m_x=0;
+	m_y=0;
+	m_z=0;
+}
+
+void physvector<2>::To0(){
+	m_x=0;
+	m_y=0;
+}

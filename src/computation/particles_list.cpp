@@ -1,6 +1,5 @@
 #include "particles_list.h"
 #include "const.h"
-  
 
 Particles_List::Particles_List():m_t(0),m_n(0)
 {
@@ -98,37 +97,88 @@ b=it->second.FindBoundary(!b);
 }
 
 void Particles_List::predictor_corrector_compute(double DT){
+
 	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-it->second.preComputeMove_predictor(DT);
+		it->second.preComputeMove_predictor(DT);
 }
 bool b=true;
 while(b){
 	b=false;
 UpdateForce();
+
 for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-it->second.ComputeMove_predictor(DT,b);
+		it->second.ComputeMove_predictor(DT,b);
 }
 }
+
+
 for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-it->second.DoMove_predictor();
+	it->second.DoMove_predictor();
 }
 }
 
 double Particles_List::NextTimeStep()const{
 	double dt=DT;
 	UpdateForce();
-	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
-it->second.NextForceTimeStep(dt);;
+	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {		
+		it->second.NextForceTimeStep(dt);
 }
-	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
-it->second.NextCourantVisciousTimeStep(dt);
-}	
+
+	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {		
+		it->second.NextCourantVisciousTimeStep(dt);
+	}
 return 0.25*dt;	
 }
 
 
 void Particles_List::UpdateForce()const{
-		for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
-it->second.UpdateForce();
+		for ( map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
+			it->second.UpdateForce();
 }
+}
+void Particles_List::Compute(double &dt)
+{
+    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+		it->second.ComputeDensity();
+    }
+	  for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+		  it->second.CalculateSubGridTens();
+    }
+	  dt=NextTimeStep();
+     bool ret=false;
+	 if(presure_laplacien){
+    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+		ret=it->second.PreComputeMove(dt)||ret;
+    }
+		 }
+	if(ret){
+	CorrectDensity();	
+	}
+	if(presure_eq_state){
+		//euler
+		/*
+	  for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.ComputeMove(DT);
+    }
+	 */
+	 //predictor corrector
+	 predictor_corrector_compute(dt);
+	}
+    m_t+=dt;
+	map<Key<DIM> ,Particles>::iterator it=m_list.begin();
+   while(it!=m_list.end()){
+	   map<Key<DIM> ,Particles>::iterator it2=it;
+	   ++it;
+        it2->second.Update(this);
+    }
+    #if DOXYGEN
+    ParticleReal p;
+    p.ComputePressure_Density();
+    p.ComputeSurface_Tensor();
+    p.ComputeInternal_Force();
+    p.ComputeInternal_Force();
+    p.ComputeGravity_Force();
+    p.ComputeMove(DT);
+    p.Update(this);
+    #endif //DOXYGEN
 }

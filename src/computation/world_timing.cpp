@@ -19,7 +19,7 @@ void World_timing::Do()
 {
 
 	fstream out ("timing.csv", fstream::out);
-	for(int N=10;N<11;N+=5){
+	for(int N=5;N<20;N+=5){
 		out<<N<<" ";
 	World_timing_elem W;
 	W.Do(N,out);

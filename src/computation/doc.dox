@@ -1,18 +1,18 @@
-/** \mainpage 
+/** \mainpage Description of SPH 
 *
 * \section intro Introduction
 * 
 * The Goal of this work is to simulate the Jet d'Eau.
-* For this, we use the Smooth %Particle Hydrodynamique methode (SPH).
+* For this, we use the Smoothed %Particle Hydrodynamique method (SPH).
 * 
-* This method is a Particule based method. It does  nothing have to do with the CERN. 
+* This method is a Particle based method. It does  nothing have to do with the CERN. 
 * This name come from the fact that we simulate with particles that carry information.
 * 
-* \section equation  Navier-Stocks equation
+* \subsection equation  Navier-Stocks equation
 * 
 * \f[ \rho\left( \frac{\partial }{\partial t}+\mathbf{u}\cdot \nabla\right)\mathbf u 
 * =-\nabla p+\mu \Delta \mathbf u+\mathbf f \f]
-* 
+*
 * With as additional condition an equation of state \f$ p(\rho)\f$ and
 * a condition of incompresibility \f$ \nabla \cdot u=0 \f$.
 * 
@@ -29,20 +29,21 @@
 * This form is more easy to implement for a particle based method. 
 * Because the equation written in this form is a Newton equation.
 *
-* To have a methode, we now need to give a mean to caculate derivative.
+* To have a method, we now need to give a mean to caculate derivative.
 *
-* \section sph Smooth Particles Hydrodynamics(SPH)
+* \subsection sph Smooth Particles Hydrodynamics(SPH)
 * 
 * We Will now present the SPH method. The SPH method is a method where we have 
 * algorithm that are linear on the number of particles.
 * It doesn't use mesh and have a simple mathematical and physical visualisation.
 *
 * We will first present the notion of Kernel that is a very important point.
-* A choice of Kernel is similar to choose a approximation sheme in grid method.
-* We will the show how to calculate derivative.
-* And the present the Navier-Stockes equation written in SPH form.
+* A choice of Kernel is similar to choose an approximation sheme in grid method.
+* We will then show how to calculate derivative.
+* And then present the Navier-Stockes equation written in SPH form.
 * 
-* \subsection kernel Kernel
+* \section kernel Kernel
+* \subsection kern_intro Introduction
 * The key point of SPH come from the theory of interpolant.
 * A quantity \f$A\f$ can be expressed by:
 *\f[  A(r)=\int_{\Omega} A(r')\delta(r-r')dr'  \f]
@@ -52,43 +53,45 @@
 *
 * \f[  <A(r)>=\int_{\Omega} A(r')W_h(r-r')dr'  \f]
 *
-* Where \f$<A(r)>\f$ indicate that it's the "Mean" value at point \f$ r \f$
+* Where \f$<A(r)>\f$ indicate that it's the "Mean" value at point \f$ r \f$.
 *
-* We then take \f$<A(r)>\f$ as an approximation to the value at point \f$ r\f$
+* We then take \f$<A(r)>\f$ as an approximation to the value at point \f$ r\f$.
 *
+* \subsection kernel_prec Kernel Property
 * Before to discretize this integral, to see the precision of this approximation, we make a Taylor expansion around \f$r\f$.
 *
 * \f[A(r')=A(r)+(r'-r)\nabla A(r)+O(|r-r'|^2)\f]
 *
 * \f[<A(r)>=A(r)\int_{\Omega}w_{h}(r-r',h)dr'+\nabla A(r)\int_{\Omega}(r'-r)w_{h}(r-r')dr'+O(|r-r'|^2)\f]
 *
-* If the kernel is spherical symetric 
+* If the kernel is spherical symetric:
 * \f[w_h(r-r')=w_h(|r-r'|)\f]
 *\f[\int_{\Omega}(r'-r)w_h(|r-r'|)dr'=0\f]
-* Because it's a odd function integrated in a symetric range.
+* Because it's an odd function integrated in a symetric range.
 * 
 * Generally \f$ |r-r'| \f$ is of order of \f$ h\f$ (We can think the kernel as a Gaussian).
 *
 * \f[ <A(r)>=A(r)\int_{\Omega} w_{h}(|r-r'|)dr'+O(h^2) \f]
 * 
-* If whe add as constraint that
+* If whe add as constraint that:
 *
 * \f[\int w_{h}(|r-r'|)dr'=1\f]
 *
 * \f[ <A(r)>=A(r)+O(h^2) \f]
 *
-* In Conclusion our Kernel need to have the following Property to have a maximal precision.
+* In Conclusion our Kernel need to have the following Property to have a maximal precision:
 * - Need to converge to a Dirac delta if \f$h\to 0\f$
 * - Need to have a mean value of 1(\f$\int_{\Omega}w_{h}(r-r')dr'=1\f$).
 * - Need to be spherical symetric.
 * 
 * In this case the approximation is of order \f$h^2\f$.
 *
-* To Discretize we use a Riemann summ.
+* \subsection kernel_discretisize Kernel Discretisation
+* To Discretize we use a Riemann sum.
 *
 * \f[A(r)=\sum _{b}V_{b}A_bw_{h}(r-r_b)+O(h)\f]
 *
-* We the use the density to replace the volume of particle b.
+* We then use the density to replace the volume of particle b.
 *
 * \f[ V_{b}=\frac{m_b}{\rho_b} \f]
 *
@@ -98,29 +101,113 @@
 * 
 * In this documentation and in the code, we will take \f$h\f$ as the maximal lenght after witch it give 0.
 *
-* \subsection derivative Derivative
+* \subsection kernel_choice Kernel Choice
+*
+*  All Normalization are done for 3d. And all kernel are spherical symmetric.
+* 
+* -Gaussian
+*  \f[\frac{1}{(\sqrt{\pi} h)^3}e^{-9\frac{||v||^2}{h^2}} \f]
+* 
+* -Quintinc spline.
+*   \f$h\f$ is the distance after wich we have 0. And \f$v\f$ the argument of the kernel.
+*   \f[ s=3\left|\left|\frac{v}{h}\right|\right| \f]
+*   \f[ w(s)=\frac{1}{120\pi h^3} \begin{cases} (3-s)^5-6(2-s)^5+15(1-s)^5 & \text{if $s<1$}\\
+*   (3-s)^5-6(2-s)^5& \text{if $s<2$}\\
+*   (3-s)^5& \text{if $s<3$}\\
+*   0& \text{if $s\geq 3$} \end{cases}  \f]
+*
+*
+*  Some graph of the different Kernel.
+*   \image html kernel.png
+*   \image latex kernel.png "Graph of the different kernel." width=\textwidth
+*
+*   \image html kernel2.png
+*   \image latex kernel2.png "Graph of the difference with respect to Gaussian kernel." width=\textwidth
+*
+*   \image html kernel3.png
+*   \image latex kernel3.png "Graph of the difference with respect to Gaussian kernel in logarithmic scale." width=\textwidth
+*
+* \subsection kern_derivative Kernel Derivative
+* \subsubsection kern_gradient Kernel Gradient
 * The idea in sph is to approximate derivatif in derivatif of the kernel.
 * 
 * A easy way to see it is before discretization considerate the mean of the derivatif function.
 *
 * \f[<\nabla A(r)>=\int_{\Omega} \nabla A(r')w_{h}(r-r')dr'+O(h^2)\f]
 * 
-* After integration by part and considerating that boundary ar nil.
+* After integration by part and considerating that boundary are nil.
 *\f[<\nabla A(r)>=-\int_{\Omega} A(r')\nabla w_{h}(r-r')dr'+O(h^2)\f]
 *
 * After discretization we have:
 *
-*\f[\nabla A(r_a)=\sum_{b}\frac{m_b}{\rho_b}\nabla_a w_{h}(r_a-r_b)+O(h)\f]
+*\f[\nabla A(r_a)=\sum_{b}A_b\frac{m_b}{\rho_b}\nabla_a w_{h}(r_a-r_b)+O(h)\f]
 *
-* Other formula are possible using equation of the forms
-*
+* Another formula can be found applyng the same fromula to:
 *\f[\rho\nabla A=\nabla(\rho A)-A\nabla \rho\f]
 * 
-* Or 
+*\f[\nabla A(r_a)=\frac{1}{\rho_a}\sum_{b} \left(\frac{m_b}{\rho_b}\rho_b A_b-A_a\frac{m_b}{\rho_b}\rho_b\right) \nabla_a w_{h}(r_a-r_b)  \f]
+*\f[\nabla A(r_a)=\frac{1}{\rho_a}\sum_{b}m_b \left(A_b-A_a\right) \nabla_a w_{h}(r_a-r_b)  \f]
+*
+* This formula is  symmetric because the gradient of the kernel is anti symmetric.
 * \f[\nabla A=\rho\nabla\left(\frac{A}{\rho}\right)+\frac{1}{\rho}A\nabla \rho\f]
 *
-* Some of the formula are symetric other are asymetric with respect to exchange of the two particles.
+* Another formula can be found applyng the same fromula to:
+* \f[\nabla A=\rho\nabla(\frac{A}{\rho})+\frac{1}{\rho}A\nabla \frac{1}{\rho}\f]
+*	
+* \f[\nabla A(r_a)=\sum_{b} \frac{m_b}{\rho_b}\left(\frac{A_b}{\rho_b}\rho_a+\frac{A_a}{\rho_a}\rho_b\right) \nabla_a w_{h}(r_a-r_b)  \f]
+* \f[\nabla A(r_a)=\rho_a\sum_{b} m_b\left(\frac{A_b}{\rho_b^2}+\frac{A_a}{\rho_a^2}\right) \nabla_a w_{h}(r_a-r_b)  \f]
+* 
+*	This formula is anti symmetric. Because the gradient of the kernel is anti symmetric.
 *
+* \subsubsection kern_laplacien Kernel Laplacien
+*
+* We can use two time the formula for the gradient (and it's trace).
+* But another sheme is to use a finite difference and a divergence.
+* \f[ \nabla \phi=\frac{e_{ij}}{r_{ij}}\left(\phi_{i}-\phi_{j}\right) \f]
+* Where \f$e_{ij}\f$ is the unit vector pointing from particle i to particle j
+* and \f$r_{ij}\f$ is the distance.
+*
+* We now use this formula in one of the formula for the divergence.
+*
+* \subsection mult_phase_kern Smoothing Function
+*
+* For multi-phase calculation. Other expression are used that are similar.
+* But are more stable for discontinuity at interface.
+*
+* \f[ \xi(r)=\frac{w(r-r_{i},h)}{\sum_{b} w(r-r_b)}=\frac{w_{i}(r)}{\sigma(r)} \f]
+*
+* \f$\sigma_{r}\f$  is a mesure of particle density.
+*
+* The volumn of a particle is defined by:
+*
+* \f[ V_{i}=\int \xi_{i}(r) dr=\int \frac{1}{\sigma(r)}w(r-r_i)dr\approx \frac{1}{\sigma_i} \f]
+*
+* The average of a quantity is now:
+*
+* \f[<A(r)>=\frac{1}{V}\int \xi_{i}(r)A(r)dr\approx \sigma_{i}\int \xi_{i}(r)A(r)dr\f]
+*
+* Derivatif can be calculate from similar equation as normal SPH.
+* Note that the density is a mass per unit of volumn.
+* \f[\rho=\frac{m}{V}=m\sigma\f]
+*
+* On the contrary to standard SPH wich give:
+* \f[\rho=\sum_{b}m_{b}w_{b}\f]
+* The advantage of the other formulation is that it doesn't depend on the mass of other particle.
+*
+* The second advantage is that it's more easy to have the correct initial mass density.
+* Because we can calculate the density in knowing only the position of the particles.
+* And then determine \f$m\f$ so that \f$\rho\f$ is the good value.
+*
+* \f[ m=\frac{\rho_0}{\sigma}\f]
+*
+* In this formalism, the expression of the derivatif is given by:
+* \f[\nabla A=\sigma_{a}\sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{1}{2}\left(A_a+A_b\right)\nabla w\f]
+*
+* And the Lapplacien by:
+*
+*\f[\Delta A=\sigma_{a}\sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{A_a-A_b}{r_{ab}}\frac{\partial w}{\partial r_{ab}}\f]
+*
+* This are the real expression that are used in the code.
 * \subsection equation Equation
 *
 * The Navier Stocks equation are written.
@@ -128,54 +215,308 @@
 * \f[ \rho\frac{d}{dt}\mathbf u =-\nabla p+\mu \Delta \mathbf u+\mathbf f \f]
 *
 * For solving the fact that this equation need to be incompressible,
-* 2 methods are possible. We can solve a elliptic problem after a half time step.
-* And choose the pressure to correct the incompressibility.
+* 2 methods are possible:
 *
-* Or we can take a equation of state for \f$p\f$.
+*  -We can solve an elliptic problem that arise from the condition that speed need to be divergence free and pressure need to be choose so that it's the case.
+*  -We can take a equation of state for \f$p(\rho)\f$.
 *
-* A proposed equation of state is:
+* \subsubsection weakly_compres_sph Weakly Compressible SPH
+* We use an equation of state for the pressure that will give a strong repulsion if we try to compress.
 * 
+*	A proposed equation of state is:
 * \f[B\left(\left(\frac{\rho}{\rho_{0}}\right)^\gamma-1\right)\f]
 *
 * Where
-*
 *\f[B=\frac{\rho_0 c_s^2}{\gamma}\f]
+* Where \f$c_s\f$ is the numerical speed of sound and \f$ \gamma =7\f$
+* 
+* The numerical speed of sound need to be at minimun 10 times faster as the fastest speed.
+* And more if possible. But if the numerical speed of sound is big, the time step is small 
+* because we have a ftl constraint that depend on the speed of sound.
+* 
+* The Choice of \f$\gamma\f$ and \f$B\f$ depend on choice of time step and time integration method.
+* More \f$B\f$ and \f$\gamma\f$ is high more we are incompressible, but more the acceleration will be strongly varying to a small perturbation of density,
+* and lower the timestep need to be.
 *
-* Where \f$c_s\f$ is the speed of sound and \f$ \gamma =7\f$
+* Note that the notion of negative pressure if we have a smaller density that seem physical is physical.
+* Because this equation only describe pressure relative to the pressure at rest. But this pressure at rest doesn't matter because we are only interested in derivative of pressure.
+* The only moment where it can have an importance is for Boundary condition between two media.
+*	
 *
-* \subsection implementation Implementation
+* \subsubsection incompres_sph  Incompressible SPH
+* \paragraph incompres_spatial_cont Spatial Continus Incompressible SPH
+* First we will show the numerical sheme, and then prove it.
+* We denote by \f$x^{*n+1}\f$ and \f$v^{*n+1}\f$ the speed and position without pressure term at next time step.
 *
-* For the implementation, the following class are important.
+* We then find the correct position and speed (\f$x^{n+1}\f$ and \f$v^{n+1}\f$).
+*  Where \f$\rho^{0}\f$ is the correct mass density and \f$\rho^{*n+1}\f$ is the mass density at position and speed \f$x^{*n+1}\f$ and \f$v^{*n+1}\f$.
+* \f[-\frac{\Delta t^2}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\log\left(\frac{\rho^{*n+1}-\rho^{0}}{\rho^0}\right)\f]
+* \f[x^{n+1}:=x^{*n+1}-\frac{\Delta t^2}{2}  \frac{\nabla p}{\rho}\f]
 *
-* - Particles_List:
-*  	  Contain the list of all particle. And is used to add particle, begin calculus.
-*     All global action begin hier.
-* - Parcticles:
-*		Represent a list of particles that are in a square of size \f$ h\f$.
-*		It's goal is to transmit calculus to make from above to the Particle.
-*		And store somes geometric information like the neighbour particles.
-* - Particle:
-*		Opaque pointer to ParticleReal. Used to be able to modify the underlying data.
-		Without taking care of need of copy.
-* - ParticleReal: 
-*		The real particle. It represent a particle with it mass, position and speed.
-*		The real work is done hier.
+* \f[\frac{\Delta t}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\nabla \cdot v^{*n+1}\f]
+* \f[v^{n+1}:=v^{*n+1}-\frac{\Delta t}{2}  \frac{\nabla p}{\rho}\f]
 *
-*    
+* The gradient and divergence term will be discretized with one of the formula seen before.
+* Where we need to solve the lapplacien to be able to  compute the gradient.
+* Note that we have 2 times the same linear system but with different second member.
+* Note that the \f$\Delta t\f$ is not neaded because we can take in account in p.
 *
-*    The other class are more uttility class.
-*	 Hier a short description of the uttility class:
-*		-Voisin and Voisin_Iterator 
-*			Uttility class to be able to easely traverse neighbour particle.
-*			The neighbour are created from a list of Particles.
-*		-physvector
-*			Represent a vector in the mathematical sense.
-*		-Tensor
-*			Represent a rank 2 tensor. With Cannonical operation.
-*		-Key
-*			Allow to locate Particles with integer coordinate.
-*			Used as key to store Particles list.
+* The proof of this numerical sheme is the following.
+* The speed and position and the new time step can be approximated without the pression by a leap frog step:
+* \f[ v^{*n+\frac{1}{2}}=v^{n}+f^{n}\frac{\Delta t}{2}\f]
+* \f[ x^{*n}=x^{n}+v^{*n+\frac{1}{2}}\Delta t\f]
 *
-*		\dotfile simplified_coll_graph.dot "Collaboration Graph of Principal class"
+* The error in density can be estimated by the discretization of the mass transport equation.
+* \f[ \frac{\rho^{*n+1}-\rho^{n}}{\Delta t}=-\rho^{n}\nabla \cdot v^{*n+\frac{1}{2}} \f]
+* The complete corrected speed is with \f$p\f$ at time \f$t^n\f$ unknow.
+* \f[v^{n+\frac{1}{2}}=v^{*n+\frac{1}{2}}-\frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
+* The divergence give:
+* \f[\nabla \cdot v^{n+\frac{1}{2}}=\nabla \cdot v^{*n+\frac{1}{2}}-\nabla \cdot \frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
+* \f[\Delta t\nabla \cdot v^{n+\frac{1}{2}}=-\frac{\rho^{n+1}-\rho^{n}}{\rho^{n}}=-\frac{\rho^{*n+1}-\rho^{n}}{\rho^{n}}-\nabla \cdot \frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t^2}{2}\f]
+* Because we want to be incompressible at full time step \f$\nabla \cdot v^{n+\frac{1}{2}}=0\f$ witch is equivalent to have \f$\rho^{n+1}=\rho^{0}\f$.
+* This give the following equation for the pressure.
+* \f[-\nabla \cdot \frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t^2}{2}=\frac{\rho^{*n+1}-\rho^{n}}{\rho^{n}}\f]
+*
+* The corrected position is then:
+* \f[x^{n+1}=x^{n}+v^{n+\frac{1}{2}}\Delta t=x^{n}+v^{*n+\frac{1}{2}}\Delta t-\frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t^2}{2}=x^{*n}-\frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t^2}{2}\f]
+*
+* It can be show that  without time discretisation we will have a correct position for \f$\log\left(\frac{\rho}{\rho_{0}}\right)\f$ (cf Comprehensible Incompressible SPH for Mathematician).
+* But contrary to this case where the suposition that we only know the force at time \f$t^n\f$ allow to show that we will find the same result that a Euler with the correct pression.
+* We cannot in general be sure that the corrected position will be the same that if we integrated from the begining with a correct pressure, because of dependence of the position and speed of the force. 
+* More clearly with a real speed, and a estimated speed:
+* \f[v(t)= \int \left(f(x(t),v(t),t) - \frac{\nabla p(x(t),v(t),t)}{\rho(x(t),v(t),t)}\right)dt \f]
+* \f[v^{*}(t)=\int f(x^{*}(t),v^{*}(t),t)dt\f]
+* \f[v(t)-v^{*}(t)\sim-\int  \frac{\nabla p(x(t),v(t),t)}{\rho(x(t),v(t),t)}dt\f]
+* Relation \f$\sim\f$ was used because this is not equal in general.
+* Because of the dependence on \f$x(t)\f$ that depend on the solution for \f$v(t)\f$
+* 
+* The proof for the speed is more easy.
+* At the speed at full time step is calculated by:
+* \f[v^{n+1}=v^{*n+1}-\frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
+* Taking the divergence we have:
+* \f[\nabla \cdot v^{n+1}=\nabla \cdot v^{*n+1}-\nabla \cdot \frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
+* We want to be divergence free at full time step (\f$ \nabla \cdot v^{n+1}=0\f$).
+* \f[\nabla \cdot v^{*n+1}=\nabla \cdot \frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
+* And the corrected position is:
+* \f[v^{n+1}=v^{*n+1}-\frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
+*
+* Note that like for the position case we are sure to have a divergence free result that is compatible to if we had 
+* integrated from the begining with the correct pressure only for Euler. For other method we will have a dependance of argument.
+*
+* Note that the corrected speed will always be divergence free whatever the integration method is. 
+* Because taking the divergence give:
+* \f[\nabla \cdot v^{n+1}=\nabla \cdot v^{*n+1}-\nabla \cdot \frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
+* \f[\nabla \cdot v^{n+1}=\nabla \cdot v^{*n+1}-\nabla \cdot v^{*n+1}=0\f]
+* 
+* \paragraph incompres_spatial_discretization Spatial Discret Incompressible SPH
+* 
+*  We will discretize the following equation:
+* \f[-\frac{\Delta t^2}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\log\left(\frac{\rho^{*n+1}-\rho^{0}}{\rho^0}\right)\f]
+* \f[x^{n+1}:=x^{*n+1}-\frac{\Delta t^2}{2}  \frac{\nabla p}{\rho}\f]
+*
+* \f[\frac{\Delta t}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\nabla \cdot v^{*n+1}\f]
+* \f[v^{n+1}:=v^{*n+1}-\frac{\Delta t}{2}  \frac{\nabla p}{\rho}\f]
+*
+* For this, we can use all sph gradient and density estimation that we have seen.
+* We will show it for the following expression (from Smoothing Function):
+* \f[\rho_{a}=m_{a}\sigma_{a}=m_{a}\sum w_{ab}\f]
+* \f[\nabla A_a=\sigma_{a}\sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{1}{2}\left(A_{a}+A_{b}\right)\nabla_a w\f]
+* \f[ \Delta A=\sigma_{a}\sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{A_a-A_b}{r_{ab}}\frac{\partial w}{\partial r_{ab}}\f]
+* To simplify notation, we write:
+* \f[B_{ab}=\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\frac{\partial w}{\partial r_{ab}}\f]
+* \f$B_{ab}\f$ is anti symmetric because of the gradient.
+* Our expression are then:
+* \f[\nabla A_a=\sigma_{a}\sum_{b}\frac{1}{2}\left(A_{a}+A_{b}\right)B_{ab}e_{ab}\f]
+* \f[ \Delta A=\sigma_{a}\sum_{b}\frac{A_a-A_b}{r_{ab}}B_{ab}\f]
+* Where \f$e_{ab}\f$ is a unitary vector from particle a to particle 2.
+* 
+* More details on the justification will be added on this part.
+*
+* To be able to put the \f$\rho\f$ in the gradient, we use the mean value of \f$\rho\f$:
+* \f[ \nabla \cdot \frac{\nabla p}{\rho}=\frac{2}{r_{ab}}\frac{p_{a}-p_{b}}{\rho_{a}+\rho_{b}}\f]
+*
+* The laplacian is then:
+* \f[  \nabla \cdot \left(\frac{\nabla p}{\rho}\right)=2\sigma_{a}\sum_{b}\frac{B_{ab}}{r_{ab}}\frac{p_a-p_b}{\rho_{a}+\rho_{b}}\f]
+* 
+* It can be shown that the gradient is:
+* 
+* \f[ \frac{\nabla p}{\rho}=\frac{1}{m_{a}}\sum_{b} B_{ab}\frac{\rho_{a}p_{b}+\rho_{b}p_{a}}{\rho_{a}+\rho_{b}}e_{ab}\f]
+*
+* With this we have everithing to calculate the matrice and the second member.
+* Note that the matrice as a big band because particle are spaced by \f$\frac{h}{3}\f$ for our Quintic kernel.
+* 
+*\subsection cont_equation Continuity Equation
+*
+* The continuity equation (Mass transport equation) :
+*
+* \f[\frac{d\rho}{dt}=-\rho\nabla \cdot v \f]
+*
+* We can then use this equation to calculate the density. And not the definition.
+* The main motivation to doing so is that this equation has less problem in the boundary.
+* This method is not used for the moment.
+*
+* \subsection conservation SPH Conservation property
+*
+* SPH has the advantage to have some very important physical conservation.
+* Total Momentum and Total Angular Momentum are conserved (without external force) with very general condition.
+*
+* Total Momentum is given by:
+*
+* \f[P=\sum_{i} m_iv_{i}\f]
+* The derivatif of the momentum give for constant mass(it's the case) the Newton's Law:
+* \f[\dot{p}=f=\sum_{i}m_ia_{i}\f]
+* We the force given by Navier-Stocks we have:
+*\f[f=\sum_{i}m_{i} \rho_{i}\left(-\frac{1}{\rho_{i}}\nabla p+\nu \Delta v\right)\f]
+* We have seen that we can choose for the derivatif a symetric and a anti symetric version.
+* Choosing the anti symetric version. Will make a sum on anti symetric term, the sum will
+* then vanish.
+*
+* This property of anti symetrisation give a Newton's Third law of action reaction.
+*
+* The angular momentum is define by:
+* \f[M=\sum_{i}x_{i}\times m_{i}v_{i}\f]
+* \f[\dot{M}=\sum_{i}\left(v_{i}\times m_{i}v_{i}+x_{i}\times m_{i}a_{i}\right)\f]
+* \f[\dot{M}=\sum_{i}x_{i}\times m_{i}\left(-\frac{1}{\rho_{i}}\nabla p+\nu \Delta v\right)\f]
+* Taking the expression for \f$a\f$ we have:
+*
+* Because the acceleration is anti simetric with respect to exchange of two particle.
+* We can rewrite the cross product$:
+* \f[\left(x_{a}-x_{b}\right)\times A_{ab}\f]
+* Where \f$ A_{ab}\f$ is one of the anti symetric component.
+* For the pressure, \f$A_{ab}\f$ is proportional to \f$x_{a}-x_{b}\f$ because of the gradient of the Kernel.
+* So the pressure contribution is 0.
+* For the viscosity term it's not the case because the speed is not in general colinear to velocity.
+* We have no angular moment conservation because of viscosity.
+* \section algorithm Algorithm Overview
+*
+* We will now recapitulate all that we have seen to give an overview of the algorithm.
+* The formula will use a Euler time integration for simplicity. Other time integration are possible.
+* 
+* First an weakly incompressible algorithm:
+* -# Create initial particle:
+* 		-# Place particle with initial position and speed, so that the number of neighbour(particles in distance \f$h\f$) is constant:
+*		-# Choose the mass so that we have a correct initial density.
+*				-# Calculate the density for every Particle by:
+*					\f[\sigma_a =\sum_{b}w_{ab} \f]
+*				-# Choose the mass by:
+*						\f[m_a=\frac{\rho_{0}}{\sigma_{a}}\f]
+* -# For every time step:
+*  		-# Integrate Navier stocks equation: For every estimate position and speed (1 for euler ) do:
+*				-# Calculate the density:
+*						\f[\sigma_a =\sum_{b}w_{ab} \f]
+*				-# Calculate pressure by the equation of state.
+*						\f[p=B \left[\left(\frac{m_{a}\sigma_{a}}{\rho_{0}}\right)^{\gamma}-1\right]\f]
+*				-# Calculate the acceleration using the sph expression for derivative.
+*						\f[a_a=-\frac{\nabla p}{m_{a}\sigma_{a}}+g+\nu \Delta v_{a}\f]
+*				-# Advance Time by:
+*						\f[x^{n+1}_{a}=x^{n}_{a}+v^{n}_a\Delta t\f]
+*						\f[v^{n+1}_{a}=v^{n}_{a}+a^{n}_{a}\Delta t \f]
+*
+*
+* Incompressible Version:
+*
+* -# Create initial particle:
+* 		-# Place particle with initial position and speed, so that the number of neighbour(particles in distance \f$h\f$) is constant.
+*		-# Choose the mass so that we have a correct initial density.
+*				-# Calculate the density for every Particle by:
+*					\f[\sigma_a =\sum_{b}w_{ab} \f]
+*				-# Choose the mass by:
+*						\f[m_a=\frac{\rho_{0}}{\sigma_{a}}\f]		
+* -# For every time step:
+*		-# Integrate Navier stocks equation: For every estimate position and speed without pressure (1 for euler ) do:
+*				-# Calculate the density:
+*						\f[\sigma_a =\sum_{b}w_{ab} \f]
+*				-# Calculate the acceleration using the sph expression for derivative.
+*						\f[a^{*}_a=g+\nu \Delta v_{a}\f]
+*				-# Advance Time by:
+*						\f[x^{*n+1}_{a}=x^{n}_{a}+v^{n}_a\Delta t\f]
+*						\f[v^{*n+1}_{a}=v^{n}_{a}+a^{*n}_{a}\Delta t \f]
+*		-# Correct position and speed for every particle \f$a\f$. The correction can be done only if we don't respect a certain tolerance in mass density.
+*				-# Calculate the density:
+*						\f[\sigma_a =\sum_{b}w_{ab} \f]
+*				-# Correct position:
+*						 -# Solve for \f$p\f$ the following linear equation:
+*								\f[ \sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{\partial w}{\partial r_{ab}}\frac{1}{r_{ab}}\frac{p_a-p_b}{m_a\sigma_{a}-m_{b}\sigma_{b}} =\frac{1}{2}\frac{\rho^{0}-m_{a}\sigma_{a}}{\rho_{0}\sigma_{a}}\f]
+*						 -# Position is now corrected to:
+*								\f[x^{n+1}_{a}=x^{*n+1}_{a}-\frac{1}{m_a}\sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{\partial w}{\partial r_{ab}}\frac{\rho_{a}p_{b}+\rho_{b}p_{a}}{\rho_a+\rho_b}e_{ab}\f]
+*				-# Calculate the density:
+*						\f[\sigma_a =\sum_{b}w_{ab} \f]
+*				-# Correct speed:
+*						-# Solve for \f$p\f$ the following linear equation:
+*								\f[ \sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{\partial w}{\partial r_{ab}}\frac{1}{r_{ab}}\frac{p_a-p_b}{m_a\sigma_{a}-m_{b}\sigma_{b}} =\frac{1}{4}\sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{\partial w}{\partial r_{ab}}\left(v_{a}+v_b\right)\cdot e_{ab}\f]				
+*						-# Correct the speed by:
+*								\f[v^{n+1}_{a}=v^{*n+1}_{a}-\frac{1}{m_a}\sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{\partial w}{\partial r_{ab}}\frac{\rho_{a}p_{b}+\rho_{b}p_{a}}{\rho_a+\rho_b}e_{ab}\f]
+*						
+* 
+*   Because we use a compact kernel, we can group particles in square block of size \f$h\f$.
+*   Where \f$h\f$ is the distance after witch kernel is nil.
+*   We then need to consider interaction only with the particles from neighbour blocks.
+* 
+*   This possibility is mathematically important, because it change the complexity from \f$o(N^2)\f$ to \f$o(N)\f$
+*   
+*   This concept is found in class Particles.
+*
+* \section implem Implementation
+*   \subsection implem_overview Implementation Overview
+*
+*   The main point in this code is the hierachical model.
+*   That allow every level to have only elementary operation to do.
+*   The Hierarchy from top to below is:
+*	-# Particles_List:
+*     	This class contain all the other object.
+*		This class consist on a dynamic square partition of space of size \f$h\f$.
+*		Every square being an instance of class Particles.
+*		This class is responsible of the correct creation of the Particles.
+*		And add individual particle to the good Particles.
+*	-# Particles:
+*		Represent a groups of Particle.
+*		The role of this class is in majority to transmit information.
+*		This class as somes operation to dos for consistency like checking that a Particle has moved outside the Region.
+*	-# Particle:
+*		This class is an opaque pointer to a Particle_Real instance.
+*		Say in other word, it allow to access the real data of the Particle.
+*		It's role is to be able to have several copy of Particle (in list for example) and that modifying a copy modify all copy.
+*	-# Particle_Real:
+*		This is an individual particle with a given speed and position.
+*		All the real work are done heir.
+*
+* All this class have relation one to the other.
+* The key relation are the following:
+*	-# Particles_List:
+*			-List of all Particles classified by an integer grid.
+*	-# Particles:
+*			-List of all Particles that are Neighbour (In fact an instance of class Voisin ).
+*			-list of all Particle in his Region.
+*	-# Particle:
+*			-Being an opaque pointer has a pointer to his Particle_Real.
+*	-# Particle_Real:
+*		 	-Pointer to the Particles in witch container it lay on.
+*			-Pointer to the list of Neighbour (an instance of class Voisin) to be able to easly iterate on all Neighbour.
+*
+*   This can be shematized by the following collaboration graph.
+*   \dotfile simplified_coll_graph.dot "Collaboration Graph of Principal class" 
+*
+*
+*	Has we can see on the graph, a class was not mentioned. The Voisin Class.
+*	The voisin class consist of a list of Particles, but has iterator that allow to 
+*   iterate throught all Particle or all Particles.
+*
+*  \subsection implem_transmition_info  Transmision of Information between class
+* 
+*	A general pattern is that we need to do an operation on every particle without needing a responce.
+*   For example to calculate the Density.
+*   The principle is the following.
+*	-# Particles_List send the work to do to all Particles.
+*	-# Particles send the work to do to all Particle_Real by the intermediate of a Particle.
+*
+*
+*	Another case is if we need to have a responce on the form on a number or boolean.
+*   For example to decide the next time step. The minimun time step from the time step calculated for every particle is taken.
+*   For this a reference is send down from the top to below. Every step updating the reference if it's smaller.
+*	
+* \subsection parallelism Parallelism
+* 	We have seen in the previous section that we have an hierachical model where at every level we have a for.
+*   This open the possibility to paralyse every loop.
+*
 **/
 

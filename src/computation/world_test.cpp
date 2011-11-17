@@ -38,47 +38,73 @@ int Nx=10;
 int Ny=3;
 int Nz=10;
 vector<vector<Particle> > listvect(Ny);
+vector<int> yloop(Nx*Nz);
 for(int j=0;j<Ny;j++){
 	vector<Particle> begvect(Nx*Nz);
 for(int i=0;i<Nx;i++){
 	
 		for(int k=0;k<Nz;k++){
-			Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.*h/3+h/6,j*h/3,k*h/3-Nz/2.*h/3+h/6),physvector< 3  >(0, uy,0),water),begvect[i+k*Nz]);
+			double x=i*h/3-Nx/2.*h/3;
+			double y=k*h/3-Nz/2.*h/3+h/6;
+			double r2=pow(x,2)+pow(y,2);
+			if(r2>pow(0.05,2)){
+				continue;
+			}
+			double Uyrel=uy/pow(0.05,2)*(pow(0.05,2)-r2);
+			Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.*h/3+h/6,j*h/3,k*h/3-Nz/2.*h/3+h/6),physvector< 3  >(0, Uyrel,0),water),begvect[i+k*Nz]);
 			begvect[i+k*Nz]->SetConstSpeed(true);
+			yloop[i+k*Nz]=Ny-1;
 }
 }
 listvect[j]=begvect;
 }
-int yloopend=Ny-1;
 
 
 
 
 m_list.Calculate0Density();
 
-double t_next=h/3/uy;
+
 while(true){
-while(m_list.GetTime()<t_next){
 	  double dt;
  m_list.Compute(dt);
-  m_list.write(dt);
-   }
-t_next+=h/3/uy;
-vector<Particle> & begvect=listvect[yloopend];
+ // m_list.write(dt);
+
+bool b=false;
 for(int i=0;i<Nx;i++){
 	
 		for(int k=0;k<Nz;k++){
+			vector<Particle> & begvect=listvect[yloop[i+k*Nz]];
+			Particle ptemp=begvect[i+k*Nz];
+			
+			
+			double x=i*h/3-Nx/2.*h/3;
+			double z=k*h/3-Nz/2.*h/3+h/6;
+			double r2=pow(x,2)+pow(z,2);
+			if(r2>pow(0.05,2)){
+				continue;
+			}
+			double y;
+			ptemp->GetPos().Get(x,y,z);
+			if(y>h){
+				b=true;
+			double Uyrel=uy/pow(0.05,2)*(pow(0.05,2)-r2);
+			int isucces=(yloop[i+k*Nz]+1)%Ny;
+			listvect[isucces][i+k*Nz]->GetPos().Get(x,y,z);
+			y-=h/3;
 			begvect[i+k*Nz]->SetConstSpeed(false);
-			Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.0*h/3+h/6,0,k*h/3-Nz/2.*h/3+h/6),physvector< 3  >(0, uy,0),water),begvect[i+k*Nz]);
+			Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.0*h/3+h/6,y,k*h/3-Nz/2.*h/3+h/6),physvector< 3  >(0,Uyrel,0),water),begvect[i+k*Nz]);
 			begvect[i+k*Nz]->SetConstSpeed(true);
+			--yloop[i+k*Nz];
+			if(yloop[i+k*Nz]<0){
+				yloop[i+k*Nz]=Ny-1;
+			}
+			}
 }
 }
---yloopend;
-if(yloopend<0){
-	yloopend=Ny-1;
-}
+if(b){
 m_list.Calculate0Density();
-
+}
  }
 
 }

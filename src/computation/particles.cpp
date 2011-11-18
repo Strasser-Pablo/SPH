@@ -16,21 +16,21 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 using namespace std;
 
 
-Particles::Particles(ParticleType type): list<Particle>(),m_type(type)
+Particles::Particles(ParticleType type): list<Particle>(),m_b_muss_be_deleted(false),m_type(type)
 {
 
 }
 
-Particles::Particles(Key<DIM> & K):m_key(K)
+Particles::Particles(Key<DIM> & K):m_b_muss_be_deleted(false),m_key(K)
 {
 
 }
 
-Particles::Particles(const Particles& A):list<Particle>(A),m_type(A.m_type){
+Particles::Particles(const Particles& A):list<Particle>(A),m_b_muss_be_deleted(false),m_type(A.m_type){
 
 }
 
-Particles::Particles():m_type(none)
+Particles::Particles():m_b_muss_be_deleted(false),m_type(none)
 {
 
 }
@@ -360,5 +360,23 @@ void Particles::MassDensity(fstream &out)const{
 	    void Particles::WriteForceTurbulence(fstream & out) const{
 			    for(Particles::const_iterator it=begin();it!=end();it++){
 	(*it)->WriteForceTurbulence(out);
+	}    
+	  }
+	  
+void Particles::SetMussBeDeleted(bool b){
+	m_b_muss_be_deleted=b;
+}
+bool Particles::GetMussBeDeleted(){
+	return m_b_muss_be_deleted;
+}
+
+void Particles::Beeman_compute(double dt){
+	for(Particles::iterator it=begin();it!=end();it++){
+	(*it)->Beeman_compute(dt);
+	}    
+}
+	  void Particles::Beeman_precompute(double dt){
+		  for(Particles::iterator it=begin();it!=end();it++){
+	(*it)->Beeman_precompute(dt);
 	}    
 	  }

@@ -17,7 +17,6 @@ const bool presure_laplacien=false;
 const bool pressure_guess_pressure=false;
 
 
-
 /**
  * @brief Distance after witch kernel is 0.
  **/

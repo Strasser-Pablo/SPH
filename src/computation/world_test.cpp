@@ -68,7 +68,7 @@ m_list.Calculate0Density();
 while(true){
 	  double dt;
  m_list.Compute(dt);
- // m_list.write(dt);
+ m_list.write(dt);
 
 bool b=false;
 for(int i=0;i<Nx;i++){

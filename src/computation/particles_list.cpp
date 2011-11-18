@@ -79,71 +79,277 @@ for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++)
         it->second.PreparePosition(b);
     }
  }
+class ApplyComputeDensity{
+	 Particles_Deque_List& m_vect;
+	public:
+	ApplyComputeDensity( Particles_Deque_List& vect):m_vect(vect){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->ComputeDensity();
+			}
+		}
+		}
+	
+};
 
+class ApplyCalculate0Density{
+	 Particles_Deque_List& m_vect;
+	public:
+	ApplyCalculate0Density( Particles_Deque_List& vect):m_vect(vect){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->Calculate0Density();
+			}
+		}
+		}
+	
+};
 void Particles_List::Calculate0Density(){
-	 for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-		it->second.ComputeDensity();
-    }
-	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-        it->second.Calculate0Density();
-    }
+ parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()), ApplyComputeDensity(m_vect),m_af);		
+ parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()), ApplyCalculate0Density(m_vect),m_af);		
+ 
 }
 
-void Particles_List::FindBoundary(){
-bool b=false;
-	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-b=it->second.FindBoundary(!b);
-}
-}
 
+
+class ApplypreComputeMove_predictor{
+	 Particles_Deque_List& m_vect;
+	 double m_Dt;
+	public:
+	ApplypreComputeMove_predictor( Particles_Deque_List& vect,double dt):m_vect(vect),m_Dt(dt){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->preComputeMove_predictor(m_Dt);
+			}
+		}
+		}
+	
+};
+
+
+class ApplyDoMove_predictor{
+	 Particles_Deque_List& m_vect;
+	 double m_Dt;
+	public:
+	ApplyDoMove_predictor( Particles_Deque_List& vect):m_vect(vect){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->DoMove_predictor();
+			}
+		}
+		}
+	
+};
+
+class ApplyComputeMove_predictor{
+	 Particles_Deque_List& m_vect;
+	 double m_Dt;
+	 bool m_b;
+	public:
+	ApplyComputeMove_predictor( Particles_Deque_List& vect,double dt):m_vect(vect),m_Dt(dt),m_b(false){
+	};
+	ApplyComputeMove_predictor( ApplyComputeMove_predictor& B,split):m_vect(B.m_vect),m_b(false){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r )  {
+		bool b=m_b;
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->ComputeMove_predictor(m_Dt,b);
+			}
+		}
+		m_b=b;
+		}
+	bool GetB(){return m_b;}
+	void join(const ApplyComputeMove_predictor& B){
+		m_b=m_b||B.m_b;
+	}
+};
 void Particles_List::predictor_corrector_compute(double DT){
 
-	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-		it->second.preComputeMove_predictor(DT);
-}
+parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()), ApplypreComputeMove_predictor(m_vect,DT),m_af);		
+	
 bool b=true;
 while(b){
-	b=false;
 UpdateForce();
+ApplyComputeMove_predictor ap(m_vect,DT);
+parallel_reduce(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()),ap,m_af);		
+b=ap.GetB();
+}
+parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyDoMove_predictor(m_vect),m_af);		
+}
 
-for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-		it->second.ComputeMove_predictor(DT,b);
-}
-}
 
 
-for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++) {
-	it->second.DoMove_predictor();
+class ApplyBeeman_precompute{
+	 Particles_Deque_List& m_vect;
+	 double m_Dt;
+	public:
+	ApplyBeeman_precompute( Particles_Deque_List& vect,double dt):m_vect(vect),m_Dt(dt){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->Beeman_precompute(m_Dt);
+			}
+		}
+		}
+	
+};
+
+
+class ApplyBeeman_compute{
+	 Particles_Deque_List& m_vect;
+	 double m_Dt;
+	public:
+	ApplyBeeman_compute( Particles_Deque_List& vect,double dt):m_vect(vect),m_Dt(dt){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->Beeman_compute(m_Dt);
+			}
+		}
+		}
+	
+};
+
+void Particles_List::beeman_compute(double DT){
+
+parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()), ApplyBeeman_precompute(m_vect,DT),m_af);		
+UpdateForce();
+parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyBeeman_compute(m_vect,DT),m_af);		
 }
-}
+
+class ApplyNextForceTimeStep{
+	const Particles_Deque_List& m_vect;
+	 double m_Dt;
+	public:
+	ApplyNextForceTimeStep(const Particles_Deque_List& vect):m_vect(vect),m_Dt(DT){
+	};
+	ApplyNextForceTimeStep( ApplyNextForceTimeStep& B,split):m_vect(B.m_vect),m_Dt(DT){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r )  {
+		double dt=m_Dt;
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			const Particles * part=m_vect[i];
+			if(part!=0){
+				part->NextForceTimeStep(dt);
+			}
+		}
+		m_Dt=dt;
+		}
+	double GetDt(){return m_Dt;}
+	void join(const ApplyNextForceTimeStep& B){
+		if(m_Dt>B.m_Dt){
+			m_Dt=B.m_Dt;
+		}
+	}
+};
+
+
+class ApplyNextCourantVisciousTimeStep{
+	const Particles_Deque_List& m_vect;
+	 double m_Dt;
+	public:
+	ApplyNextCourantVisciousTimeStep(const Particles_Deque_List& vect):m_vect(vect),m_Dt(DT){
+	};
+	ApplyNextCourantVisciousTimeStep( ApplyNextCourantVisciousTimeStep& B,split):m_vect(B.m_vect),m_Dt(DT){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r )  {
+		double dt=m_Dt;
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			const Particles * part=m_vect[i];
+			if(part!=0){
+				part->NextCourantVisciousTimeStep(dt);
+			}
+		}
+		m_Dt=dt;
+		}
+	double GetDt(){return m_Dt;}
+	void join(const ApplyNextCourantVisciousTimeStep& B){
+		if(m_Dt>B.m_Dt){
+			m_Dt=B.m_Dt;
+		}
+	}
+};
 
 double Particles_List::NextTimeStep()const{
 	double dt=DT;
 	UpdateForce();
-	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {		
-		it->second.NextForceTimeStep(dt);
-}
-
-	for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {		
-		it->second.NextCourantVisciousTimeStep(dt);
+	ApplyNextCourantVisciousTimeStep courvis(m_vect);
+	ApplyNextForceTimeStep force(m_vect);
+parallel_reduce(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()),courvis,m_af);		
+parallel_reduce(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()),force,m_af);
+	double dta=courvis.GetDt();
+	double dtb=force.GetDt();
+    if(dta>dtb){
+		dt=dtb;
+	}
+	else{
+		dt=dta;
 	}
 return 0.25*dt;	
 }
 
+class ApplyUpdateForce{
+	const Particles_Deque_List& m_vect;
+	public:
+	ApplyUpdateForce(const Particles_Deque_List& vect):m_vect(vect){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			const Particles * part=m_vect[i];
+			if(part!=0){
+				part->UpdateForce();
+			}
+		}
+		}
+	
+};
 
 void Particles_List::UpdateForce()const{
-		for ( map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();it++) {
-			it->second.UpdateForce();
+parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyUpdateForce(m_vect),m_af);		
+/*for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+		it->second.UpdateForce();
+    }*/
 }
-}
+
+
+
+class ApplyCalculateSubGridTens{
+	 Particles_Deque_List& m_vect;
+	public:
+	ApplyCalculateSubGridTens( Particles_Deque_List& vect):m_vect(vect){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->CalculateSubGridTens();
+			}
+		}
+		}
+	
+};
 void Particles_List::Compute(double &dt)
 {
-    for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-		it->second.ComputeDensity();
-    }
-	  for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
-		  it->second.CalculateSubGridTens();
-    }
+	parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyComputeDensity(m_vect),m_af);		
+	  parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyCalculateSubGridTens(m_vect),m_af);		
 	  dt=NextTimeStep();
      bool ret=false;
 	 if(presure_laplacien){
@@ -171,6 +377,7 @@ void Particles_List::Compute(double &dt)
 	   ++it;
         it2->second.Update(this);
     }
+	m_vect.Update(m_list);
     #if DOXYGEN
     ParticleReal p;
     p.ComputePressure_Density();

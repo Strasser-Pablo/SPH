@@ -23,8 +23,10 @@ void Particles_List::AddNeighbour(Key< 3 > k)
     list<Key<DIM> > l=k.GetNeighbour();
 	 list<Key<DIM> > l2;
     list<Particles*> n;
+	
 
     Particles* pa0=&m_list[k];
+	m_vect.push_back(pa0);
 	m_list[k].SetKey(k);
     for (list<Key<DIM> >::iterator it=l.begin(); it!=l.end(); ++it)
     {
@@ -66,14 +68,16 @@ void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
     }
 }
 
-void Particles_List::RemoveParticles(const Particles* part){
+void Particles_List::RemoveParticles( Particles* part){
 	Voisin v;
  part->GetNeighbour(v);
  list<Particles*> l=v.GetParticlesVect();
 for(list<Particles*>::iterator it=l.begin();it!=l.end();it++){
 	(*it)->RemoveParticlesNeighbour(part);
 }
-m_list.erase(part->GetKey());
+//m_list.erase(part->GetKey());
+part->SetMussBeDeleted(true);
+cout<<"remove "<< part<<endl;
 }
 
 
@@ -204,7 +208,6 @@ cout<<"file num "<<filenum<<" nb part "<<m_n<<" time "<<m_t<<" dt "<<dt<<endl;
    
 
 void Particles_List::CorrectDensity(){
-		FindBoundary();
 bool bcont=true;
 int i=0;
 while(bcont){

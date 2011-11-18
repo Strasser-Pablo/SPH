@@ -378,6 +378,8 @@ inline double GetPressure() const;
    * @param part Particle to test
    * @return bool
    **/
+   inline void Beeman_compute(double dt);
+inline void   Beeman_precompute(double dt);
   inline bool Equal(const Particle part) const;
 
 

@@ -568,3 +568,11 @@ void ParticleReal::SetConstSpeed(bool b){
 		m_force_turbulence.WritePos(out);
 	   
   }
+  
+  //TODO write beeman
+void ParticleReal::Beeman_compute(double dt){
+		 
+	 }
+void   ParticleReal::Beeman_precompute(double dt){
+	
+}

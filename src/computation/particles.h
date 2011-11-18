@@ -25,6 +25,7 @@ using namespace std;
 
 class Particles: public std::list<Particle>
 {
+	bool m_b_muss_be_deleted;
 	/**
 	 * @brief Type of particle in container. Unused for the moment. 
 	 **/
@@ -39,6 +40,9 @@ class Particles: public std::list<Particle>
 	 **/
 	Key<DIM> m_key;
 public:
+
+void SetMussBeDeleted(bool b);
+bool GetMussBeDeleted();
 /**
  * @brief Remove information of Neighbour about this particles. Used when deleting neighbour.
  **/
@@ -134,6 +138,9 @@ public:
      * @return void
      **/
 	   void ComputeMove(double dt);
+	   
+	  void Beeman_compute(double dt);
+	  void Beeman_precompute(double dt);
 	    /**
      * @brief Make the initial move for the predictor corrector.
      *

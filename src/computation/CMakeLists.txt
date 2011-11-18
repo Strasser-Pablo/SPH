@@ -3,7 +3,7 @@ project(computation)
 find_package (Doxygen)
 file(GLOB_RECURSE source_computation *.cpp )
 add_executable(computation ${source_computation})
-
+target_link_libraries(computation ${TBB_LIBRARIES})
   if(${DOXYGEN_FOUND})
 add_custom_target(doc_computation COMMAND "${DOXYGEN_EXECUTABLE}" "Doxyfile"
 COMMENT "Writing documentation ..."

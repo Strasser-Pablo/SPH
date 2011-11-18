@@ -19,7 +19,7 @@ void World_timing::Do()
 {
 
 	fstream out ("timing.csv", fstream::out);
-	for(int N=5;N<20;N+=5){
+	for(int N=20;N<21;N+=5){
 		out<<N<<" ";
 	World_timing_elem W;
 	W.Do(N,out);
@@ -47,10 +47,8 @@ for(int i=0;i<Nx;i++){
 }
 }
 
-
-
 m_list.Calculate0Density();
-for(int i=0;i<20;i++){
+for(int i=0;i<50;i++){
 	  double dt;
  m_list.Compute(dt);
   m_list.write(dt);

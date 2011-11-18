@@ -3,22 +3,26 @@
 #include <map>
 #include "particles.h"
 #include "particle.h"
-
+#include "particles_deque_list.h"
 #include "key.h"
+#include "tbb/tbb.h"
 
+const int CHUNK_SIZE=10;
 
 using namespace std;
-
+using namespace tbb;
 /**
  * @brief Contain all the particles object in a map. Creating the geometric relation between particles.
  *
  **/
 class Particles_List
 {
+	mutable affinity_partitioner m_af;
 	/**
 	 * @brief Map of particles.
 	 **/
 	map<Key<DIM> ,Particles> m_list;
+	Particles_Deque_List m_vect;
 	/**
 	 * @brief Current time of the simulation.
 	 **/
@@ -140,7 +144,7 @@ public:
 	 *
 	 * @param parts Particles to remove.
 	 **/
-	inline void RemoveParticles(const Particles * Parts);
+	inline void RemoveParticles( Particles * Parts);
 
 	/**
 	 * @brief Output data for the current timestep to file.
@@ -164,7 +168,8 @@ public:
 	 * @brief Get the current time.
 	 **/
 	inline	double GetTime() const;
-
+	
+	void beeman_compute(double DT);
 
 };
 

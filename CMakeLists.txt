@@ -4,6 +4,11 @@ ADD_DEFINITIONS(-Wall -W -Wconversion  -Wcast-qual -Wwrite-strings )
 ADD_DEFINITIONS(-march=native)
 INCLUDE(CPack)
 find_package (Doxygen)
+find_package(TBB)
+
+include_directories(${TBB_INCLUDE_DIRS})
+link_directories(${TBB_LIBRARY_DIRS})
+
 add_subdirectory(src/computation ./computation  )
 add_custom_target(sph ALL)
 if(${DOXYGEN_FOUND})

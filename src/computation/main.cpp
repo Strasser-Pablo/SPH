@@ -21,15 +21,15 @@ int main() {
 
 	/*World_test w;
 	w.Do();*/
-	/*World_timing W;
-	 W.Do();*/
+	World_timing W;
+	 W.Do();
 	  
-	  
+	/*  
 	  double x=3;
 	  double y=6;
 	  double z=10;
 	  physvector<3> v(x,y,z);
 	  physvector<3> v2(y,x,z);
 	return myfunc(v,v2);
-	  
+	  */
 }

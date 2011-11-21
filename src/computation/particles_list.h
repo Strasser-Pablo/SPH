@@ -7,7 +7,7 @@
 #include "key.h"
 #include "tbb/tbb.h"
 
-const int CHUNK_SIZE=10;
+const int CHUNK_SIZE=10000;
 
 using namespace std;
 using namespace tbb;

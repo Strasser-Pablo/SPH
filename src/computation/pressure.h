@@ -12,8 +12,8 @@ using namespace std;
 
 
 const double rho0=1000;
-const double sound_speed=1435;
-const double B=pow(sound_speed,2)*rho0/7.*0.1;
+const double sound_speed=10;
+const double B=pow(sound_speed,2)*rho0/7.;
 /**
  * @brief Calculate pressure from the density and particle type.
  * 
@@ -26,7 +26,8 @@ inline double pressure(double rho,ParticleType A) {
 	//	rho=rho/NA;
 	//	double ret=rho*R*T*(1+rho*(-BSTAR-AVW/(R*T)+ALPHA/(1-LAMBDA*B*rho)));
 	//	return ret;
-	return B*(pow(rho/rho0,7)-1);
+	//return B*(pow(rho/rho0,7)-1);
+	return 0;
 	} else if(A==Gaz) {
 		return  4*rho;
 	}

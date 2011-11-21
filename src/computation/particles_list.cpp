@@ -87,6 +87,7 @@ class ApplyComputeDensity{
 	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
 		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
 			 Particles * part=m_vect[i];
+			 cout<<"part "<<part<<endl;
 			if(part!=0){
 				part->ComputeDensity();
 			}
@@ -111,6 +112,13 @@ class ApplyCalculate0Density{
 	
 };
 void Particles_List::Calculate0Density(){
+	/*cout<<m_list.size()<<endl;
+	cout<<"norm for"<<endl;
+	for(map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it){
+		it->second.ComputeDensity();
+	}
+	cout<<"parallel for"<<endl;
+	 */
  parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()), ApplyComputeDensity(m_vect),m_af);		
  parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()), ApplyCalculate0Density(m_vect),m_af);		
  
@@ -228,11 +236,34 @@ class ApplyBeeman_compute{
 	
 };
 
-void Particles_List::beeman_compute(double DT){
+class ApplyBeeman_first_time{
+	 Particles_Deque_List& m_vect;
+	 double m_Dt;
+	public:
+	ApplyBeeman_first_time( Particles_Deque_List& vect,double dt):m_vect(vect),m_Dt(dt){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->Beeman_first_time(m_Dt);
+			}
+		}
+		}
+	
+};
 
+void Particles_List::beeman_compute(double DT){
+static bool b=true;
+if(b){
+b=false;
+parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()), ApplyBeeman_first_time(m_vect,DT),m_af);		
+return;
+}
 parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size()), ApplyBeeman_precompute(m_vect,DT),m_af);		
 UpdateForce();
 parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyBeeman_compute(m_vect,DT),m_af);		
+
 }
 
 class ApplyNextForceTimeStep{
@@ -350,7 +381,8 @@ void Particles_List::Compute(double &dt)
 {
 	parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyComputeDensity(m_vect),m_af);		
 	  parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyCalculateSubGridTens(m_vect),m_af);		
-	  dt=NextTimeStep();
+	dt=DT;
+	//  dt=NextTimeStep();
      bool ret=false;
 	 if(presure_laplacien){
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
@@ -368,7 +400,9 @@ void Particles_List::Compute(double &dt)
     }
 	 */
 	 //predictor corrector
-	 predictor_corrector_compute(dt);
+	 //predictor_corrector_compute(dt);
+	  // beeman_compute(dt);
+	  predictor_corrector_compute(dt);
 	}
     m_t+=dt;
 	map<Key<DIM> ,Particles>::iterator it=m_list.begin();

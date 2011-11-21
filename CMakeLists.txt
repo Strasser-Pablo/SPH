@@ -1,15 +1,19 @@
 cmake_minimum_required(VERSION 2.8)
 project(sph)
+INCLUDE(CTest)
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 ADD_DEFINITIONS(-Wall -W -Wconversion  -Wcast-qual -Wwrite-strings )
 ADD_DEFINITIONS(-march=native)
 INCLUDE(CPack)
 find_package (Doxygen)
 find_package(TBB)
-
+find_package(CxxTest)
 include_directories(${TBB_INCLUDE_DIRS})
+include_directories(${CXXTEST_INCLUDE_DIR})
 link_directories(${TBB_LIBRARY_DIRS})
-
+find_file(test_determinism  determinism.sh src/test/)
 add_subdirectory(src/computation ./computation  )
+add_subdirectory(src/test ./test  )
 add_custom_target(sph ALL)
 if(${DOXYGEN_FOUND})
 add_custom_target(doc)
@@ -21,4 +25,3 @@ add_dependencies(sph_computation computation)
 
 
 add_dependencies(sph  sph_computation)
-

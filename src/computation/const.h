@@ -20,12 +20,12 @@ const bool pressure_guess_pressure=false;
 /**
  * @brief Distance after witch kernel is 0.
  **/
-const double h=0.03;
+const double h=1;
 
 /**
  * @brief Time step size.
  **/
-const double DT=0.0001;
+const double DT=0.1;
 #endif // CONST_H
 
 #ifndef CONST_H_VECTOR

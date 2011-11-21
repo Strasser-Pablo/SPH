@@ -32,6 +32,8 @@ class ParticleReal
 	 * @brief Cache for the value of force. For not calculating it 2 times.
 	 **/
 mutable	physvector<DIM> m_force;
+ physvector<DIM> m_force2;
+ physvector<DIM> m_force3;
 //Variable for conjugate gradient
 		/**
 	 * @brief Point to Voisin.
@@ -380,6 +382,7 @@ inline double GetPressure() const;
    **/
    inline void Beeman_compute(double dt);
 inline void   Beeman_precompute(double dt);
+inline void Beeman_first_time(double dt);
   inline bool Equal(const Particle part) const;
 
 

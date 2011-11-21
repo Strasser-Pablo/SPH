@@ -141,6 +141,7 @@ bool GetMussBeDeleted();
 	   
 	  void Beeman_compute(double dt);
 	  void Beeman_precompute(double dt);
+	 void Beeman_first_time(double dt);
 	    /**
      * @brief Make the initial move for the predictor corrector.
      *
@@ -287,6 +288,7 @@ void WriteForcePressure(fstream &out) const;
 void WriteForceViscosity(fstream &out) const;
 void WriteForceTurbulence(fstream &out) const;
 void UpdateForce() const;
+void WriteMussBeDeleted(fstream &out) const;
 };
 
 

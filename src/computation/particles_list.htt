@@ -8,6 +8,8 @@
 void Particles_List::Add(Particle part)
 {
     Key<DIM> key=part->GetPos().ToKey(h);
+	//cout<<part->GetPos()<<endl;
+	key.Dump();
     if (m_list.count(key)==0)
     {
         AddNeighbour(key);
@@ -54,18 +56,26 @@ void Particles_List::AddNeighbour(Key< 3 > k)
 
 void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
 {
-    Key<DIM> key=(*it)->GetPos().ToKey(h);
+    
+	Key<DIM> key=(*it)->GetPos().ToKey(h);
     if (m_list.count(key)==0)
     {
-        AddNeighbour(key);
+     //   AddNeighbour(key);
     }
+	cout<<"update "<<endl;
+	part->GetKey().Dump();
+	key.Dump();
+	cout<<"before crit"<<endl;
     Particles * pnew=&m_list[key];
-	
+	cout<<"after crit"<<endl;
+	/*
     if(pnew!=part)
     { 
-        pnew->splice(pnew->begin(),*part,it);
-		(*it)->SetContainerParticles(pnew);
+		//(*it)->SetContainerParticles(pnew);
+		//cout<<pnew->size()<<" "<<&*it<<endl;
+       // pnew->splice(pnew->begin(),*part,it);
     }
+	 */
 }
 
 void Particles_List::RemoveParticles( Particles* part){
@@ -77,7 +87,6 @@ for(list<Particles*>::iterator it=l.begin();it!=l.end();it++){
 }
 //m_list.erase(part->GetKey());
 part->SetMussBeDeleted(true);
-cout<<"remove "<< part<<endl;
 }
 
 
@@ -201,6 +210,12 @@ outtot<<"<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\
 outtot<<"</VTKFile>"<<endl;
 outtot.seekp(pos);
 cout<<"file num "<<filenum<<" nb part "<<m_n<<" time "<<m_t<<" dt "<<dt<<endl;
+char filename2[30];
+sprintf(filename2,"outmusbe%07d.vtu",filenum);
+fstream out2 (filename, fstream::out);
+for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+        it->second.WriteMussBeDeleted(out2);
+    }
 ++filenum;
 }
 

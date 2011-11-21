@@ -18,8 +18,8 @@ World_timing_elem::World_timing_elem()
 void World_timing::Do()
 {
 
-	fstream out ("timing.csv", fstream::out);
-	for(int N=20;N<21;N+=5){
+	fstream out ("../timing.csv", fstream::out);
+	for(int N=2;N<3;N+=5){
 		out<<N<<" ";
 	World_timing_elem W;
 	W.Do(N,out);
@@ -48,9 +48,13 @@ for(int i=0;i<Nx;i++){
 }
 
 m_list.Calculate0Density();
-for(int i=0;i<50;i++){
+m_list.write(0.00);
+
+//exit(0);
+for(int i=0;i<1;++i){
 	  double dt;
  m_list.Compute(dt);
+ cout<<"write "<<i<<endl;
   m_list.write(dt);
 }
 struct tms tf;

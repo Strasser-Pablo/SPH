@@ -242,7 +242,7 @@ m_force_pres-=0.5*A*(pressure(GetDensity()*m_m,water)+pressure((*it)->GetDensity
 m_force_viscious+=0.001*A/norm*(GetSpeed()-(*it)->GetSpeed());
 m_force_turbulence-=0.5*B*(m_sub_grid+(*it)->m_sub_grid)*r;
 }
-return m_force_gravity+m_force_pres+m_force_turbulence+m_force_viscious;
+return m_force_gravity;//+m_force_pres+m_force_turbulence+m_force_viscious;
 }
 
 double ParticleReal::GetR() const{
@@ -436,6 +436,8 @@ void ParticleReal::WritePos(fstream &out)const{
 	 m_speed+=dt/2*m_force;
 	 m_nb_it=0;
 	   }
+	   else{
+	   }
  }
 	 void ParticleReal::ComputeMove_predictor(double dt,bool &b){
 		   if(!m_fixed){
@@ -443,6 +445,7 @@ void ParticleReal::WritePos(fstream &out)const{
 	 m_speed0_5=m_speed;
 	  if(!m_const_speed){
 	 m_speed=m_speed0+dt/2*Force();
+	  }else{
 	  }
 	m_pos=m_pos0+dt/2*m_speed;
 	bool ret=false;
@@ -457,12 +460,19 @@ void ParticleReal::WritePos(fstream &out)const{
 	}
 	b=b||ret;
 		   }
+		   else{
+
+		   }
 }
 
 void ParticleReal::DoMove_predictor(){
+	//cout<<this<<" Do move"<<endl;
 	  if(!m_fixed){
 	m_pos=2*m_pos-m_pos0;
 	m_speed=2*m_speed-m_speed0;
+	cout<<m_speed<<endl; 
+	  }else{
+		 	
 	  }
 }
 
@@ -546,6 +556,10 @@ void ParticleReal::SetConstSpeed(bool b){
   void ParticleReal::WriteErf(fstream & out,double t) const{
 	  double x; double y; double z;
 	  m_pos.Get(x,y,z);
+	  if(t==0){
+		  out<<0<<endl;
+		  return;
+	  }
 	  out<<-erf(x/sqrt(4E-6*t))<<endl;
   }
   
@@ -570,9 +584,31 @@ void ParticleReal::SetConstSpeed(bool b){
   }
   
   //TODO write beeman
-void ParticleReal::Beeman_compute(double dt){
-		 
+void ParticleReal::Beeman_precompute(double dt){
+	if(!m_fixed){
+		m_pos+=dt*m_speed+2./3.*pow(dt,2)*m_force-1./6.*pow(dt,2)*m_force3;
+		if(!m_const_speed){
+		m_speed-=1.5*dt*m_force-0.5*dt*m_force3;
+		}
+		m_force2=m_force;
+	}
 	 }
-void   ParticleReal::Beeman_precompute(double dt){
-	
+void   ParticleReal::Beeman_compute(double dt){
+	if(!m_fixed){
+		m_pos+=dt*m_speed+1./6.*pow(dt,2)*m_force+1./3.*pow(dt,2)*m_force2;
+		if(!m_const_speed){
+		m_speed+=5./12.*dt*m_force+8./12.*dt*m_force2-1./12.*dt*m_force3;
+		}
+		m_force3=m_force;
+		
+	}
+}
+void ParticleReal::Beeman_first_time(double dt){
+	if(!m_fixed){
+		m_pos+=dt*m_speed;
+	if(!m_const_speed){
+		m_speed+=m_force*dt;
+		m_force3=m_force;
+	}
+	}
 }

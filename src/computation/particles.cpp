@@ -38,9 +38,12 @@ Particles::Particles():m_b_muss_be_deleted(false),m_type(none)
 
 void Particles::ComputeDensity()
 {
+	//GetKey().Dump();
     for (list<Particle>::iterator it=begin();it!=end();++it) {
-            (*it)->ComputeDensity();
+        cout<<"p "<<&*it<<endl;    
+		(*it)->ComputeDensity();
     }
+	cout<<size()<<endl;
 }
 
 
@@ -379,4 +382,13 @@ void Particles::Beeman_compute(double dt){
 		  for(Particles::iterator it=begin();it!=end();it++){
 	(*it)->Beeman_precompute(dt);
 	}    
+	  }
+	  
+	  void Particles::Beeman_first_time(double dt){
+		  for(Particles::iterator it=begin();it!=end();it++){
+	(*it)->Beeman_first_time(dt);
+	}    
+	  }
+void Particles::WriteMussBeDeleted(fstream &out) const{
+	out<<m_b_muss_be_deleted;
 	  }

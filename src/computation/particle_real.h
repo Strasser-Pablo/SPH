@@ -481,6 +481,7 @@ private:
 };
 
 
-
+#ifdef DONT_INCLUDE_PARTICLE_REAL_HTT
 #include "particle_real.htt"
+#endif
 #endif // PARTICLE_REAL_H

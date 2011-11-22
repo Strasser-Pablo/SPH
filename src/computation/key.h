@@ -51,6 +51,11 @@ inline Key();
    * @brief < operator for key. Test the inegality from x to y. If the first component is the same, test the next.
    **/
   inline bool operator<(const Key<2> A) const;
+  
+   /**
+   * @brief == operator for key. Test equality element by element.
+   **/
+  inline bool operator==(const Key<2> A) const;
 
   /**
    * @brief Dump value of the key, used for debuging
@@ -104,7 +109,10 @@ inline list<Key<3> > GetNeighbour() const;
    * @brief < operator for key. Test the inegality from x to z. If the first component is the same, test the next.
    **/
 inline bool operator<(const Key<3> A) const;
-
+   /**
+   * @brief == operator for key. Test equality element by element.
+   **/
+  inline bool operator==(const Key<3> A) const;
 /**
  * @brief Dump value of the key. Usefull for debuging
  *

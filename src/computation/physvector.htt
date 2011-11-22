@@ -215,10 +215,7 @@ m_y*=c;
 }
 
       Key<3> physvector<3>::ToKey(double _h){
- Key<3> ret(int(floor(m_x/_h)),int(floor(m_y/_h)),int(floor(m_z/_h)));
- ret.Dump();
-  cout<<"end"<<endl;
- return ret;
+ return Key<3>(int(floor(m_x/_h)),int(floor(m_y/_h)),int(floor(m_z/_h)));
 }
 
 Key<2> physvector<2>::ToKey(double _h){

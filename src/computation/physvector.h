@@ -89,14 +89,62 @@ public:
      * @return void
      **/
     inline void Get(double &x,double &y,double &z) const;
+	/**
+	 * @brief Add element by element. Overload + operator.
+	 * @param A physvector to add.
+	 * @return physvector<3> added vector.
+	 **/
     inline  physvector<3> operator+(const physvector<3>& A) const;
+	/**
+	 * @brief Make Dot Product for two vector. Overload * operator.
+	 * @param A physvector to Multiply.
+	 * @return double Result from dot product.
+	 **/
      inline  double operator*(const physvector<3>& A) const;
+	 /**
+	 * @brief Substract element by element. Overload - operator.
+	 * @param A physvector to substract.
+	 * @return physvector<3> Substracted vector.
+	 **/
     inline physvector<3> operator-(const physvector<3>& A) const;
+	 /**
+	 * @brief Unary minus element by element. Overload - operator.
+	 * @return physvector<3>  minus vector.
+	 **/
         inline physvector<3> operator-() const;
+		/**
+		 *@brief Asignement. Assign argument.
+		 * @param A Vector to assign.
+		 * @return void.
+		 **/
     inline void operator=( const physvector<3> &A);
+	/**
+	 * @brief Assign and add. Add the current vector to the argument vector, element by element.
+	 * 
+	 * @param A vector to add.
+	 * @return void.
+	 **/
     inline void operator+=(const physvector<3> &A);
+	/**
+	 * @brief Assign and substract. Stbstract the current vector to the argument vector, element by element.
+	 * 
+	 * @param A vector to Subtstract.
+	 * @return void.
+	 **/
     inline void operator-=(const physvector<3> &A);
+	/**
+	 * @brief Assign and Multiply. Multiply the current vector to the argument vector, element by element.
+	 * 
+	 * @param c constant to Multiply.
+	 * @return void.
+	 **/
      inline  void operator*=(const double c);
+	 	/**
+	 * @brief Divide all element by the constant.
+	 * 
+	 * @param c constant to divide by.
+	 * @return physvector<3> after division.
+	 **/
          inline physvector<3> operator/(const double c) const;
         /**
      * @brief Output Stream Operator for cout<< for example

@@ -1,5 +1,6 @@
 #ifndef VOISIN_ITERATOR_H
 #define VOISIN_ITERATOR_H
+#define DONT_INCLUDE_PARTICLE_REAL_HTT
 #include "particles.h"
 /**
  * @brief Class Voisin_Iterator. Iterator that can be incremented.

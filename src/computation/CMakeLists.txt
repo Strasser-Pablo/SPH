@@ -16,5 +16,6 @@ endif()
 install (TARGETS computation DESTINATION bin)
 
 add_test(NAME computation_crash_test  COMMAND $<TARGET_FILE:computation>)
+
 add_test(NAME determinism  COMMAND ${test_determinism} $<TARGET_FILE:computation>)
 add_dependencies(check  computation)

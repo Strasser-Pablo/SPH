@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(sph)
+#set(COVERAGE_COMMAND "echo ")
 INCLUDE(CTest)
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 ADD_DEFINITIONS(-Wall -W -Wconversion  -Wcast-qual -Wwrite-strings )

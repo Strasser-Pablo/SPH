@@ -120,3 +120,6 @@ bool Voisin_Const_Iterator::operator !=(const Voisin_Const_Iterator& B)const{
 Voisin_Const_Iterator::Voisin_Const_Iterator(Voisin_Iterator A):m_particles(A.m_particles),m_particle(A.m_particle),m_lpart(A.m_lpart){
 	
 }
+
+#undef DONT_INCLUDE_PARTICLE_REAL_HTT
+#include "particle_real.htt"

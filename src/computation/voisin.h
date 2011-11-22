@@ -1,6 +1,6 @@
 
-#ifndef VOISIN_ITERATOR
-#define VOISIN_ITERATOR
+#ifndef VOISIN_H
+#define VOISIN_H
 #include <list>
 class particles;
 

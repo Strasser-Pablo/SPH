@@ -14,9 +14,7 @@ using namespace tbb;
      {
        feenableexcept (FE_INVALID|FE_DIVBYZERO|FE_OVERFLOW);
      }
-int myfunc(physvector<3>& v,physvector<3>& v2){
-	return (v2-v).Norm();
-}
+
 int main() {
 
 	/*World_test w;

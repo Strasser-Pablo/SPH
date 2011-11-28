@@ -40,10 +40,8 @@ void Particles::ComputeDensity()
 {
 	//GetKey().Dump();
     for (list<Particle>::iterator it=begin();it!=end();++it) {
-        cout<<"p "<<&*it<<endl;    
 		(*it)->ComputeDensity();
     }
-	cout<<size()<<endl;
 }
 
 
@@ -87,14 +85,14 @@ void Particles::Update( Particles_List*  plist)
 	}
 	//Todo Correcte it
  if(empty()){
-	 plist->RemoveParticles(this);
+	 	SetMussBeDeleted(true);
  }
 }
 
-bool Particles::operator==(const Particles& parts) const
+/*bool Particles::operator==(const Particles& parts) const
 {
-return this==&parts;
-}
+return *(this::list<Particle>)==parts::list<Particle>;
+}*/
 
 
 void Particles::Dump(bool voisin)

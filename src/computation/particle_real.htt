@@ -1,3 +1,4 @@
+
 #include "particle.h"
 
 #include "kernel.h"
@@ -5,9 +6,15 @@
 #include <iostream>
 
 #include "pressure.h"
+
 #include "voisin.h"
-#ifndef PARTICLE_REAL_HTT
-#define PARTICLE_REAL_HTT
+//Because of include loop we nee to include 2 times.
+#ifndef VOISIN_ITERATOR_H
+#include "voisin_iterator.h"
+#endif 
+
+#ifndef PARTICLE_REAL_HTT_CLASS
+#define PARTICLE_REAL_HTT_CLASS
 ParticleReal::ParticleReal():m_type(none),m_fixed(false),m_container(0)   ,m_density(0),m_m(0),m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(false),m_converged(true),m_b_0_done(false),m_nb_it(0),m_1_over_m(1),m_1_over_density_2(0),m_const_speed(false)
 {
 }
@@ -326,7 +333,9 @@ m_b=val;
 }
 
 void ParticleReal::GetVoisin( Voisin & voisin) const {
+	cout<<"pointeur "<<m_voisin<<endl;
 voisin=*m_voisin;
+cout<<"after dereferencing"<<endl;
 }
 
 bool ParticleReal::OKR() const{
@@ -420,6 +429,7 @@ void ParticleReal::Calculate0Density(){
 	m_density0=m_density;
 	m_m=1000/m_density0;
 	m_1_over_m=1/m_m;
+	m_b_0_done=true;
 }
 
 
@@ -441,12 +451,12 @@ void ParticleReal::WritePos(fstream &out)const{
 	   else{
 	   }
  }
-	 void ParticleReal::ComputeMove_predictor(double dt,bool &b){
-		   if(!m_fixed){
+	 void ParticleReal::ComputeMove_predictor(double dt,bool &b){  
+		 if(!m_fixed){
 		m_pos0_5=m_pos;
 	 m_speed0_5=m_speed;
 	  if(!m_const_speed){
-	 m_speed=m_speed0+dt/2*Force();
+	 m_speed=m_speed0+dt/2*m_force;
 	  }else{
 	  }
 	m_pos=m_pos0+dt/2*m_speed;
@@ -472,7 +482,6 @@ void ParticleReal::DoMove_predictor(){
 	  if(!m_fixed){
 	m_pos=2*m_pos-m_pos0;
 	m_speed=2*m_speed-m_speed0;
-	cout<<m_speed<<endl; 
 	  }else{
 		 	
 	  }
@@ -614,4 +623,16 @@ void ParticleReal::Beeman_first_time(double dt){
 	}
 	}
 }
+
+bool ParticleReal::operator==(const ParticleReal & B)const{
+return m_pos==B.m_pos&&m_speed==B.m_speed;
+}
+
+bool ParticleReal::operator==(const Particle & B)const{
+return *this==*B;
+}
+
+  physvector<3> ParticleReal::GetForce() const{
+	  return m_force;
+  }
 #endif

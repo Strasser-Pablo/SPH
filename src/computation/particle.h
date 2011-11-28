@@ -67,18 +67,7 @@ public:
 	 * @return const ParticleReal& Linked Particle
 	 **/
 	inline const ParticleReal& operator *() const;
-	/**
-	 * @brief Return a pointer of Particle.
-	 *
-	 * @return Particle* Pointer to this.
-	 **/
-	inline Particle* operator &();
-	/**
-	  * @brief Return a pointer on constant of Particle.
-	  *
-	  * @return const Particle* Pointer to this.
-	  **/
-	inline  const Particle* operator &() const;
+
 	/**
 	 * @brief Allow to access member of Linked Particle.
 	 *
@@ -94,7 +83,7 @@ public:
 	**/
 	inline const ParticleReal* operator ->() const;
 
-
+	inline bool operator==(const Particle & A)const;
 };
 
 

@@ -2,17 +2,16 @@
 Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplinaire
 */
 
-#ifndef PARTICLE_REAL_H
-#define PARTICLE_REAL_H
 
 #include "type.h"
 #include "physvector.h"
 #include "tensor.h"
 #include "const.h"
 #include <list>
-#include "particle.h"
 #include "particles.h"
-
+#include "particle.h"
+#ifndef PARTICLE_REAL_CLASS
+#define PARTICLE_REAL_CLASS
 class Voisin;
 /**
  * \file particle_real.h Contain Header for class Particle_Real, containing the particle.
@@ -356,6 +355,8 @@ inline double GetPressure() const;
   inline void ComputeMove(double dt);
   /**
  * @brief Prepare a move of predictor corrector.
+ * 
+ * @attention Don't test if boundary.
  **/
 	inline void preComputeMove_predictor(double dt);
 	/**
@@ -432,6 +433,9 @@ inline void WriteForceGravity(fstream &out) const;
 inline void WriteForcePressure(fstream &out) const;
 inline void WriteForceViscosity(fstream &out) const;
 inline void WriteForceTurbulence(fstream &out) const;
+ inline bool operator==(const ParticleReal & B) const;
+ inline bool operator==(const Particle & B) const;
+ inline physvector<3> GetForce() const;
 private:
 
 /**
@@ -473,15 +477,10 @@ private:
   **/
  inline physvector<DIM> Force() const __attribute__ ((hot));
  
- 
 
  
-
+friend class Test_Particles_List;
 
 };
-
-
-#ifdef DONT_INCLUDE_PARTICLE_REAL_HTT
+#endif // PARTICLE_REAL_CLASS
 #include "particle_real.htt"
-#endif
-#endif // PARTICLE_REAL_H

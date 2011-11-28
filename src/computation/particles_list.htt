@@ -5,11 +5,69 @@
 #include "debug.h"
 #include <fstream>
 #include <string>
+
+class ApplyComputeDensity{
+	 Particles_Deque_List& m_vect;
+	public:
+	ApplyComputeDensity( Particles_Deque_List& vect):m_vect(vect){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->ComputeDensity();
+			}
+		}
+		}
+	
+};
+
+class ApplypreComputeMove_predictor{
+	 Particles_Deque_List& m_vect;
+	 double m_Dt;
+	public:
+	ApplypreComputeMove_predictor( Particles_Deque_List& vect,double dt):m_vect(vect),m_Dt(dt){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->preComputeMove_predictor(m_Dt);
+			}
+		}
+		}
+	
+};
+
+class ApplyComputeMove_predictor{
+	 Particles_Deque_List& m_vect;
+	 double m_Dt;
+	 bool m_b;
+	public:
+	ApplyComputeMove_predictor( Particles_Deque_List& vect,double dt):m_vect(vect),m_Dt(dt),m_b(false){
+	};
+	ApplyComputeMove_predictor( ApplyComputeMove_predictor& B,split):m_vect(B.m_vect),m_Dt(B.m_Dt),m_b(false){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r )  {
+		bool b=m_b;
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->ComputeMove_predictor(m_Dt,b);
+			}
+		}
+		m_b=b;
+		}
+	bool GetB(){return m_b;}
+	void join(const ApplyComputeMove_predictor& B){
+		m_b=m_b||B.m_b;
+	}
+};
+
 void Particles_List::Add(Particle part)
 {
     Key<DIM> key=part->GetPos().ToKey(h);
 	//cout<<part->GetPos()<<endl;
-	key.Dump();
     if (m_list.count(key)==0)
     {
         AddNeighbour(key);
@@ -42,7 +100,7 @@ void Particles_List::AddNeighbour(Key< 3 > k)
             list<Particles*>   templist=pa->GetNeighbour().GetParticlesVect();
             //verify if element is in list if it's not add it
             if ( find(templist.begin(),templist.end(),pa0)==templist.end())
-            {
+            {   
                 templist.push_back(pa0);
 				Voisin V(templist);
                 pa->SetNeighbour(V);
@@ -56,38 +114,22 @@ void Particles_List::AddNeighbour(Key< 3 > k)
 
 void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
 {
-    
 	Key<DIM> key=(*it)->GetPos().ToKey(h);
     if (m_list.count(key)==0)
     {
-     //   AddNeighbour(key);
+        AddNeighbour(key);
     }
-	cout<<"update "<<endl;
-	part->GetKey().Dump();
-	key.Dump();
-	cout<<"before crit"<<endl;
     Particles * pnew=&m_list[key];
-	cout<<"after crit"<<endl;
-	/*
+	
     if(pnew!=part)
     { 
-		//(*it)->SetContainerParticles(pnew);
-		//cout<<pnew->size()<<" "<<&*it<<endl;
-       // pnew->splice(pnew->begin(),*part,it);
+        pnew->splice(pnew->begin(),*part,it);
+		pnew->SetMussBeDeleted(false);
+		(*it)->SetContainerParticles(pnew);
     }
-	 */
+	 
 }
 
-void Particles_List::RemoveParticles( Particles* part){
-	Voisin v;
- part->GetNeighbour(v);
- list<Particles*> l=v.GetParticlesVect();
-for(list<Particles*>::iterator it=l.begin();it!=l.end();it++){
-	(*it)->RemoveParticlesNeighbour(part);
-}
-//m_list.erase(part->GetKey());
-part->SetMussBeDeleted(true);
-}
 
 
 void Particles_List::write(double dt  ) const

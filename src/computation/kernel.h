@@ -34,7 +34,7 @@ inline double sign(double x) {
  * @brief Kernel for the Density
  *
  * @param vect postion  where to evaluate the kernel
- * @param h distance h for the kernel
+ * @param h_ distance h for the kernel
  * @return double Value at the given point
  **/
 inline double Kernel_Density(physvector<DIM> vect,double h_ ) {

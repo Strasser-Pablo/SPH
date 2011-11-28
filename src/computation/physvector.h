@@ -21,8 +21,9 @@ public:
 
 
  /**
-   * @brief Specialized class for 3d vector
-   *
+   * @brief Specialized class for 3d vector.
+   * 
+   * This class has overloaded member for addition, substraction, dot product.
    **/
 template<>
 class physvector<3> {
@@ -180,6 +181,8 @@ public:
 		 **/
 		inline physvector<3> prod(const physvector<3>& a) const;
 		inline bool operator<(const physvector<3> A)const;
+		inline bool operator<=(const physvector<3> A)const;
+		inline bool operator>=(const physvector<3> A)const;
 		inline bool operator==(const physvector<3> A)const;
 		inline void To0();
      #ifndef DOXYGEN

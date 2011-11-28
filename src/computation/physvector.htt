@@ -283,6 +283,57 @@ bool physvector<3>::operator<(const physvector<3> A) const{
   return false;
 }
 
+bool physvector<3>::operator<=(const physvector<3> A) const{
+
+
+
+  if(m_x<A.m_x){
+    return true;
+  }
+  else if(m_x>A.m_x){
+   return false;
+  }
+    if(m_y<A.m_y){
+    return true;
+  }
+  else if(m_y>A.m_y){
+   return false;
+  }
+
+      if(m_z<A.m_z){
+    return true;
+  }
+  else if(m_z>A.m_z){
+   return false;
+  }
+  return true;
+}
+
+bool physvector<3>::operator>=(const physvector<3> A) const{
+
+
+
+  if(m_x>A.m_x){
+    return true;
+  }
+  else if(m_x<A.m_x){
+   return false;
+  }
+    if(m_y>A.m_y){
+    return true;
+  }
+  else if(m_y<A.m_y){
+   return false;
+  }
+
+      if(m_z>A.m_z){
+    return true;
+  }
+  else if(m_z<A.m_z){
+   return false;
+  }
+  return true;
+}
 bool physvector<3>::IsNull()const{
 	return m_x==0&&m_y==0&&m_z==0;
 }

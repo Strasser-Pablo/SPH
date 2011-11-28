@@ -1,7 +1,7 @@
-
+#include <list>
 #ifndef VOISIN_H
 #define VOISIN_H
-#include <list>
+
 class particles;
 
 using namespace std;
@@ -62,8 +62,11 @@ inline iterator_particles end_particles();
  * Iterator it is invalided.
  * 
  * @param it Is the iterator to erase.
+ * 
+ * @attention The iterator mus be created by the same instance of the class by mean of begin_particles or end_particles.
  **/
 inline void erase(iterator_particles& it);
+
 };
 #include "voisin.htt"
 #endif //VOISIN_H

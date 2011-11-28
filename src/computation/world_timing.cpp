@@ -3,7 +3,7 @@
 #include <fstream>
 using namespace std;
 /**
-* \file World_timing.cpp Implementation file for World_test.
+* \file world_timing.cpp Implementation file for World_test.
 **/
 
 World_timing::World_timing()
@@ -19,7 +19,7 @@ void World_timing::Do()
 {
 
 	fstream out ("../timing.csv", fstream::out);
-	for(int N=2;N<3;N+=5){
+	for(int N=5;N<50;N+=5){
 		out<<N<<" ";
 	World_timing_elem W;
 	W.Do(N,out);
@@ -36,8 +36,7 @@ int Nx=N;
 int Ny=N;
 int Nz=N;
 
-	struct tms ti;
-times(&ti);	
+	
 for(int j=0;j<Ny;j++){
 for(int i=0;i<Nx;i++){
 	
@@ -49,18 +48,19 @@ for(int i=0;i<Nx;i++){
 
 m_list.Calculate0Density();
 m_list.write(0.00);
-
-//exit(0);
+struct tms ti;
+times(&ti);
 for(int i=0;i<1;++i){
 	  double dt;
  m_list.Compute(dt);
- cout<<"write "<<i<<endl;
   m_list.write(dt);
 }
 struct tms tf;
 times(&tf);
 double nb=double(sysconf(_SC_CLK_TCK));
+#pragma GCC diagnostic ignored "-Wconversion"
 out<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+#pragma GCC diagnostic pop
 	}
 	
 	

@@ -7,7 +7,9 @@ class Test_Physvector : public CxxTest::TestSuite
 {
 public:
 Test_Physvector(){
+	#pragma GCC diagnostic ignored "-Wconversion"
 	srand ( time(NULL) );
+	#pragma GCC diagnostic pop
 }
 void testAddition( void )
 {

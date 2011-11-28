@@ -6,9 +6,8 @@
 #include "particles_deque_list.h"
 #include "key.h"
 #include "tbb/tbb.h"
-
-const int CHUNK_SIZE=10000;
-
+#undef PARALLEL
+const int CHUNK_SIZE=10;
 using namespace std;
 using namespace tbb;
 /**
@@ -17,6 +16,8 @@ using namespace tbb;
  **/
 class Particles_List
 {
+public:
+	
 	mutable affinity_partitioner m_af;
 	/**
 	 * @brief Map of particles.
@@ -139,12 +140,7 @@ public:
 	 * @brief Used for debuging purpose. Print somes usefull informations.
 	 **/
 	void Dump();
-	/**
-	 * @brief Remove particles because it's empty.
-	 *
-	 * @param parts Particles to remove.
-	 **/
-	inline void RemoveParticles( Particles * Parts);
+
 
 	/**
 	 * @brief Output data for the current timestep to file.
@@ -171,8 +167,9 @@ public:
 	
 	void beeman_compute(double DT);
 
+	 friend class Test_Particles;
+	 friend class Test_Particles_List;
 };
-
 
 
 

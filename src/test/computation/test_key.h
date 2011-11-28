@@ -8,7 +8,9 @@ class Test_Key : public CxxTest::TestSuite
 {
 public:
 Test_Key(){
+	#pragma GCC diagnostic ignored "-Wconversion"
 	srand ( time(NULL) );
+	#pragma GCC diagnostic pop
 }
 void testCreation(void){
 	Key<3> k;

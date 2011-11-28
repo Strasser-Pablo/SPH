@@ -40,11 +40,7 @@ const ParticleReal* Particle::operator->() const {
 }
 
 
-Particle* Particle::operator&() {
-	return this;
-}
 
-
-const Particle* Particle::operator&() const {
-	return this;
-}
+ bool Particle::operator==(const Particle & A)const{
+	 return m_data==A.m_data;
+ }

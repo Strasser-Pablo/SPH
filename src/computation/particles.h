@@ -240,10 +240,11 @@ bool GetMussBeDeleted();
      * @return void
      **/
     void Update(  Particles_List*  list);
-     /**
+    /**
 	  * @brief Comparation operator.
 	  **/
-     bool operator==(const Particles& parts) const;
+  //   bool operator==(const Particles& parts) const;
+	 
 /**
  * Used for Debuging, print information on screen.
  **/

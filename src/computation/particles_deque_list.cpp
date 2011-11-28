@@ -37,12 +37,15 @@ void  Particles_Deque_List::push_back(const_reference part){
 		for(deque<Particles*>::iterator it=m_vect.begin();it!=m_vect.end();++it){
 			if(!(*it)->GetMussBeDeleted()){
 				vtemp.push_back(*it);
-				cout<<"copied "<<*it<<endl;
 			}
 			else{
-					cout<<"particles erased "<<*it<<endl;
+					Voisin v;
+					(*it)->GetNeighbour(v);
+					list<Particles*> l=v.GetParticlesVect();
+					for(list<Particles*>::iterator it2=l.begin();it2!=l.end();it2++){
+						(*it2)->RemoveParticlesNeighbour(*it);
+					}
 				mymap.erase((*it)->GetKey());
-				cout<<"particles erased"<<endl;
 			}
 		}
 		vtemp.swap(m_vect);

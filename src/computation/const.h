@@ -15,6 +15,8 @@ const int DIM=DIM_DEF;
 const bool presure_eq_state=true;
 const bool presure_laplacien=false;
 const bool pressure_guess_pressure=false;
+extern double MEAN_MASS;
+extern double DIV_MEAN_MASS;
 #define PRESSURE_EQ_STATE
 //#define PRESSURE_LAPLACIEN
 

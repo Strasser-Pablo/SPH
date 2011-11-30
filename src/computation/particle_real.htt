@@ -15,32 +15,31 @@
 
 #ifndef PARTICLE_REAL_HTT_CLASS
 #define PARTICLE_REAL_HTT_CLASS
-ParticleReal::ParticleReal():m_type(none),m_fixed(false),m_container(0)   ,m_density(0),m_m(0),
+ParticleReal::ParticleReal():m_type(none),m_fixed(false),m_container(0)   ,m_density(0),m_m(MEAN_MASS),
   #ifdef PRESSURE_LAPLACIEN
 m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(false),m_converged(true),
 #endif
-m_b_0_done(false),m_nb_it(0),m_1_over_m(1),m_1_over_density_2(0),m_const_speed(false)
+m_b_0_done(false),m_nb_it(0),m_1_over_m(DIV_MEAN_MASS),m_1_over_density_2(0),m_const_speed(false)
 {
+	m_density0=1000*DIV_MEAN_MASS;
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type,bool fixed):m_pos(pos),m_type(type),m_fixed(fixed),m_container(0)   ,m_density(0),m_m(0),
+ParticleReal::ParticleReal(physvector< DIM > pos, ParticleType type,bool fixed):m_pos(pos),m_type(type),m_fixed(fixed),m_container(0)   ,m_density(0),m_m(MEAN_MASS),
   #ifdef PRESSURE_LAPLACIEN
 m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(false),m_converged(true),
 #endif
-m_b_0_done(false),m_nb_it(0),m_1_over_m(1),m_1_over_density_2(0),m_const_speed(false)
+m_b_0_done(false),m_nb_it(0),m_1_over_m(DIV_MEAN_MASS),m_1_over_density_2(0),m_const_speed(false)
 {
-    m_m=1;
-    m_density0=1000;
+		m_density0=1000*DIV_MEAN_MASS;
 }
 
-ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type,bool fixed):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_container(0) ,m_density(0),m_m(0),
+ParticleReal::ParticleReal(physvector< DIM > pos,physvector<DIM> speed ,ParticleType type,bool fixed):m_pos(pos),m_speed(speed),m_type(type),m_fixed(fixed),m_container(0) ,m_density(0),m_m(MEAN_MASS),
   #ifdef PRESSURE_LAPLACIEN
 m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(false),m_converged(true),
 #endif
-m_b_0_done(false),m_nb_it(0),m_1_over_m(1),m_1_over_density_2(0),m_const_speed(false)
+m_b_0_done(false),m_nb_it(0),m_1_over_m(DIV_MEAN_MASS),m_1_over_density_2(0),m_const_speed(false)
 {
-	m_m=1;
-    m_density0=1000;
+		m_density0=1000*DIV_MEAN_MASS;
 }
   #ifdef PRESSURE_LAPLACIEN
 bool ParticleReal::GetBoundary() const{
@@ -448,14 +447,13 @@ void ParticleReal::PreparePosition(bool &b) {
 	
 }
 #endif
-void ParticleReal::Calculate0Density(){
-	if(m_b_0_done){
-		return;
-	}
+void ParticleReal::Calculate0Density(double &m){
 	m_density0=m_density;
 	m_m=1000/m_density0;
 	m_1_over_m=1/m_m;
-	m_b_0_done=true;
+	if(m_m<m){
+		m=m_m;
+	}
 }
 
 
@@ -661,5 +659,11 @@ return *this==*B;
 
   physvector<3> ParticleReal::GetForce() const{
 	  return m_force;
+  }
+  
+  void ParticleReal::SetToMeanMass(){
+	  m_m=MEAN_MASS;
+	  m_density0=1000*DIV_MEAN_MASS;
+	  m_1_over_m=DIV_MEAN_MASS;
   }
 #endif

@@ -70,7 +70,7 @@ while(true){
  m_list.Compute(dt);
  m_list.write(dt);
 
-bool b=false;
+
 for(int i=0;i<Nx;i++){
 	
 		for(int k=0;k<Nz;k++){
@@ -87,7 +87,7 @@ for(int i=0;i<Nx;i++){
 			double y;
 			ptemp->GetPos().Get(x,y,z);
 			if(y>h){
-				b=true;
+
 			double Uyrel=uy/pow(0.05,2)*(pow(0.05,2)-r2);
 			int isucces=(yloop[i+k*Nz]+1)%Ny;
 			listvect[isucces][i+k*Nz]->GetPos().Get(x,y,z);
@@ -102,9 +102,7 @@ for(int i=0;i<Nx;i++){
 			}
 }
 }
-if(b){
-m_list.Calculate0Density();
-}
+
  }
 
 }

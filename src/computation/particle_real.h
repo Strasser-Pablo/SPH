@@ -178,7 +178,9 @@ inline double CalculateA(const Particle& B)const;
 /**
  * @brief Choose the mass so that we have a correcte rest 0 density.
  **/
-inline void Calculate0Density();
+inline void Calculate0Density(double &m);
+
+inline void SetToMeanMass();
 /**
  * @brief A sub calculus for the A matrix for the incompressible case.
  **/

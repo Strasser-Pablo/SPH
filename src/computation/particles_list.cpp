@@ -1,6 +1,7 @@
 #include "particles_list.h"
 #include "const.h"
-
+double MEAN_MASS=1;
+double DIV_MEAN_MASS=1;
 Particles_List::Particles_List():m_t(0),m_n(0)
 {
 
@@ -83,36 +84,54 @@ for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++)
 
 class ApplyCalculate0Density{
 	 Particles_Deque_List& m_vect;
+	 double m_m;
 	public:
-	ApplyCalculate0Density( Particles_Deque_List& vect):m_vect(vect){
+	ApplyCalculate0Density( Particles_Deque_List& vect):m_vect(vect),m_m(300000){
 	};
-	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		ApplyCalculate0Density( ApplyCalculate0Density &B,split):m_vect(B.m_vect),m_m(300000){
+	};
+	double GetMeanMass()const{
+		return m_m;
+	}
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r )  {
+		double m=m_m;
 		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
 			 Particles * part=m_vect[i];
 			if(part!=0){
-				part->Calculate0Density();
+				part->Calculate0Density(m);
 			}
 		}
+		m_m=m;
 		}
+		
+		void join(const ApplyCalculate0Density& B){
+		if(B.m_m<m_m){
+			m_m=B.m_m;
+		}
+	}
 	
 };
 void Particles_List::Calculate0Density(){
-	/*cout<<m_list.size()<<endl;
-	cout<<"norm for"<<endl;
-	for(map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it){
-		it->second.ComputeDensity();
-	}
-	cout<<"parallel for"<<endl;
-	 */
 	 #ifdef PARALLEL
- parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyComputeDensity(m_vect),m_af);		
- parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyCalculate0Density(m_vect),m_af);		
+ parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyComputeDensity(m_vect),m_af);
+ ApplyCalculate0Density Calc0Dens(m_vect);
+ parallel_reduce(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), Calc0Dens,m_af);	
+ MEAN_MASS=Calc0Dens.GetMeanMass();
+ DIV_MEAN_MASS=1/MEAN_MASS;
+ parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplySetToMeanMass(m_vect),m_af);
     #else
 	for(map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it){
 		it->second.ComputeDensity();
 	}
+	double m=30000;
 	for(map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it){
-		it->second.Calculate0Density();
+		it->second.Calculate0Density(m);
+	}
+	MEAN_MASS=m;
+	 DIV_MEAN_MASS=1/MEAN_MASS;
+	 
+	 	for(map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it){
+		it->second.SetToMeanMass();
 	}
 	#endif
 }

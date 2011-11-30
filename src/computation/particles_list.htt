@@ -6,6 +6,21 @@
 #include <fstream>
 #include <string>
 
+class ApplySetToMeanMass{
+	 Particles_Deque_List& m_vect;
+	public:
+	ApplySetToMeanMass( Particles_Deque_List& vect):m_vect(vect){
+	};
+	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
+		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
+			 Particles * part=m_vect[i];
+			if(part!=0){
+				part->SetToMeanMass();
+			}
+		}
+		}
+	
+};
 class ApplyComputeDensity{
 	 Particles_Deque_List& m_vect;
 	public:

@@ -199,9 +199,9 @@ for(Particles::iterator it=begin();it!=end();++it){
  }
 }
 #endif
-void Particles::Calculate0Density(){
+void Particles::Calculate0Density(double &m){
 	for(Particles::iterator it=begin();it!=end();++it){
- (*it)->Calculate0Density();
+ (*it)->Calculate0Density(m);
  }
 }
 
@@ -394,4 +394,10 @@ void Particles::Beeman_compute(double dt){
 	  }
 void Particles::WriteMussBeDeleted(fstream &out) const{
 	out<<m_b_muss_be_deleted;
+	  }
+	  
+	  void Particles::SetToMeanMass() {
+		  for(Particles::iterator it=begin();it!=end();it++){
+	(*it)->SetToMeanMass();
+	}      
 	  }

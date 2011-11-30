@@ -57,9 +57,9 @@ bool GetMussBeDeleted();
  * @brief Modify the mass to have a correct 0 density.
  *  Calculus will only happen once per particle.
  **/
-	void Calculate0Density();
+	void Calculate0Density(double &m);
 
-
+ void SetToMeanMass();
 
 	/**
 	 * @brief Initialize conjugate gradient for the used in the incompressible algorithm.

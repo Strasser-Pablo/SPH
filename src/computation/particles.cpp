@@ -38,6 +38,7 @@ Particles::Particles():m_b_muss_be_deleted(false),m_type(none)
 
 void Particles::ComputeDensity()
 {
+		//ProfilerFlush();
 	//GetKey().Dump();
     for (list<Particle>::iterator it=begin();it!=end();++it) {
 		(*it)->ComputeDensity();
@@ -57,17 +58,20 @@ Voisin Particles::GetNeighbour()const{
   return m_neighbour;
 }
 
-
+#ifdef PRESSURE_LAPLACIEN
 bool Particles::PreComputeMove(double dt)
 {
+	//ProfilerFlush();
     bool ret=false;
     for (list<Particle>::iterator it=begin();it!=end();++it) {
         ret=(*it)->PreComputeMove( dt)|| ret;
     }
     return ret;
 }
+#endif
 void Particles::ComputeMove(double dt)
 {
+	//ProfilerFlush();
     for (list<Particle>::iterator it=begin();it!=end();++it) {
         (*it)->ComputeMove( dt);
     }
@@ -75,6 +79,7 @@ void Particles::ComputeMove(double dt)
 
 void Particles::Update( Particles_List*  plist)
 {
+	//ProfilerFlush();
   list<Particle>::iterator it=begin();
     while (it!=end()) {
       //iterator effectly used
@@ -115,7 +120,7 @@ part->SetContainerParticles(this);
 push_back(part);
 
 }
-
+  #ifdef PRESSURE_LAPLACIEN
 void Particles::InitializeCG(){
 for(Particles::iterator it=begin();it!=end();++it){
 	if(!(*it)->GetBoundary()){
@@ -193,7 +198,7 @@ for(Particles::iterator it=begin();it!=end();++it){
  (*it)->PreparePosition(b);
  }
 }
-
+#endif
 void Particles::Calculate0Density(){
 	for(Particles::iterator it=begin();it!=end();++it){
  (*it)->Calculate0Density();
@@ -229,7 +234,7 @@ void Particles::GetNeighbour(Voisin *& vois){
 }
 
 
-
+#ifdef PRESSURE_LAPLACIEN
 bool Particles::FindBoundary(bool b) {
 	if(empty()){
 		return false;
@@ -244,7 +249,7 @@ bool Particles::FindBoundary(bool b) {
 		return true;
 	}
 }
-
+#endif
 void Particles::WritePos(fstream& out)const{
 	for(Particles::const_iterator it=begin();it!=end();it++){
 			(*it)->WritePos( out);
@@ -290,7 +295,6 @@ void Particles::MassDensity(fstream &out)const{
 	(*it)->DoMove_predictor();
 	}
 	 }
-	 
 	  void Particles::NB_it(fstream& out) const{
 		 for(Particles::const_iterator it=begin();it!=end();it++){
 	out<<(*it)->GetNb_It()<<endl;
@@ -323,6 +327,7 @@ void Particles::MassDensity(fstream &out)const{
 	  }
 	  
 	  void Particles::UpdateForce() const{
+		  //ProfilerFlush();
 			    for(Particles::const_iterator it=begin();it!=end();it++){
 	(*it)->UpdateForce();
 	}   
@@ -339,7 +344,7 @@ void Particles::MassDensity(fstream &out)const{
 	(*it)->WriteForce(out);
 	}    
 	  }
-	  
+	 #ifdef PRESSURE_LAPLACIEN 
 	  void Particles::WriteForceViscosity(fstream & out) const{
 			    for(Particles::const_iterator it=begin();it!=end();it++){
 	(*it)->WriteForceViscosity(out);
@@ -363,7 +368,7 @@ void Particles::MassDensity(fstream &out)const{
 	(*it)->WriteForceTurbulence(out);
 	}    
 	  }
-	  
+#endif	  
 void Particles::SetMussBeDeleted(bool b){
 	m_b_muss_be_deleted=b;
 }

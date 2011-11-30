@@ -59,6 +59,14 @@ public:
      * @return double Distance
      **/
     inline  double Distance2(const physvector<3>& A) const;
+	
+	/**
+     * @brief Get the max distance \f$ max(|x-x2|,|y-y2|,|z-z2|) \f$
+     *
+     * @param A Other vector
+     * @return double Distance
+     **/
+    inline  double DistanceMax(const physvector<3>& A) const;
           /**
      * @brief Calculate the euclidian norm \f$\sqrt{x^2+y^2+z^2}\f$
      *
@@ -71,6 +79,13 @@ public:
      * @return double
      **/
     inline double Norm2()const;
+	
+	 /**
+     * @brief Calculate the maximun norm \f$ max(x,y,z) \f$
+     *
+     * @return double
+     **/
+    inline double NormMax()const;
     /**
      * @brief Set the value of the vector
      *
@@ -230,7 +245,13 @@ public:
      * @return double Distance
      **/
     inline  double Distance2(const physvector<2>& A) const;
-
+	/**
+     * @brief Get the max distance \f$ max(|x-x2|,|y-y2|) \f$
+     *
+     * @param A Other vector
+     * @return double Distance
+     **/
+    inline  double DistanceMax(const physvector<2>& A) const;
     /**
      * @brief Calculate the euclidian norm \f$\sqrt{x^2+y^2}\f$
      *
@@ -243,6 +264,12 @@ public:
      * @return double
      **/
     inline double Norm2() const;
+	/**
+     * @brief Calculate the maximun norm \f$ max(x,y) \f$
+     *
+     * @return double
+     **/
+    inline double NormMax()const;
     /**
      * @brief Set the value of the vector
      *

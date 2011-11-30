@@ -17,11 +17,12 @@ using namespace tbb;
 
 int main() {
 
-	/*World_test w;
-	w.Do();*/
-	World_timing W;
+	World_test w;
+	w.Do();
+	 
+	/*World_timing W;
 	 W.Do();
-	  
+	*/
 	/*  
 	  double x=3;
 	  double y=6;

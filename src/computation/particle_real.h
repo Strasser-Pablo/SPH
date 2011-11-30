@@ -89,6 +89,7 @@ ParticleType m_type;
    * @brief Second member for solving linear equation, used it the incompressible case.
    **/
    double m_b;
+   #ifdef PRESSURE_LAPLACIEN
   /**
    * @brief Pressure. Used in the incompressible case.
    **/
@@ -102,7 +103,8 @@ ParticleType m_type;
 		double m_zprec;
 		double m_z;
 		bool m_boundary;
-			bool m_converged;
+		bool m_converged;
+			#endif
 			/** 
 	 * @brief True if we have initalized the 0 density.
 	 **/
@@ -139,10 +141,6 @@ ParticleType m_type;
   **/
  Tensor<DIM> m_sub_grid;
  
- mutable physvector<DIM> m_force_pres;
- mutable physvector<DIM> m_force_viscious;
- mutable physvector<DIM> m_force_turbulence;
- mutable physvector<DIM> m_force_gravity;
 
 public:
 /**
@@ -163,12 +161,14 @@ inline int GetNb_It()const;
 	 * @param out Output to write.
 	 **/
 inline void WritePos(fstream& out)const;
+#ifdef PRESSURE_LAPLACIEN
 /**
  * Set if boundary.
  * 
  * @param b If boundary or not.
  **/
 inline void SetBoundary(bool b);
+#endif
 //For conjugate gradiant
 /**
 	 * @brief Calculate the A matrice for Gradient conjugate
@@ -192,6 +192,7 @@ inline double CalculateABas(const Particle& B)const;
 inline bool GetBoundary() const;
 
 //Used for conjugate gradient
+  #ifdef PRESSURE_LAPLACIEN
 inline double GetB() const;
 inline void SetB(double val);
 
@@ -227,6 +228,7 @@ inline double MultRZprec() const;
 inline void UpdateRZ() ;
 inline void PreparePosition(bool &b);
 inline bool OKR() const;
+#endif
       /**
    * @brief Default Constructor
    **/
@@ -263,6 +265,14 @@ inline bool OKR() const;
      * @return double Distance.
      **/
       inline double Distance(const Particle & A) const;
+	  
+	    /**
+     * @brief Calculate the Distance of the particle with max norm of the Particle
+     *
+     * @param A Particle to calculate distance with
+     * @return double Distance.
+     **/
+      inline double DistanceMax(const Particle & A) const;
     /**
      * @brief Give the position.
      *
@@ -371,10 +381,12 @@ inline double GetPressure() const;
  * @brief Effectivelly do the predictor corrector move.
  **/
 	inline void DoMove_predictor();
+	#ifdef PRESSURE_LAPLACIEN
 	/**
 	 * @brief used in the incompressible case 
 	 **/
   inline bool PreComputeMove(double dt);
+  #endif
    /**
    * @brief Verify that the two object represent the same particle (ie they share the same memory)
    *
@@ -429,10 +441,12 @@ inline void GetVoisin( Voisin & voisin) const;
  inline void UpdateForce() const;
  
 inline void WriteForce(fstream &out) const;
+#ifdef PRESSURE_LAPLACIEN
 inline void WriteForceGravity(fstream &out) const;
 inline void WriteForcePressure(fstream &out) const;
 inline void WriteForceViscosity(fstream &out) const;
 inline void WriteForceTurbulence(fstream &out) const;
+#endif
  inline bool operator==(const ParticleReal & B) const;
  inline bool operator==(const Particle & B) const;
  inline physvector<3> GetForce() const;

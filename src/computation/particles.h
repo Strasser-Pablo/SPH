@@ -13,8 +13,6 @@ Code écrit par Pablo Strasser dans le cadre d'un travail de Master bi-disiplina
 #include <map>
 #include "key.h"
 
-
-
 class Particle;
 class Particles_List;
 using namespace std;

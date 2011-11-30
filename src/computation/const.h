@@ -15,17 +15,18 @@ const int DIM=DIM_DEF;
 const bool presure_eq_state=true;
 const bool presure_laplacien=false;
 const bool pressure_guess_pressure=false;
-
+#define PRESSURE_EQ_STATE
+//#define PRESSURE_LAPLACIEN
 
 /**
  * @brief Distance after witch kernel is 0.
  **/
-const double h=1;
+const double h=0.01;
 
 /**
  * @brief Time step size.
  **/
-const double DT=0.1;
+const double DT=0.001;
 #endif // CONST_H
 
 #ifndef CONST_H_VECTOR

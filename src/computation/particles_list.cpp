@@ -15,7 +15,7 @@ void Particles_List::Dump() {
     cout<<"End Particle List"<<endl;
 }
 
-
+#ifdef PRESSURE_LAPLACIEN
  void Particles_List::InitializeCG(){
   for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.InitializeCG();
@@ -79,7 +79,7 @@ for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();it++)
         it->second.PreparePosition(b);
     }
  }
-
+#endif
 
 class ApplyCalculate0Density{
 	 Particles_Deque_List& m_vect;
@@ -388,13 +388,35 @@ class ApplyCalculateSubGridTens{
 };
 void Particles_List::Compute(double &dt)
 {
+	#ifdef OUTPUT_PART_TIMING
+		static fstream outtim ("../timing.tim", std::fstream::binary |std::fstream::out);
+		outtim<<m_n<<" ";
+	struct tms ti;
+	struct tms tf;
+	long end;
+	long deb=times(&ti);
+	double nb=double(sysconf(_SC_CLK_TCK));
+	#endif
+
 	#ifdef PARALLEL
 	parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyComputeDensity(m_vect),m_af);		
-	  parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyCalculateSubGridTens(m_vect),m_af);		
-	dt=DT;
-	//  dt=NextTimeStep();
-     bool ret=false;
+	#ifdef OUTPUT_PART_TIMING
+	end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+	#endif
+	parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyCalculateSubGridTens(m_vect),m_af);		
+	//dt=DT;
+	#ifdef OUTPUT_PART_TIMING
+	end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+	  #endif
+	  dt=NextTimeStep();
+	  #ifdef OUTPUT_PART_TIMING
+	  end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+   #endif
 	 if(presure_laplacien){
+		   bool ret=false;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 		ret=it->second.PreComputeMove(dt)||ret;
     }
@@ -412,8 +434,12 @@ void Particles_List::Compute(double &dt)
 	 */
 	 //predictor corrector
 	 //predictor_corrector_compute(dt);
-	  // beeman_compute(dt);
-	  predictor_corrector_compute(dt);
+	   beeman_compute(dt);
+	 // predictor_corrector_compute(dt);
+	 #ifdef OUTPUT_PART_TIMING
+	   end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+	#endif
 	}
     m_t+=dt;
 	map<Key<DIM> ,Particles>::iterator it=m_list.begin();
@@ -422,18 +448,40 @@ void Particles_List::Compute(double &dt)
 	   ++it;
         it2->second.Update(this);
     }
+	 #ifdef OUTPUT_PART_TIMING
+	 end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+	#endif
 	m_vect.Update(m_list);
+	 #ifdef OUTPUT_PART_TIMING
+	 end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+   #endif
 	#else
+		
 	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 		it->second.ComputeDensity();
     }
+	 #ifdef OUTPUT_PART_TIMING
+	 end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+   #endif
 	for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 		it->second.CalculateSubGridTens();
     }
-		dt=DT;
-	//  dt=NextTimeStep();
-     bool ret=false;
+	 #ifdef OUTPUT_PART_TIMING
+	 end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+   #endif
+		//dt=DT;
+	  dt=NextTimeStep();
+	   #ifdef OUTPUT_PART_TIMING
+	   end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+   #endif
+    
 	 if(presure_laplacien){
+		  bool ret=false;
     for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 		ret=it->second.PreComputeMove(dt)||ret;
     }
@@ -451,8 +499,12 @@ void Particles_List::Compute(double &dt)
 	 */
 	 //predictor corrector
 	 //predictor_corrector_compute(dt);
-	  // beeman_compute(dt);
-	  predictor_corrector_compute(dt);
+	   beeman_compute(dt);
+	  //predictor_corrector_compute(dt);
+	   #ifdef OUTPUT_PART_TIMING
+	   end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+   #endif
 	}
     m_t+=dt;
 	map<Key<DIM> ,Particles>::iterator it=m_list.begin();
@@ -461,9 +513,19 @@ void Particles_List::Compute(double &dt)
 	   ++it;
         it2->second.Update(this);
     }
+	 #ifdef OUTPUT_PART_TIMING
+	 end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+   #endif
 	m_vect.Update(m_list);
-		
+		 #ifdef OUTPUT_PART_TIMING
+		 end=times(&tf);
+	outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
+   #endif
 		#endif
+		 #ifdef OUTPUT_PART_TIMING
+	outtim<<endl;
+	#endif
     #if DOXYGEN
     ParticleReal p;
     p.ComputePressure_Density();

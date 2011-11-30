@@ -6,8 +6,10 @@
 #include "particles_deque_list.h"
 #include "key.h"
 #include "tbb/tbb.h"
-#undef PARALLEL
-const int CHUNK_SIZE=10;
+#include <sys/times.h>
+#define PARALLEL
+#define OUTPUT_PART_TIMING
+const int CHUNK_SIZE=1;
 using namespace std;
 using namespace tbb;
 /**

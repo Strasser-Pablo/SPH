@@ -75,6 +75,7 @@ void Particles_List::Add(Particle part)
 
     m_list[key].Add(part);
 	++m_n;
+	//ProfilerFlush();
 }
 
 
@@ -205,7 +206,7 @@ for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end()
         it->second.WriteForce(out);
     }
 out<< "</DataArray>"<<endl;
-
+/*
 out<< "<DataArray type=\"Float64\"  Name=\"Force_Gravity\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
 for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
         it->second.WriteForceGravity(out);
@@ -234,7 +235,7 @@ for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end()
         it->second.WriteErf(out,m_t);
     }
 out<< "</DataArray>"<<endl;
- 
+ */
 out<< "</PointData>"<<endl; 
 out<<"</Piece>"<<endl;
 out<<"</UnstructuredGrid>"<<endl;
@@ -252,12 +253,6 @@ outtot<<"<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\
 outtot<<"</VTKFile>"<<endl;
 outtot.seekp(pos);
 cout<<"file num "<<filenum<<" nb part "<<m_n<<" time "<<m_t<<" dt "<<dt<<endl;
-char filename2[30];
-sprintf(filename2,"outmusbe%07d.vtu",filenum);
-fstream out2 (filename, fstream::out);
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.WriteMussBeDeleted(out2);
-    }
 ++filenum;
 }
 

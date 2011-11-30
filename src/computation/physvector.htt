@@ -39,10 +39,27 @@ double physvector<3>::Distance2(const physvector<3> &A) const {
 }
 
 
-double physvector<2>::Distance2(const physvector<2>& A)const {
-    return pow(A.m_x-m_x,2)+pow(A.m_y-m_y,2);
+double physvector<2>::DistanceMax(const physvector<2>& A)const {
+   double ret=abs(m_x-A.m_x);
+	double retcand=abs(m_y-A.m_y);
+	if(ret<retcand){
+		ret=retcand;
+	}
+	return ret;
 }
 
+double physvector<3>::DistanceMax(const physvector<3>& A)const {
+     double ret=abs(m_x-A.m_x);
+	double retcand=abs(m_y-A.m_y);
+	if(ret<retcand){
+		ret=retcand;
+	}
+	retcand=abs(m_z-A.m_z);
+	if(ret<retcand){
+		ret=retcand;
+	}
+	return ret;
+}
 
 double physvector<3>::Norm()const {
     return sqrt(pow(m_x,2)+pow(m_y,2)+pow(m_z,2));
@@ -58,7 +75,27 @@ double physvector<3>::Norm2() const {
     return pow(m_x,2)+pow(m_y,2)+pow(m_z,2);
 }
 
+double physvector<3>::NormMax() const {
+    double ret=abs(m_x);
+	double retcand=abs(m_y);
+	if(ret<retcand){
+		ret=retcand;
+	}
+	retcand=abs(m_z);
+	if(ret<retcand){
+		ret=retcand;
+	}
+	return ret;
+}
 
+double physvector<2>::NormMax() const {
+    double ret=abs(m_x);
+	double retcand=abs(m_y);
+	if(ret<retcand){
+		ret=retcand;
+	}
+	return ret;
+}
 double physvector<2>::Norm2()const {
     return pow(m_x,2)+pow(m_y,2);
 }

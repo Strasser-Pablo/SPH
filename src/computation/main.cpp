@@ -9,26 +9,25 @@ using namespace tbb;
  * Trap that signal when nan and infinity occure.
  * Usefull for debuguing.
  **/
-     static void __attribute__ ((constructor))
-     trapfpe ()
-     {
-       feenableexcept (FE_INVALID|FE_DIVBYZERO|FE_OVERFLOW);
-     }
+static void __attribute__ ((constructor))
+trapfpe ()
+{
+	feenableexcept (FE_INVALID|FE_DIVBYZERO|FE_OVERFLOW);
+}
 
 int main() {
 
-	World_test w;
-	w.Do();
-	 
+	 World_test w;
+	w.Do(); 
 	/*World_timing W;
-	 W.Do();
+	   W.Do();
 	*/
-	/*  
-	  double x=3;
-	  double y=6;
-	  double z=10;
-	  physvector<3> v(x,y,z);
-	  physvector<3> v2(y,x,z);
-	return myfunc(v,v2);
-	  */
+	/*
+	   double x=3;
+	   double y=6;
+	   double z=10;
+	   physvector<3> v(x,y,z);
+	   physvector<3> v2(y,x,z);
+	   return myfunc(v,v2);
+	 */
 }

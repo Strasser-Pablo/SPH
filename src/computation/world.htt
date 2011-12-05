@@ -1,21 +1,21 @@
 /**
-* \file world.htt
-* @brief Contain template and inline function implementation for class World.
-*/
+ * \file world.htt
+ * @brief Contain template and inline function implementation for class World.
+ */
 
 
 void World::Add ( ParticleReal part ) {
-// part.Dump();
+	// part.Dump();
 	m_particle_real_list.push_front ( part );
 
 	m_list.Add ( Particle ( &m_particle_real_list.front() ) );
 }
 
-void World::Add ( ParticleReal  part,Particle & partic ) {
-// part.Dump();
+void World::Add ( ParticleReal part,Particle & partic ) {
+	// part.Dump();
 	m_particle_real_list.push_front ( part );
 	partic=Particle ( &m_particle_real_list.front() );
 	m_list.Add ( partic);
 
-	
+
 }

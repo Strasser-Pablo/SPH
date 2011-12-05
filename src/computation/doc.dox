@@ -5,7 +5,7 @@
 * The Goal of this work is to simulate the Jet d'Eau.
 * For this, we use the Smoothed %Particle Hydrodynamique method (SPH).
 * 
-* This method is a Particle based method. It does  nothing have to do with the CERN. 
+* This method is a %Particle based method. It does  nothing have to do with the CERN. 
 * This name come from the fact that we simulate with particles that carry information.
 * 
 * \subsection equation  Navier-Stocks equation
@@ -80,7 +80,7 @@
 * \f[ <A(r)>=A(r)+O(h^2) \f]
 *
 * In Conclusion our Kernel need to have the following Property to have a maximal precision:
-* - Need to converge to a Dirac delta if \f$h\to 0\f$
+* - Need to converge to a Dirac delta if \f$h\to 0\f$.
 * - Need to have a mean value of 1(\f$\int_{\Omega}w_{h}(r-r')dr'=1\f$).
 * - Need to be spherical symetric.
 * 
@@ -131,7 +131,7 @@
 * \subsubsection kern_gradient Kernel Gradient
 * The idea in sph is to approximate derivatif in derivatif of the kernel.
 * 
-* A easy way to see it is before discretization considerate the mean of the derivatif function.
+* An easy way to see it, is before discretization. Considerate the mean of the derivatif function.
 *
 * \f[<\nabla A(r)>=\int_{\Omega} \nabla A(r')w_{h}(r-r')dr'+O(h^2)\f]
 * 
@@ -217,8 +217,8 @@
 * For solving the fact that this equation need to be incompressible,
 * 2 methods are possible:
 *
-*  -We can solve an elliptic problem that arise from the condition that speed need to be divergence free and pressure need to be choose so that it's the case.
-*  -We can take a equation of state for \f$p(\rho)\f$.
+*  - We can solve an elliptic problem that arise from the condition that speed need to be divergence free and pressure need to be choose so that it's the case.
+*  - We can take a equation of state for \f$p(\rho)\f$.
 *
 * \subsubsection weakly_compres_sph Weakly Compressible SPH
 * We use an equation of state for the pressure that will give a strong repulsion if we try to compress.
@@ -232,14 +232,14 @@
 * 
 * The numerical speed of sound need to be at minimun 10 times faster as the fastest speed.
 * And more if possible. But if the numerical speed of sound is big, the time step is small 
-* because we have a ftl constraint that depend on the speed of sound.
+* because we have a FTL constraint that depend on the speed of sound.
 * 
 * The Choice of \f$\gamma\f$ and \f$B\f$ depend on choice of time step and time integration method.
 * More \f$B\f$ and \f$\gamma\f$ is high more we are incompressible, but more the acceleration will be strongly varying to a small perturbation of density,
 * and lower the timestep need to be.
 *
-* Note that the notion of negative pressure if we have a smaller density that seem physical is physical.
-* Because this equation only describe pressure relative to the pressure at rest. But this pressure at rest doesn't matter because we are only interested in derivative of pressure.
+* Note that this formula give the pressure relatif to the rest density witch is spatialy constant.
+* But this pressure at rest doesn't matter because we are only interested in spatial derivative of pressure.
 * The only moment where it can have an importance is for Boundary condition between two media.
 *	
 *
@@ -250,7 +250,7 @@
 *
 * We then find the correct position and speed (\f$x^{n+1}\f$ and \f$v^{n+1}\f$).
 *  Where \f$\rho^{0}\f$ is the correct mass density and \f$\rho^{*n+1}\f$ is the mass density at position and speed \f$x^{*n+1}\f$ and \f$v^{*n+1}\f$.
-* \f[-\frac{\Delta t^2}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\log\left(\frac{\rho^{*n+1}-\rho^{0}}{\rho^0}\right)\f]
+* \f[-\frac{\Delta t^2}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\log\left(\frac{\rho^{*n+1}}{\rho^0}\right)\f]
 * \f[x^{n+1}:=x^{*n+1}-\frac{\Delta t^2}{2}  \frac{\nabla p}{\rho}\f]
 *
 * \f[\frac{\Delta t}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\nabla \cdot v^{*n+1}\f]
@@ -259,10 +259,10 @@
 * The gradient and divergence term will be discretized with one of the formula seen before.
 * Where we need to solve the lapplacien to be able to  compute the gradient.
 * Note that we have 2 times the same linear system but with different second member.
-* Note that the \f$\Delta t\f$ is not neaded because we can take in account in p.
+* Note that the \f$\Delta t\f$ is not needed because we can take it in account in p.
 *
 * The proof of this numerical sheme is the following.
-* The speed and position and the new time step can be approximated without the pression by a leap frog step:
+* The speed and position at the new time step can be approximated without the pression by a leap frog step:
 * \f[ v^{*n+\frac{1}{2}}=v^{n}+f^{n}\frac{\Delta t}{2}\f]
 * \f[ x^{*n}=x^{n}+v^{*n+\frac{1}{2}}\Delta t\f]
 *
@@ -281,9 +281,9 @@
 * \f[x^{n+1}=x^{n}+v^{n+\frac{1}{2}}\Delta t=x^{n}+v^{*n+\frac{1}{2}}\Delta t-\frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t^2}{2}=x^{*n}-\frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t^2}{2}\f]
 *
 * It can be show that  without time discretisation we will have a correct position for \f$\log\left(\frac{\rho}{\rho_{0}}\right)\f$ (cf Comprehensible Incompressible SPH for Mathematician).
-* But contrary to this case where the suposition that we only know the force at time \f$t^n\f$ allow to show that we will find the same result that a Euler with the correct pression.
-* We cannot in general be sure that the corrected position will be the same that if we integrated from the begining with a correct pressure, because of dependence of the position and speed of the force. 
-* More clearly with a real speed, and a estimated speed:
+* But contrary to this case where the suposition that we only know the force at time \f$t^n\f$ allow to show that we will find the same result that an Euler with the corrected pression.
+* We cannot in general be sure that the corrected position will be the same that if we integrated from the begining with a corrected pressure, because of dependence of the position and speed of the force. 
+* More clearly with a real speed, and an estimated speed:
 * \f[v(t)= \int \left(f(x(t),v(t),t) - \frac{\nabla p(x(t),v(t),t)}{\rho(x(t),v(t),t)}\right)dt \f]
 * \f[v^{*}(t)=\int f(x^{*}(t),v^{*}(t),t)dt\f]
 * \f[v(t)-v^{*}(t)\sim-\int  \frac{\nabla p(x(t),v(t),t)}{\rho(x(t),v(t),t)}dt\f]
@@ -291,7 +291,7 @@
 * Because of the dependence on \f$x(t)\f$ that depend on the solution for \f$v(t)\f$
 * 
 * The proof for the speed is more easy.
-* At the speed at full time step is calculated by:
+* The speed at full time step is calculated by:
 * \f[v^{n+1}=v^{*n+1}-\frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
 * Taking the divergence we have:
 * \f[\nabla \cdot v^{n+1}=\nabla \cdot v^{*n+1}-\nabla \cdot \frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
@@ -301,7 +301,7 @@
 * \f[v^{n+1}=v^{*n+1}-\frac{\nabla p^{n}}{\rho^{n}}\frac{\Delta t}{2}\f]
 *
 * Note that like for the position case we are sure to have a divergence free result that is compatible to if we had 
-* integrated from the begining with the correct pressure only for Euler. For other method we will have a dependance of argument.
+* integrated from the begining with the correct pressure only for Euler. For other method we will have a dependance on argument.
 *
 * Note that the corrected speed will always be divergence free whatever the integration method is. 
 * Because taking the divergence give:
@@ -311,7 +311,7 @@
 * \paragraph incompres_spatial_discretization Spatial Discret Incompressible SPH
 * 
 *  We will discretize the following equation:
-* \f[-\frac{\Delta t^2}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\log\left(\frac{\rho^{*n+1}-\rho^{0}}{\rho^0}\right)\f]
+* \f[-\frac{\Delta t^2}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\log\left(\frac{\rho^{*n+1}}{\rho^0}\right)\f]
 * \f[x^{n+1}:=x^{*n+1}-\frac{\Delta t^2}{2}  \frac{\nabla p}{\rho}\f]
 *
 * \f[\frac{\Delta t}{2}\nabla \cdot \frac{\nabla p}{\rho}:=\nabla \cdot v^{*n+1}\f]
@@ -323,12 +323,12 @@
 * \f[\nabla A_a=\sigma_{a}\sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{1}{2}\left(A_{a}+A_{b}\right)\nabla_a w\f]
 * \f[ \Delta A=\sigma_{a}\sum_{b}\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{A_a-A_b}{r_{ab}}\frac{\partial w}{\partial r_{ab}}\f]
 * To simplify notation, we write:
-* \f[B_{ab}=\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\frac{\partial w}{\partial r_{ab}}\f]
+* \f[B_{ab}=\left(\frac{1}{\sigma_{a}^2}+\frac{1}{\sigma_{b}^2}\right)\frac{\partial w}{\partial r_{ab}}\f]
 * \f$B_{ab}\f$ is anti symmetric because of the gradient.
 * Our expression are then:
 * \f[\nabla A_a=\sigma_{a}\sum_{b}\frac{1}{2}\left(A_{a}+A_{b}\right)B_{ab}e_{ab}\f]
 * \f[ \Delta A=\sigma_{a}\sum_{b}\frac{A_a-A_b}{r_{ab}}B_{ab}\f]
-* Where \f$e_{ab}\f$ is a unitary vector from particle a to particle 2.
+* Where \f$e_{ab}\f$ is a unitary vector from particle a to particle b.
 * 
 * More details on the justification will be added on this part.
 *
@@ -365,10 +365,10 @@
 * \f[P=\sum_{i} m_iv_{i}\f]
 * The derivatif of the momentum give for constant mass(it's the case) the Newton's Law:
 * \f[\dot{p}=f=\sum_{i}m_ia_{i}\f]
-* We the force given by Navier-Stocks we have:
-*\f[f=\sum_{i}m_{i} \rho_{i}\left(-\frac{1}{\rho_{i}}\nabla p+\nu \Delta v\right)\f]
-* We have seen that we can choose for the derivatif a symetric and a anti symetric version.
-* Choosing the anti symetric version. Will make a sum on anti symetric term, the sum will
+* With the force given by Navier-Stocks we have:
+*\f[f=\sum_{i}m_{i} \left(-\frac{1}{\rho_{i}}\nabla p+\nu \Delta v\right)\f]
+* We have seen that we can choose for the derivatif a symetric and an anti symetric version.
+* Choosing the anti symetric version, will make a sum on anti symetric term, the sum will
 * then vanish.
 *
 * This property of anti symetrisation give a Newton's Third law of action reaction.
@@ -380,7 +380,7 @@
 * Taking the expression for \f$a\f$ we have:
 *
 * Because the acceleration is anti simetric with respect to exchange of two particle.
-* We can rewrite the cross product$:
+* We can rewrite the cross product:
 * \f[\left(x_{a}-x_{b}\right)\times A_{ab}\f]
 * Where \f$ A_{ab}\f$ is one of the anti symetric component.
 * For the pressure, \f$A_{ab}\f$ is proportional to \f$x_{a}-x_{b}\f$ because of the gradient of the Kernel.
@@ -390,7 +390,7 @@
 * \section algorithm Algorithm Overview
 *
 * We will now recapitulate all that we have seen to give an overview of the algorithm.
-* The formula will use a Euler time integration for simplicity. Other time integration are possible.
+* The formula will use an Euler time integration for simplicity. Other time integration are possible.
 * 
 * First an weakly incompressible algorithm:
 * -# Create initial particle:
@@ -461,7 +461,7 @@
 *
 *   The main point in this code is the hierachical model.
 *   That allow every level to have only elementary operation to do.
-*   The Hierarchy from top to below is:
+*   The Hierarchy from top to botom is:
 *	-# Particles_List:
 *     	This class contain all the other object.
 *		This class consist on a dynamic square partition of space of size \f$h\f$.
@@ -471,7 +471,7 @@
 *	-# Particles:
 *		Represent a groups of Particle.
 *		The role of this class is in majority to transmit information.
-*		This class as somes operation to dos for consistency like checking that a Particle has moved outside the Region.
+*		This class has somes operation to do for consistency like checking that a Particle has moved outside the Region.
 *	-# Particle:
 *		This class is an opaque pointer to a Particle_Real instance.
 *		Say in other word, it allow to access the real data of the Particle.

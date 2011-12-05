@@ -5,75 +5,106 @@
 #include "debug.h"
 #include <fstream>
 #include <string>
-
-class ApplySetToMeanMass{
-	 Particles_Deque_List& m_vect;
-	public:
-	ApplySetToMeanMass( Particles_Deque_List& vect):m_vect(vect){
+/**
+ * @brief Class used for parallel assignement of all mass to the MEAN_MASS
+ **/
+class ApplySetToMeanMass {
+	Particles_Deque_List& m_vect;
+public:
+/**
+ * @brief Constructor from a List of Particles to witch applicate the calculation.
+ * @param vect Vector of Particles to witch apply the calculation.
+ **/
+	ApplySetToMeanMass( Particles_Deque_List& vect) : m_vect(vect){
 	};
-	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
-		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
-			 Particles * part=m_vect[i];
-			if(part!=0){
+/**
+ * @brief Functor used by tbb to launch a thread on a work.
+ * 
+ * @param r Range of particles to process.
+ *
+ **/
+	void operator() ( const blocked_range<Particles_Deque_List::size_type>&r ) const {
+		for(Particles_Deque_List::size_type i=r.begin(); i!=r.end(); i++) {
+			Particles * part=m_vect[i];
+			if(part!=0) {
 				part->SetToMeanMass();
 			}
 		}
-		}
-	
+	}
+
 };
-class ApplyComputeDensity{
-	 Particles_Deque_List& m_vect;
-	public:
-	ApplyComputeDensity( Particles_Deque_List& vect):m_vect(vect){
+/**
+ * @brief Class Used for parallel calculation of the density.
+ **/
+class ApplyComputeDensity {
+	Particles_Deque_List& m_vect;
+public:
+/**
+ * @brief Constructor
+ * @param vect List of Particles do use for the calculation
+ **/
+	ApplyComputeDensity( Particles_Deque_List& vect) : m_vect(vect){
 	};
-	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
-		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
-			 Particles * part=m_vect[i];
-			if(part!=0){
+	
+	/**
+	 * @brief Job to do for a range of the calculation domaine.
+	 **/
+	void operator() ( const blocked_range<Particles_Deque_List::size_type>&r ) const {
+		for(Particles_Deque_List::size_type i=r.begin(); i!=r.end(); i++) {
+			Particles * part=m_vect[i];
+			if(part!=0) {
 				part->ComputeDensity();
 			}
 		}
-		}
-	
-};
+	}
 
-class ApplypreComputeMove_predictor{
-	 Particles_Deque_List& m_vect;
-	 double m_Dt;
-	public:
-	ApplypreComputeMove_predictor( Particles_Deque_List& vect,double dt):m_vect(vect),m_Dt(dt){
+};
+/**
+ * @brief Class Used for parallel calculation of PrecomputeMove_Predictor
+ **/
+class ApplypreComputeMove_predictor {
+	Particles_Deque_List& m_vect;
+	double m_Dt;
+public:
+	ApplypreComputeMove_predictor( Particles_Deque_List& vect,double dt) : m_vect(vect),m_Dt(dt){
 	};
-	void operator()( const blocked_range<Particles_Deque_List::size_type>& r ) const {
-		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
-			 Particles * part=m_vect[i];
-			if(part!=0){
+	void operator() ( const blocked_range<Particles_Deque_List::size_type>&r ) const {
+		for(Particles_Deque_List::size_type i=r.begin(); i!=r.end(); i++) {
+			Particles * part=m_vect[i];
+			if(part!=0) {
 				part->preComputeMove_predictor(m_Dt);
 			}
 		}
-		}
-	
+	}
+
 };
 
-class ApplyComputeMove_predictor{
-	 Particles_Deque_List& m_vect;
-	 double m_Dt;
-	 bool m_b;
-	public:
-	ApplyComputeMove_predictor( Particles_Deque_List& vect,double dt):m_vect(vect),m_Dt(dt),m_b(false){
+/**
+ * @brief Class Used for parallel calculation of ComputeMove_predictor
+ **/
+class ApplyComputeMove_predictor {
+	Particles_Deque_List& m_vect;
+	double m_Dt;
+	bool m_b;
+public:
+	ApplyComputeMove_predictor( Particles_Deque_List& vect,double dt) : m_vect(vect),m_Dt(dt),m_b(false){
 	};
-	ApplyComputeMove_predictor( ApplyComputeMove_predictor& B,split):m_vect(B.m_vect),m_Dt(B.m_Dt),m_b(false){
+	ApplyComputeMove_predictor( ApplyComputeMove_predictor& B,split) : m_vect(B.m_vect),m_Dt(B.m_Dt),m_b(false){
 	};
-	void operator()( const blocked_range<Particles_Deque_List::size_type>& r )  {
+	void operator() ( const blocked_range<Particles_Deque_List::size_type>&r )  {
 		bool b=m_b;
-		for(Particles_Deque_List::size_type i=r.begin();i!=r.end();i++){
-			 Particles * part=m_vect[i];
-			if(part!=0){
+		for(Particles_Deque_List::size_type i=r.begin(); i!=r.end(); i++) {
+			Particles * part=m_vect[i];
+			if(part!=0) {
 				part->ComputeMove_predictor(m_Dt,b);
 			}
 		}
 		m_b=b;
-		}
-	bool GetB(){return m_b;}
+	}
+	bool GetB(){
+		//return false;
+		return m_b;
+	}
 	void join(const ApplyComputeMove_predictor& B){
 		m_b=m_b||B.m_b;
 	}
@@ -81,14 +112,15 @@ class ApplyComputeMove_predictor{
 
 void Particles_List::Add(Particle part)
 {
-    Key<DIM> key=part->GetPos().ToKey(h);
-	//cout<<part->GetPos()<<endl;
-    if (m_list.count(key)==0)
-    {
-        AddNeighbour(key);
-    }
+	Key<DIM> key=part->GetPos().ToKey(h);
+	
+	if (m_list.count(key)==0)
+	{
+		//Particles doesn't exit, created it.
+		AddNeighbour(key);
+	}
 
-    m_list[key].Add(part);
+	m_list[key].Add(part);
 	++m_n;
 	//ProfilerFlush();
 }
@@ -96,201 +128,205 @@ void Particles_List::Add(Particle part)
 
 void Particles_List::AddNeighbour(Key< 3 > k)
 {
-    list<Key<DIM> > l=k.GetNeighbour();
-	 list<Key<DIM> > l2;
-    list<Particles*> n;
-	
+	list<Key<DIM> > l=k.GetNeighbour();
+	list<Key<DIM> > l2;
+	list<Particles*> n;
 
-    Particles* pa0=&m_list[k];
+	//Current Particles
+	Particles* pa0=&m_list[k];
 	m_vect.push_back(pa0);
 	m_list[k].SetKey(k);
-    for (list<Key<DIM> >::iterator it=l.begin(); it!=l.end(); ++it)
-    {
+	//iterate throught the neigbour of the created particles
+	for (list<Key<DIM> >::iterator it=l.begin(); it!=l.end(); ++it)
+	{
 
-        if (m_list.count(*it)>0)
-        {
-            //   cout<<"found"<<endl;
-            //element found, add element in neighbour of the two element
-            Particles*   pa=&m_list[*it];
-            n.push_front(pa);
-            list<Particles*>   templist=pa->GetNeighbour().GetParticlesVect();
-            //verify if element is in list if it's not add it
-            if ( find(templist.begin(),templist.end(),pa0)==templist.end())
-            {   
-                templist.push_back(pa0);
+		if (m_list.count(*it)>0)
+		{
+			//element found, add element in neighbour of the two element
+			Particles*   pa=&m_list[*it];
+			n.push_front(pa);
+			list<Particles*>   templist=pa->GetNeighbour().GetParticlesVect();
+			//verify if element is in list if it's not add it
+			if ( find(templist.begin(),templist.end(),pa0)==templist.end())
+			{
+				templist.push_back(pa0);
 				Voisin V(templist);
-                pa->SetNeighbour(V);
-            }
-        }
-    }
+				pa->SetNeighbour(V);
+			}
+		}
+	}
 	Voisin V(n);
-    m_list[k].SetNeighbour(V);
+	m_list[k].SetNeighbour(V);
 }
 
 
 void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
 {
 	Key<DIM> key=(*it)->GetPos().ToKey(h);
-    if (m_list.count(key)==0)
-    {
-        AddNeighbour(key);
-    }
-    Particles * pnew=&m_list[key];
-	
-    if(pnew!=part)
-    { 
-        pnew->splice(pnew->begin(),*part,it);
+	if (m_list.count(key)==0)
+	{
+		//We moved in a new particles
+		AddNeighbour(key);
+	}
+	Particles * pnew=&m_list[key];
+
+	//We moved in another Particles
+	if(pnew!=part)
+	{
+		//Change the list from old to new.
+		pnew->splice(pnew->begin(),*part,it);
+		//New particles is marked to not be deleted.
 		pnew->SetMussBeDeleted(false);
 		(*it)->SetContainerParticles(pnew);
-    }
-	 
+	}
+
 }
 
 
 
 void Particles_List::write(double dt  ) const
 {
-static int filenum=0;
-char filename[15];
-sprintf(filename,"out%07d.vtu",filenum);
-fstream out (filename, fstream::out);
-out<<"<?xml version=\"1.0\"?>"<<endl;
-out<<"<VTKFile type= \"UnstructuredGrid\"  version= \"0.1\"  byte_order= \"BigEndian\">"<<endl;                      
-out<<"<UnstructuredGrid>"<<endl;
-out<<"<Piece NumberOfPoints=\""<<m_n<<"\" NumberOfCells=\""<<m_n<<"\">"<<endl; 
-out<<"<Points>"<<endl;                                                                                         
-out<<"<DataArray type=\"Float64\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
- for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.WritePos(out);
-    }
-out<<"</DataArray>"<<endl;
-out<<"</Points>"<<endl;
-out<<"<Cells>"<<endl;
-out<<"<DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">"<<endl;
-for(int i=0;i<m_n;i++){
-	out<<i<<endl;
+	static int filenum=0;
+	char filename[15];
+	sprintf(filename,"out%07d.vtu",filenum);
+	fstream out (filename, fstream::out);
+	out<<"<?xml version=\"1.0\"?>"<<endl;
+	out<<"<VTKFile type= \"UnstructuredGrid\"  version= \"0.1\"  byte_order= \"BigEndian\">"<<endl;
+	out<<"<UnstructuredGrid>"<<endl;
+	out<<"<Piece NumberOfPoints=\""<<m_n<<"\" NumberOfCells=\""<<m_n<<"\">"<<endl;
+	out<<"<Points>"<<endl;
+	out<<"<DataArray type=\"Float64\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.WritePos(out);
+	}
+	out<<"</DataArray>"<<endl;
+	out<<"</Points>"<<endl;
+	out<<"<Cells>"<<endl;
+	out<<"<DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">"<<endl;
+	for(int i=0; i<m_n; i++) {
+		out<<i<<endl;
+	}
+	out<<"</DataArray>"<<endl;
+	out<<"<DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">"<<endl;
+	for(int i=1; i<=m_n; i++) {
+		out<<i<<endl;
+	}
+	out<<"</DataArray>"<<endl;
+	out<<"<DataArray type=\"Int32\" Name=\"types\" format=\"ascii\">"<<endl;
+	for(int i=0; i<m_n; i++) {
+		out<<1<<endl;
+	}
+	out<<"</DataArray>"<<endl;
+	out<<"</Cells>"<<endl;
+	out<< "<PointData Scalars=\"Density\">"<<endl;
+	out<< "<DataArray type=\"Float64\" Name=\"Density\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.Density(out);
+	}
+	out<< "</DataArray>"<<endl;
+	out<< "<DataArray type=\"Float64\" Name=\"Pressures\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.Pressures(out);
+	}
+	out<< "</DataArray>"<<endl;
+	out<< "<DataArray type=\"Float64\" Name=\"Mass\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.Mass(out);
+	}
+	out<< "</DataArray>"<<endl;
+	out<< "<DataArray type=\"Float64\" Name=\"Mass Density\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.MassDensity(out);
+	}
+	out<< "</DataArray>"<<endl;
+
+	out<< "<DataArray type=\"Int32\" Name=\"NB_it\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.NB_it(out);
+	}
+	out<< "</DataArray>"<<endl;
+
+	out<< "<DataArray type=\"Float64\"  Name=\"Speed\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.WriteSpeed(out);
+	}
+	out<< "</DataArray>"<<endl;
+
+	out<< "<DataArray type=\"Float64\"  Name=\"Force\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.WriteForce(out);
+	}
+	out<< "</DataArray>"<<endl;
+	
+	   out<< "<DataArray type=\"Float64\"  Name=\"Force_Gravity\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+	   for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+	        it->second.WriteForceGravity(out);
+	    }
+	   out<< "</DataArray>"<<endl;
+
+	   out<< "<DataArray type=\"Float64\"  Name=\"Force_Pressure\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+	   for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+	        it->second.WriteForcePressure(out);
+	    }
+	   out<< "</DataArray>"<<endl;
+
+	   out<< "<DataArray type=\"Float64\"  Name=\"Force_Viscosity\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+	   for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+	        it->second.WriteForceViscosity(out);
+	    }
+	   out<< "</DataArray>"<<endl;
+
+	   out<< "<DataArray type=\"Float64\"  Name=\"Force_Turbulence\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
+	   for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+	        it->second.WriteForceTurbulence(out);
+	    }
+	   out<< "</DataArray>"<<endl;
+	   /*
+	   out<< "<DataArray type=\"Float64\"  Name=\"erf\" format=\"ascii\">"<<endl;
+	   for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
+	        it->second.WriteErf(out,m_t);
+	    }
+	   out<< "</DataArray>"<<endl;
+	 */
+	out<< "</PointData>"<<endl;
+	out<<"</Piece>"<<endl;
+	out<<"</UnstructuredGrid>"<<endl;
+	out<<"</VTKFile>"<<endl;
+	out.close();
+	static fstream outtot ("animation.pvd", std::fstream::binary |std::fstream::out);
+	if(filenum==0) {
+		outtot<<"<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\">"<<endl;
+		outtot<<" <Collection>"<<endl;
+	}
+	outtot<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\"0\" file=\""<<filename<<"\" globdata=\""<<2.5<<"\"/>"<<endl;
+	streampos pos;
+	pos=outtot.tellp();
+	outtot<<"</Collection>"<<endl;
+	outtot<<"</VTKFile>"<<endl;
+	outtot.seekp(pos);
+	cout<<"file num "<<filenum<<" nb part "<<m_n<<" time "<<m_t<<" dt "<<dt<<endl;
+	++filenum;
 }
-out<<"</DataArray>"<<endl;
-out<<"<DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">"<<endl;
-for(int i=1;i<=m_n;i++){
-	out<<i<<endl;
-}
-out<<"</DataArray>"<<endl;
-out<<"<DataArray type=\"Int32\" Name=\"types\" format=\"ascii\">"<<endl;
-for(int i=0;i<m_n;i++){
-	out<<1<<endl;
-}
-out<<"</DataArray>"<<endl;
-out<<"</Cells>"<<endl;
-out<< "<PointData Scalars=\"Density\">"<<endl;                                                
-out<< "<DataArray type=\"Float64\" Name=\"Density\" format=\"ascii\">"<<endl;
- for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.Density(out);
-    }
-out<< "</DataArray>"<<endl;
-out<< "<DataArray type=\"Float64\" Name=\"Pressures\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.Pressures(out);
-    }
-out<< "</DataArray>"<<endl;
-out<< "<DataArray type=\"Float64\" Name=\"Mass\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.Mass(out);
-    }
-out<< "</DataArray>"<<endl;
-out<< "<DataArray type=\"Float64\" Name=\"Mass Density\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.MassDensity(out);
-    }
-out<< "</DataArray>"<<endl;
 
-out<< "<DataArray type=\"Int32\" Name=\"NB_it\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.NB_it(out);
-    }
-out<< "</DataArray>"<<endl;
 
-out<< "<DataArray type=\"Float64\"  Name=\"Speed\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.WriteSpeed(out);
-    }
-out<< "</DataArray>"<<endl;
 
-out<< "<DataArray type=\"Float64\"  Name=\"Force\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.WriteForce(out);
-    }
-out<< "</DataArray>"<<endl;
-/*
-out<< "<DataArray type=\"Float64\"  Name=\"Force_Gravity\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.WriteForceGravity(out);
-    }
-out<< "</DataArray>"<<endl;
-
-out<< "<DataArray type=\"Float64\"  Name=\"Force_Pressure\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.WriteForcePressure(out);
-    }
-out<< "</DataArray>"<<endl;
-
-out<< "<DataArray type=\"Float64\"  Name=\"Force_Viscosity\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.WriteForceViscosity(out);
-    }
-out<< "</DataArray>"<<endl;
-
-out<< "<DataArray type=\"Float64\"  Name=\"Force_Turbulence\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.WriteForceTurbulence(out);
-    }
-out<< "</DataArray>"<<endl;
-out<< "<DataArray type=\"Float64\"  Name=\"erf\" format=\"ascii\">"<<endl;
-for (map<Key<DIM> ,Particles>::const_iterator it=m_list.begin();it!=m_list.end();++it) {
-        it->second.WriteErf(out,m_t);
-    }
-out<< "</DataArray>"<<endl;
- */
-out<< "</PointData>"<<endl; 
-out<<"</Piece>"<<endl;
-out<<"</UnstructuredGrid>"<<endl;
-out<<"</VTKFile>"<<endl;
-out.close();
-static fstream outtot ("animation.pvd", std::fstream::binary |std::fstream::out);
-if(filenum==0){
-outtot<<"<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\">"<<endl;
- outtot<<" <Collection>"<<endl;
-}
- outtot<<" <DataSet timestep=\""<<m_t<<"\" group=\"\" part=\"0\" file=\""<<filename<<"\"/>"<<endl;
- streampos pos;
-   pos=outtot.tellp();
-   outtot<<"</Collection>"<<endl;
-outtot<<"</VTKFile>"<<endl;
-outtot.seekp(pos);
-cout<<"file num "<<filenum<<" nb part "<<m_n<<" time "<<m_t<<" dt "<<dt<<endl;
-++filenum;
-}
-
-   
-   
 
 void Particles_List::CorrectDensity(){
-bool bcont=true;
-int i=0;
-while(bcont){
-    bcont=false;
-ConjugateGradiant();
-SetB_Speed();
-//ConjugateGradiant();
-PreparePosition(bcont);
-i++;
- }
- cout<<"correction iteration "<<i<<endl;
+	bool bcont=true;
+	int i=0;
+	while(bcont) {
+		bcont=false;
+		ConjugateGradiant();
+		SetB_Speed();
+		ConjugateGradiant();
+		PreparePosition(bcont);
+		i++;
+	}
 }
 
 
 
 
-double Particles_List::GetTime()const{
+double Particles_List::GetTime() const {
 	return m_t;
 }

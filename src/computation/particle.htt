@@ -1,15 +1,11 @@
 
 
-
-
-
-
-Particle::Particle(ParticleReal* part):m_data(part) {
+Particle::Particle(ParticleReal* part) : m_data(part) {
 
 }
 
-Particle::Particle():m_data(0){
-	
+Particle::Particle() : m_data(0){
+
 }
 
 
@@ -40,7 +36,6 @@ const ParticleReal* Particle::operator->() const {
 }
 
 
-
- bool Particle::operator==(const Particle & A)const{
-	 return m_data==A.m_data;
- }
+bool Particle::operator==(const Particle &A) const {
+	return m_data==A.m_data;
+}

@@ -16,7 +16,7 @@ void testCreation(void){
 	physvector<3> v0;
 	TS_ASSERT_EQUALS(pr1.GetPos(),v0);
 	TS_ASSERT_EQUALS(pr1.GetSpeed(),v0);
-	TS_ASSERT_EQUALS(pr1.GetMass(),0);
+	TS_ASSERT_EQUALS(pr1.GetMass(),1);
 	ParticleReal pr2;
 	TS_ASSERT_EQUALS(pr1,pr2);
 	TS_ASSERT(pr1.Equal(Particle(&pr2)));
@@ -56,12 +56,15 @@ void testMass(void){
 	double mres=pr1.GetMass();
 	TS_ASSERT_DELTA(mres,m,eps);
 }
-void testBoundary(void){
+//only if incompressible
+void xtestBoundary(void){
+	/*
    ParticleReal pr1;
    pr1.SetBoundary(true);
    TS_ASSERT_EQUALS(true,pr1.GetBoundary());
    pr1.SetBoundary(false);
    TS_ASSERT_EQUALS(false,pr1.GetBoundary());
+    */
 }
 void testSetDensity(void){
 	ParticleReal pr1;
@@ -151,15 +154,17 @@ void testComputeDensity(void){
 	delete Pr1;
 	delete Pr2;
 }
+
 void testCompute0Dens(void){
 	double dens0=rand()/1000.;
 	ParticleReal part;
 	part.SetDensity(dens0);
-	part.Calculate0Density();
+	double m;
+	part.Calculate0Density(m);
 	TS_ASSERT_DELTA(part.GetMassDensity(),1000,eps);
 	part.SetDensity(3*dens0);
-	part.Calculate0Density();
-	TS_ASSERT_DELTA(part.GetMassDensity()/3.,1000,eps);
+	part.Calculate0Density(m);
+	TS_ASSERT_DELTA(part.GetMassDensity(),1000,eps);
 }
 void testMoveComputation(void){
 	double x=(rand()%10)/1000.;
@@ -198,9 +203,10 @@ void testMoveComputation(void){
 	PrB1->SetContainerParticles(&partB);
 	PrB2->SetContainerParticles(&partB);
 	partA.ComputeDensity();
-	partA.Calculate0Density();
+	double m;
+	partA.Calculate0Density(m);
 	partB.ComputeDensity();
-	partB.Calculate0Density();
+	partB.Calculate0Density(m);
 	double dt=0.0001;
 	partA.UpdateForce();
 	partB.UpdateForce();

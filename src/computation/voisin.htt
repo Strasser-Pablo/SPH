@@ -2,34 +2,37 @@
 #include "particles.h"
 Voisin::Voisin(){
 }
-Voisin::Voisin(list<Particles*> vect):m_vect(vect){
+Voisin::Voisin(list<Particles*> vect) : m_vect(vect){
 }
 
-list<Particles*> Voisin::GetParticlesVect()const{
+list<Particles*> Voisin::GetParticlesVect() const {
 	return m_vect;
 }
 
 Voisin_Iterator Voisin::begin(){
-	if(m_vect.empty()){
-	return	Voisin_Iterator(m_vect,m_vect.end());
+	if(m_vect.empty()) {
+		//empty return the end.
+		return Voisin_Iterator(m_vect,m_vect.end());
 	}
 	iterator_particles it_beg=m_vect.begin();
 	bool b=false;
-	while(it_beg!=m_vect.end()){
-		if(!(*it_beg)->empty()){
+	//not empty find first non empty particles
+	while(it_beg!=m_vect.end()) {
+		if(!(*it_beg)->empty()) {
 			b=true;
 			break;
 		}
 		++it_beg;
 	}
-	if(b){
-  return Voisin_Iterator(m_vect,it_beg,(*it_beg)->begin());
+	if(b) {
+		//first non empty found
+		return Voisin_Iterator(m_vect,it_beg,(*it_beg)->begin());
 	}
 	//case in witch it_beg is the end, cannot define second member.
-  return Voisin_Iterator(m_vect,it_beg);
+	return Voisin_Iterator(m_vect,it_beg);
 }
 Voisin_Iterator Voisin::end(){
-	return	Voisin_Iterator(m_vect,m_vect.end());
+	return Voisin_Iterator(m_vect,m_vect.end());
 }
 
 list<Particles*>::iterator Voisin::begin_particles(){

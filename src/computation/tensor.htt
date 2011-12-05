@@ -2,59 +2,59 @@
 Tensor<2>::Tensor(){
 }
 
-Tensor<2>::Tensor(physvector<2> x,physvector<2>y):m_x(x),m_y(y){
+Tensor<2>::Tensor(physvector<2> x,physvector<2>y) : m_x(x),m_y(y){
 }
 
 Tensor<3>::Tensor(){
 }
 
-Tensor<3>::Tensor(physvector<3> x,physvector<3>y,physvector<3>z):m_x(x),m_y(y),m_z(z){
+Tensor<3>::Tensor(physvector<3> x,physvector<3>y,physvector<3>z) : m_x(x),m_y(y),m_z(z){
 }
 
-Tensor<2> Tensor<2>::operator+(const Tensor<2>& B)const{
+Tensor<2> Tensor<2>::operator+(const Tensor<2>&B) const {
 	physvector<2> x=m_x+B.m_x;
 	physvector<2> y=m_y+B.m_y;
 	return Tensor<2>(x,y);
 }
 
-Tensor<3> Tensor<3>::operator+(const Tensor<3>& B)const{
+Tensor<3> Tensor<3>::operator+(const Tensor<3>&B) const {
 	physvector<3> x=m_x+B.m_x;
 	physvector<3>  y=m_y+B.m_y;
 	physvector<3>  z=m_z+B.m_z;
 	return Tensor<3>(x,y,z);
 }
 
-Tensor<2> Tensor<2>::operator-(const Tensor<2>& B)const{
+Tensor<2> Tensor<2>::operator-(const Tensor<2>&B) const {
 	physvector<2> x=m_x-B.m_x;
 	physvector<2> y=m_y-B.m_y;
 	return Tensor<2>(x,y);
 }
 
-Tensor<3> Tensor<3>::operator-(const Tensor<3>& B)const{
+Tensor<3> Tensor<3>::operator-(const Tensor<3>&B) const {
 	physvector<3>  x=m_x-B.m_x;
 	physvector<3>  y=m_y-B.m_y;
 	physvector<3>  z=m_z-B.m_z;
 	return Tensor<3>(x,y,z);
 }
 
-void Tensor<3>::operator+=(const Tensor<3>& B){
+void Tensor<3>::operator+=(const Tensor<3>&B){
 	m_x+=B.m_x;
 	m_y+=B.m_y;
 	m_z+=B.m_z;
 }
 
-void Tensor<2>::operator+=(const Tensor<2>& B){
+void Tensor<2>::operator+=(const Tensor<2>&B){
 	m_x+=B.m_x;
 	m_y+=B.m_y;
 }
 
-void Tensor<3>::operator-=(const Tensor<3>& B){
+void Tensor<3>::operator-=(const Tensor<3>&B){
 	m_x+=B.m_x;
 	m_y+=B.m_y;
 	m_z+=B.m_z;
 }
 
-void Tensor<2>::operator-=(const Tensor<2>& B){
+void Tensor<2>::operator-=(const Tensor<2>&B){
 	m_x+=B.m_x;
 	m_y+=B.m_y;
 }
@@ -122,38 +122,38 @@ void Tensor<2>::operator*=(const double c){
 void Tensor<3>::operator*=(const double c){
 	m_x*=c;
 	m_y*=c;
-    m_z*=c;
-	
+	m_z*=c;
+
 }
 
-double Tensor<2>::Norm()const{
+double Tensor<2>::Norm() const {
 	return sqrt(m_x.Norm2()+m_y.Norm2());
 }
-double Tensor<3>::Norm()const {
+double Tensor<3>::Norm() const {
 	return sqrt(m_x.Norm2()+m_y.Norm2()+m_z.Norm2());
 }
 
- physvector< 2> operator*(const physvector< 2>& A,const Tensor<2>& B) {
-	 double x=A*B.m_x;
-	 double y=A*B.m_y;
-	 return physvector<2>(x,y);
- }
-  physvector< 2> operator*(const Tensor<2>& B,const physvector< 2>& A) {
-	  double x=A*B.m_x;
-	 double y=A*B.m_y;
-	 return physvector<2>(x,y);
-  }
-  
-  
-  physvector< 3> operator*(const Tensor<3>& B,const physvector< 3>& A) {
-	  double x=A*B.m_x;
-	 double y=A*B.m_y;
-	 	 double z=A*B.m_z;
-	 return physvector<3>(x,y,z);
-  }
-  physvector< 3> operator*(const physvector< 3>& A,const Tensor<3>& B) {
-	  double x=A*B.m_x;
-	 double y=A*B.m_y;
-	 	 double z=A*B.m_z;
-	 return physvector<3>(x,y,z);
-  }
+physvector< 2> operator*(const physvector< 2>&A,const Tensor<2>&B) {
+	double x=A*B.m_x;
+	double y=A*B.m_y;
+	return physvector<2>(x,y);
+}
+physvector< 2> operator*(const Tensor<2>&B,const physvector< 2>&A) {
+	double x=A*B.m_x;
+	double y=A*B.m_y;
+	return physvector<2>(x,y);
+}
+
+
+physvector< 3> operator*(const Tensor<3>&B,const physvector< 3>&A) {
+	double x=A*B.m_x;
+	double y=A*B.m_y;
+	double z=A*B.m_z;
+	return physvector<3>(x,y,z);
+}
+physvector< 3> operator*(const physvector< 3>&A,const Tensor<3>&B) {
+	double x=A*B.m_x;
+	double y=A*B.m_y;
+	double z=A*B.m_z;
+	return physvector<3>(x,y,z);
+}

@@ -29,17 +29,23 @@ void Particles_List::Dump() {
 		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 			it->second.CalculateAlphaPart(num,denom);
 		}
-		b=num==0 && denom==0;
+		if(denom==0){
+			b=true;
+			return 0;
+		}
 		return num/denom;
 	}
 
-	double Particles_List::CalculateBeta(double &denom,bool &bret,double alpha){
+	double Particles_List::CalculateBeta(double &denom,double alpha,bool & b){
 		double num=0;
-		bool b=true;
+		b=true;
 		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
-			it->second.CalculateBetaPart(num,b,alpha);
+			it->second.CalculateBetaPart(num,alpha,b);
 		}
-		bret=b;
+		if(denom<=0.000001){
+			b=true;
+			return 0;
+		}
 		return num/denom;
 	}
 
@@ -49,7 +55,7 @@ void Particles_List::Dump() {
 		}
 	}
 
-	void Particles_List::ConjugateGradiant(){
+	/*void Particles_List::ConjugateGradiant(){
 		InitializeCG();
 		bool bcont=false;
 		bool b;
@@ -67,7 +73,26 @@ void Particles_List::Dump() {
 			cout<<"end loop"<<endl;
 		}
 		cout<<"conjugate gradient nb it "<<j<<endl;
-	}
+	}*/
+	
+	bool Particles_List::ConjugateGradiantOneiter(){
+			double num=0;
+			bool b=false;
+			double alpha=CalculateAlpha(num,b);
+			cout<<"alpha "<<alpha<<endl;
+			if(b) {
+				return true;
+			}
+			bool blucky;
+			double beta=CalculateBeta(num,alpha,blucky);
+			cout<<"beta "<<beta<<endl;	
+			if(blucky){
+				return true;
+			}
+			CalculateP1(beta);
+
+			return false;
+		}
 
 
 	void Particles_List::SetB_Speed(){
@@ -585,4 +610,42 @@ void Particles_List::Compute(double &dt)
 		p.ComputeMove(DT);
 		p.Update(this);
    #endif  //DOXYGEN
+}
+
+	void Particles_List::CorrectPosition(){
+		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.CorrectPosition();
+		}
+	}
+	void Particles_List::CorrectSpeed(){
+		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.CorrectSpeed();
+	}
+	}
+	void Particles_List::PrepareSpeed(){
+		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.PrepareSpeed();
+	}
+	}
+
+double Particles_List::TestPositionOK(bool &b){
+	double ret=1000000;
+	for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		double temp=it->second.TestPositionOK(b);
+		if(temp<ret){
+			ret=temp;
+		}
+	}
+	return ret;
+}
+	
+double Particles_List::TestSpeedOK(bool &b){
+	double ret=1000000;
+	for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			double temp=it->second.TestSpeedOK(b);
+			if(temp<ret){
+			ret=temp;
+		}
+	}
+	return ret;
 }

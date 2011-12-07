@@ -34,9 +34,9 @@ void World_test::Do()
 	   }
 	 */
 	
-	int Nx=10;
+	int Nx=3;
 	int Ny=3;
-	int Nz=10;
+	int Nz=3;
 	vector<vector<Particle> > listvect(Ny);
 	vector<int> yloop(Nx*Nz);
 	for(int j=0; j<Ny; j++) {
@@ -52,26 +52,23 @@ void World_test::Do()
 				}
 				double Uyrel=uy/pow(0.05,2)*(pow(0.05,2)-r2);
 				Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.*h/3+h/6,j*h/3,k*h/3-Nz/2.*h/3+h/6),physvector< 3  >(0, Uyrel,0),water),begvect[i+k*Nz]);
-				begvect[i+k*Nz]->SetConstSpeed(true);
 				yloop[i+k*Nz]=Ny-1;
 			}
 		}
 		listvect[j]=begvect;
 	}
-
-
-
+cout<<"bound true "<<listvect[0][1].Get()<<endl;
+listvect[0][0]->SetBoundary(true);
 
 	m_list.Calculate0Density();
-
+		m_list.write(0);
 
 	while(true) {
 		double dt;
 		m_list.Compute(dt);
 		m_list.write(dt);
-
-		bool b=false;
-		for(int i=0; i<Nx; i++) {
+	}
+	/*	for(int i=0; i<Nx; i++) {
 
 			for(int k=0; k<Nz; k++) {
 				vector<Particle> & begvect=listvect[yloop[i+k*Nz]];
@@ -87,14 +84,11 @@ void World_test::Do()
 				double y;
 				ptemp->GetPos().Get(x,y,z);
 				if(y>h) {
-					b=true;
 					double Uyrel=uy/pow(0.05,2)*(pow(0.05,2)-r2);
 					int isucces=(yloop[i+k*Nz]+1)%Ny;
 					listvect[isucces][i+k*Nz]->GetPos().Get(x,y,z);
 					y-=h/3;
-					begvect[i+k*Nz]->SetConstSpeed(false);
 					Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.0*h/3+h/12.,y,k*h/3-Nz/2.*h/3+h/12.),physvector< 3  >(0,Uyrel,0),water),begvect[i+k*Nz]);
-					begvect[i+k*Nz]->SetConstSpeed(true);
 					--yloop[i+k*Nz];
 					if(yloop[i+k*Nz]<0) {
 						yloop[i+k*Nz]=Ny-1;
@@ -103,7 +97,6 @@ void World_test::Do()
 			}
 		}
 	
-			m_list.Calculate0Density();
 		
 	}
 	 

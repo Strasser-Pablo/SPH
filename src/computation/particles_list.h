@@ -10,7 +10,7 @@
 	/**
 	 * @brief Preprocessor variable if defined we use parallel method for calculation
 	 **/
-	#define PARALLEL
+	#undef PARALLEL
 	/**
 	 * @brief Preprocessor variable if defined we output information on timing of all calculation
 	 * Usefull for profiling.
@@ -144,7 +144,11 @@ protected:
 	  * @name Conjugate Gradient
 	  **/
 	  //@{
-	  
+	  void CorrectPosition();
+	void CorrectSpeed();
+	void PrepareSpeed();
+	double TestPositionOK(bool &b);
+	double TestSpeedOK(bool &b);
 	  /**
 	 * @brief Used for incompressible sph. Initialize for conjugate gradient.
 	 * using the matrice and value store by the particles.
@@ -166,7 +170,8 @@ protected:
 	 * @param b Return true if we have converged.
 	 * @param alpha Value of alpha used to calculate beta.
 	 **/
-	double CalculateBeta(double &denom,bool &b,double alpha);
+	double CalculateBeta(double &denom,double alpha, bool &b);
+	
 	/**
 	 * @brief Last step for conjugate gradient using beta.
 	 *
@@ -177,8 +182,8 @@ protected:
 	/**
 	 * @brief Calculate the conjugate gradient for the incompressible sph step.
 	 **/
-	void ConjugateGradiant();
-	
+	//void ConjugateGradiant();
+	bool ConjugateGradiantOneiter();
 	/**
 	 * @brief Use incompressible correction algorithm to correct position and speed
 	 *

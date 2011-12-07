@@ -13,7 +13,6 @@ physvector<2>::physvector() : m_x(0),m_y(0) {
 
 
 physvector<3>::physvector( const double x, const double y, const double z) : m_x(x),m_y(y),m_z(z) {
-
 }
 
 
@@ -252,6 +251,9 @@ physvector< 3> physvector<3>::operator/(const double c) const {
 }
 
 Key<3> physvector<3>::ToKey(double _h){
+	if(m_x>10){
+		cout<<m_x<<endl;
+	}
 	return Key<3>(int(floor(m_x/_h)),int(floor(m_y/_h)),int(floor(m_z/_h)));
 }
 

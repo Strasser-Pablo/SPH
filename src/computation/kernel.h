@@ -41,7 +41,7 @@
 		}else{
 			ret=0;
 		}
-		ret=ret*1/(120*M_PI*pow(h_,3));
+		ret=ret*27/(120*M_PI*pow(h_,3));
 		return ret;
 	}
 //@}
@@ -68,7 +68,7 @@
 	inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h_ ){
 		double d=(3/h_*vect).Norm();
 		if(vect.Norm()==0) {
-			return physvector< DIM>();
+			return physvector< DIM>(0,0,0);
 		}
 		double ret;
 		if(d<1) {
@@ -81,7 +81,7 @@
 		}else{
 			ret=0;
 		}
-		physvector<DIM> rret=ret*1/(40*M_PI*pow(h_,4))*vect/vect.Norm();
+		physvector<DIM> rret=ret*27/(40*M_PI*pow(h_,4))*vect/vect.Norm();
 		return rret;
 	}
 
@@ -116,7 +116,7 @@
 		}else{
 			ret=0;
 		}
-		return ret*1/(40*M_PI*pow(h_,4));
+		return ret*27/(40*M_PI*pow(h_,4));
 
 	}
 
@@ -155,7 +155,7 @@
 		}else{
 			ret=0;
 		}
-		return ret*1/(40*M_PI*pow(h_,4));
+		return ret*27/(40*M_PI*pow(h_,4));
 
 	}
 //@}

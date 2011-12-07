@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "pressure.h"
-
+#include <cassert>
 #include "voisin.h"
 //Because of include loop we need to include 2 times.
 #ifndef VOISIN_ITERATOR_H
@@ -19,7 +19,7 @@
     #ifdef PRESSURE_LAPLACIEN
 			m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(false),m_converged(true),
     #endif
-		m_b_0_done(false),m_nb_it(0),m_1_over_m(DIV_MEAN_MASS),m_1_over_density_2(0),m_const_speed(false),m_once_calculate0Dens(false)
+		m_b_0_done(false),m_nb_it(0),m_1_over_m(DIV_MEAN_MASS),m_1_over_density_2(0),m_const_speed(false),m_once_calculate0Dens(false),m_nb_itv(0),m_nb_itx(0)
 	{
 		m_density0=1000*DIV_MEAN_MASS;
 	}
@@ -28,7 +28,7 @@
     #ifdef PRESSURE_LAPLACIEN
 			m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(false),m_converged(true),
     #endif
-		m_b_0_done(false),m_nb_it(0),m_1_over_m(DIV_MEAN_MASS),m_1_over_density_2(0),m_const_speed(false),m_once_calculate0Dens(false)
+		m_b_0_done(false),m_nb_it(0),m_1_over_m(DIV_MEAN_MASS),m_1_over_density_2(0),m_const_speed(false),m_once_calculate0Dens(false),m_nb_itv(0),m_nb_itx(0)
 	{
 		m_density0=1000*DIV_MEAN_MASS;
 	}
@@ -37,7 +37,7 @@
     #ifdef PRESSURE_LAPLACIEN
 			m_b(0),m_p(0),m_pv(0),m_px(0),m_p1(0),m_r(0),m_rprec(0),m_zprec(0),m_z(0),m_boundary(false),m_converged(true),
     #endif
-		m_b_0_done(false),m_nb_it(0),m_1_over_m(DIV_MEAN_MASS),m_1_over_density_2(0),m_const_speed(false),m_once_calculate0Dens(false)
+		m_b_0_done(false),m_nb_it(0),m_1_over_m(DIV_MEAN_MASS),m_1_over_density_2(0),m_const_speed(false),m_once_calculate0Dens(false),m_nb_itv(0),m_nb_itx(0)
 	{
 		m_density0=1000*DIV_MEAN_MASS;
 	}
@@ -116,6 +116,8 @@
 
 	physvector< DIM > ParticleReal::GetPos() const
 	{
+		double x,y,z;
+		m_pos.Get(x,y,z);
 		return m_pos;
 	}
 
@@ -143,21 +145,24 @@
     #ifdef PRESSURE_LAPLACIEN
 		bool ParticleReal::PreComputeMove(double dt) {
 			if(!m_fixed) {
-				m_speed+=Force()*dt/2;
+				//leap frog manner to calculate position at full time step
+				//speed is calculated at half time step.
+				m_speed+=m_force*dt/2;
 				m_pos+=m_speed*dt;
-				ComputeDensity();
-				double rap=(m_density0-m_density)/m_density0;
-				m_b=rap/2/m_density;
+				m_speed+=m_force*dt/2;
+				m_pos0=m_pos;
+				m_speed0=m_speed;
+				m_nb_itv=0;
+				m_nb_itx=0;
+				m_b=log(m_density0/m_density)/m_density/2;
 				if(GetBoundary()) {
 					m_converged=true;
 					return false;
 				}
 				m_p=0;
 				m_pv=0;
-				bool ret=abs(rap)>0.0001;
-				m_converged=!ret;
-
-				return ret;
+				m_px=0;
+				return true;
 			}
 
 			return false;
@@ -361,6 +366,85 @@
 		void ParticleReal::SetB(double val){
 			m_b=val;
 		}
+		
+		 double ParticleReal::TestSpeedOK(bool &b){
+			double rap=0;
+			for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+				if(!Equal(*it)) {
+					physvector<DIM> r=GetPos()-(*it)->GetPos();
+					double norm=r.Norm();
+					double v=((*it)->GetSpeed()-GetSpeed())*r/norm;
+					rap+=(*it)->m_m*Kernel_grad_spline5_dir(norm,h)*v;
+				}
+			}
+			rap*=m_1_over_m*1/m_density;
+			if(!GetBoundary()){
+				bool ret=rap>0.0000000001;
+				if(ret){
+					m_nb_itv++;
+				}
+			b=b||ret;
+			}
+			return rap;
+		 }
+		 double ParticleReal::TestPositionOK(bool &b){
+			double rap=(m_density-m_density0)/m_density0;
+			if(!GetBoundary()){
+				bool ret=rap>0.0000000001;
+				if(!ret){
+					m_nb_itx++;
+				}
+			b=b||ret;
+			} 
+			return rap;
+		 }
+		
+		void ParticleReal::CorrectPosition(){
+			m_px=m_p;
+			physvector<DIM> temp;
+			for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+				if(!Equal(*it)) {
+					physvector<DIM> r=GetPos()-(*it)->GetPos();
+					temp-=m_1_over_m*Kernel_grad_spline5(r,h)*(m_1_over_density_2+(*it)->m_1_over_density_2)*(GetMass()*GetDensity()*((*it)->GetP())+(*it)->GetMass()*(*it)->GetDensity()*(GetP()))/(GetMass()*GetDensity()+(*it)->GetMass()*(*it)->GetDensity());
+				}
+			}
+			m_force_pres=temp;
+			m_pos=m_pos0+temp;
+			if(temp.Norm()>1E2){
+			cout<<"pos "<<temp<<endl;
+			assert(false);
+			}
+		}
+		void ParticleReal::CorrectSpeed(){
+			m_pv=m_p;
+			physvector<DIM> temp;
+			for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+				physvector<DIM> r=GetPos()-(*it)->GetPos();
+				temp-=m_1_over_m*Kernel_grad_spline5(r,h)*(m_1_over_density_2+(*it)->m_1_over_density_2)*(GetMass()*GetDensity()*((*it)->GetP())+(*it)->GetMass()*(*it)->GetDensity()*(GetP()))/(GetMass()*GetDensity()+(*it)->GetMass()*(*it)->GetDensity());
+			}
+			//m_force_pres=temp;
+			//if(!GetBoundary()){
+			m_speed=m_speed0+temp;
+			if(temp.Norm()>1E2){
+			cout<<"speed "<<temp<<endl;
+			cout<<"m_p "<<temp<<endl;
+
+			}
+			//}
+		}
+		void ParticleReal::PrepareSpeed(){
+			double ret=0;
+			for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+				if(!Equal(*it)) {
+					physvector<DIM> r=GetPos()-(*it)->GetPos();
+					double norm=r.Norm();
+					double v=((*it)->GetSpeed()-GetSpeed())*r/norm;
+					ret+=(*it)->m_m*Kernel_grad_spline5_dir(norm,h)*v;
+				}
+			}
+			m_b=m_1_over_m*1/m_density*ret;
+			m_p=0;
+		}
     #endif
 	void ParticleReal::GetVoisin( Voisin & voisin) const {
 		cout<<"pointeur "<<m_voisin<<endl;
@@ -369,7 +453,7 @@
 	}
     #ifdef PRESSURE_LAPLACIEN
 		bool ParticleReal::OKR() const {
-			return abs(m_r)<0.0000001;
+			return abs(m_r)<0.000000001;
 		}
     #endif
 
@@ -390,7 +474,8 @@
 			return 0;
 		}
 		physvector<DIM> r=GetPos()-B->GetPos();
-		double ret=(1/GetDensity()+1/B->GetDensity())*Kernel_grad_spline5(r,h)*r/r.Norm2()/(Distance(B)*(GetMass()*GetDensity()+B->GetMass()*B->GetDensity()));
+		double norm=r.Norm();
+		double ret=(m_1_over_density_2+B->m_1_over_density_2)*Kernel_grad_spline5_dir(norm,h)/norm/(GetMass()*GetDensity()+B->GetMass()*B->GetDensity());
 
 		if(isnan(ret)) {
 			//cout<<"PPPPPPPPPPPPRRRRRROB NAN"<<endl;
@@ -526,9 +611,11 @@
 
 	void ParticleReal::NextForceTimeStep(double &dt) const {
 		if(!m_fixed&&!m_const_speed) {
+			if(m_force.Norm()>h){
 			double dttemp=sqrt(h/m_force.Norm());
 			if(dttemp<dt) {
 				dt=dttemp;
+			}
 			}
 		}
 	}
@@ -536,6 +623,10 @@
 	void ParticleReal::NextCourantVisciousTimeStep(double &dt) const {
 		if(!m_fixed) {
 			double temp=0;
+			double c=m_speed.Norm();
+			if(c<h){
+				c=h;
+			}
 			if(!m_const_speed) {
 				for(Voisin::const_iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
 					if(Equal(*it)) {
@@ -546,10 +637,10 @@
 						temp=temp2;
 					}
 				}
-				temp=h/(sound_speed+temp);
+				temp=h/(c+temp);
 			}
 			else{
-				temp=h/sound_speed;
+				temp=h/c;
 			}
 			if(dt>temp) {
 				dt=temp;
@@ -677,4 +768,18 @@
 		m_density0=1000*DIV_MEAN_MASS;
 		m_1_over_m=DIV_MEAN_MASS;
 	}
+	
+	void ParticleReal::WritePressuresPos(fstream &out)const {
+		out<<m_px<<endl;
+	}
+	void ParticleReal::WritePressuresSpeed(fstream &out) const{
+		out<<m_pv<<endl;
+	}
+	
+	void ParticleReal::WriteNbItPos(fstream &out) const{
+			out<<m_nb_itx<<endl;
+		}
+	void ParticleReal::WriteNbItSpeed(fstream &out) const{
+			out<<m_nb_itv<<endl;
+		}
 #endif

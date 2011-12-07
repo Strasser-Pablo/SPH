@@ -63,12 +63,12 @@
 	/**
 	 * @brief Distance after witch kernel is 0.
 	 **/
-	const double h = 0.03;
+	const double h = 0.006;
 
 	/**
 	 * @brief Time step size.
 	 **/
-	const double DT = 0.000001;
+	const double DT = 0.1;
 
 #endif // CONST_H
 

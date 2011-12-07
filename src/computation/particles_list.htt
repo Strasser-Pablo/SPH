@@ -224,11 +224,40 @@ void Particles_List::write(double dt  ) const
 		it->second.Density(out);
 	}
 	out<< "</DataArray>"<<endl;
+	#ifdef PRESSURE_EQ_STATE
 	out<< "<DataArray type=\"Float64\" Name=\"Pressures\" format=\"ascii\">"<<endl;
 	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 		it->second.Pressures(out);
 	}
 	out<< "</DataArray>"<<endl;
+	#endif
+	
+	#ifdef PRESSURE_LAPLACIEN
+	out<< "<DataArray type=\"Float64\" Name=\"Pressures X\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.WritePressuresPos(out);
+	}
+	out<< "</DataArray>"<<endl;
+	
+	out<< "<DataArray type=\"Float64\" Name=\"Pressures V\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.WritePressuresSpeed(out);
+	}
+	out<< "</DataArray>"<<endl;
+
+out<< "<DataArray type=\"Int32\" Name=\"NB_it_V\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.WriteNbItSpeed(out);
+	}
+	out<< "</DataArray>"<<endl;
+	
+	out<< "<DataArray type=\"Int32\" Name=\"NB_it_X\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.WriteNbItPos(out);
+	}
+	out<< "</DataArray>"<<endl;
+	#endif
+	
 	out<< "<DataArray type=\"Float64\" Name=\"Mass\" format=\"ascii\">"<<endl;
 	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 		it->second.Mass(out);
@@ -239,12 +268,13 @@ void Particles_List::write(double dt  ) const
 		it->second.MassDensity(out);
 	}
 	out<< "</DataArray>"<<endl;
-
+/*
 	out<< "<DataArray type=\"Int32\" Name=\"NB_it\" format=\"ascii\">"<<endl;
 	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 		it->second.NB_it(out);
 	}
 	out<< "</DataArray>"<<endl;
+*/
 
 	out<< "<DataArray type=\"Float64\"  Name=\"Speed\" NumberOfComponents=\""<<DIM<< "\" format=\"ascii\">"<<endl;
 	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
@@ -312,15 +342,55 @@ void Particles_List::write(double dt  ) const
 
 
 void Particles_List::CorrectDensity(){
-	bool bcont=true;
+	bool totit=true;
+	double arcondpos=100000;
+	double arcondspeed=100000;
+	while(totit){
 	int i=0;
+	InitializeCG();
+	bool bcont=true;
 	while(bcont) {
 		bcont=false;
-		ConjugateGradiant();
-		SetB_Speed();
-		ConjugateGradiant();
-		PreparePosition(bcont);
-		i++;
+		bool b=ConjugateGradiantOneiter();
+		CorrectPosition();
+		if(b){
+			break;
+		}
+		for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+				it->second.ComputeDensity();
+			}
+		TestPositionOK(bcont);
+	}
+	 
+		PrepareSpeed();
+		InitializeCG();
+		bcont=true;
+	while(bcont) {
+		bcont=false;
+		bool b=ConjugateGradiantOneiter();
+		CorrectSpeed();
+		if(b){
+			break;
+		}
+		TestSpeedOK(bcont);
+	}
+	totit=false;
+	double arcondpos2=TestPositionOK(totit);
+	if(arcondpos2>=arcondpos){
+		totit=false;
+	}
+	else{
+		arcondpos=arcondpos2;
+	}
+	if(!totit){
+		double arcondspeed2=TestSpeedOK(totit);
+		if(arcondspeed2>=arcondspeed){
+		totit=false;
+	}
+	else{
+		arcondspeed=arcondspeed2;
+	}
+	}
 	}
 }
 

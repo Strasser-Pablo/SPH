@@ -158,6 +158,16 @@ public:
 	/**
 	 * @brief Initialize conjugate gradient for the used in the incompressible algorithm.
 	 **/
+	 	
+	void CorrectPosition();
+	void CorrectSpeed();
+	double TestSpeedOK(bool &b);
+	double TestPositionOK(bool &b);
+	void PrepareSpeed();
+	void WritePressuresPos(fstream &out)const;
+	void WritePressuresSpeed(fstream & out)const;
+	void WriteNbItPos(fstream &out)const;
+	void WriteNbItSpeed(fstream &out)const;
 	void InitializeCG();
 	/**
 	 * @brief Partial calculate of Beta. For conjugate Gradient.
@@ -166,7 +176,7 @@ public:
 	 * @param b True when converged.
 	 * @param alpha Value of alpha to use for calculation.
 	 **/
-	void CalculateBetaPart(double &num,bool & b,double alpha);
+	void CalculateBetaPart(double &num,double alpha,bool &b);
 	/**
 	 * @brief Partial calculate of alpha. For conjugate Gradient.
 	 *
@@ -334,6 +344,7 @@ public:
 	void WriteForceTurbulence(fstream &out) const;
 	void UpdateForce() const;
 	void WriteMussBeDeleted(fstream &out) const;
+
 	//@}
 	/**
 	 * @brief Comparation operator.

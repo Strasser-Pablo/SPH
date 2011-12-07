@@ -18,13 +18,15 @@ World_timing_elem::World_timing_elem()
 }
 void World_timing::Do()
 {
+	//ProfilerStart("profile.prof");
 	fstream out ("../timing.csv", fstream::out);
-	for(int N=5; N<6; N+=5) {
+	for(int N=50; N<51; N+=5) {
 		out<<N<<" ";
 		World_timing_elem W;
 		W.Do(N,out);
 		out<<endl;
 	}
+	//ProfilerStop();
 }
 
 void World_timing_elem::Do(int N,fstream & out)
@@ -40,20 +42,34 @@ void World_timing_elem::Do(int N,fstream & out)
 		for(int i=0; i<Nx; i++) {
 
 			for(int k=0; k<Nz; k++) {
+				if(k==0&&i==0&&j==0){
+					Particle part;
+				Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.*h/3+h/6,j*h/3,k*h/3-Nz/2.*h/3+h/6),physvector< 3  >(0,0,0),water),part);
+				part->SetBoundary(true);
+			}
+			else{
 				Add(ParticleReal(physvector< 3  >(i*h/3-Nx/2.*h/3+h/6,j*h/3,k*h/3-Nz/2.*h/3+h/6),physvector< 3  >(0,0,0),water));
+			}
 			}
 		}
 
 	}
-
+/*
+Particle part;
+Add(ParticleReal(physvector< 3  >(0,0,0),physvector< 3  >(0,-1,0),water),part);
+				part->SetBoundary(true);
+Add(ParticleReal(physvector< 3  >(0,h/3,0),physvector< 3  >(0,1,0),water),part);
+		*/		
 	m_list.Calculate0Density();
 	m_list.write(0.00);
+	ProfilerFlush();
 	struct tms ti;
 	long deb=times(&ti);
-	for(int i=0; i<10; ++i) {
+	for(int i=0; i<10000; ++i) {
 		double dt;
 		m_list.Compute(dt);
 		m_list.write(dt);
+		ProfilerFlush();
 	}
 	struct tms tf;
 	long end=times(&tf);

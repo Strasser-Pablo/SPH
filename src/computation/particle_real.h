@@ -125,6 +125,8 @@
 	 * Number of iteration
 	 **/
 	int m_nb_it;
+	int m_nb_itx;
+	int m_nb_itv;
 	/**
 	 * Value of \f$ \frac{1}{m}\f$
 	 **/
@@ -401,8 +403,14 @@ public:
 	  
 	  //@{
 	  
+	  
 	  //Used for conjugate gradient
    #ifdef PRESSURE_LAPLACIEN
+   		inline void CorrectPosition();
+		inline void CorrectSpeed();
+		inline void PrepareSpeed();
+		inline double TestSpeedOK(bool &b);
+		inline double TestPositionOK(bool &b);
 		inline double GetB() const;
 		inline void SetB(double val);
 
@@ -465,6 +473,8 @@ public:
 	 *
 	 * @param out Output to write.
 	 **/
+	 inline void WritePressuresPos(fstream &out) const;
+	 inline void WritePressuresSpeed(fstream &out) const;
 	inline void WritePos(fstream& out) const;
 	
 	inline void WriteSpeed(fstream & out) const;
@@ -477,6 +487,8 @@ public:
 		inline void WriteForceViscosity(fstream &out) const;
 		inline void WriteForceTurbulence(fstream &out) const;
 		inline void WriteForcePressureOneLine(fstream &out) const;
+		inline void WriteNbItPos(fstream &out) const;
+		inline void WriteNbItSpeed(fstream &out) const;
 	   //@}
 	   
 	   /**

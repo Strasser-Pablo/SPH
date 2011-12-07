@@ -13,7 +13,7 @@
 
 	const double rho0=1000;
 	const double rho0div=1/rho0;
-	const double sound_speed=1500;
+	const double sound_speed=1;
 	const double B=pow(sound_speed,2)*rho0/7.;
 	/**
 	 * @brief Calculate pressure from the density and particle type.

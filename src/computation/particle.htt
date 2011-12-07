@@ -1,7 +1,8 @@
+#include <iostream>
 
-
+using namespace std;
+#include "particle_real.h"
 Particle::Particle(ParticleReal* part) : m_data(part) {
-
 }
 
 Particle::Particle() : m_data(0){

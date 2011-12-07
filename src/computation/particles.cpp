@@ -122,7 +122,7 @@ void Particles::Add(Particle part){
 		for(Particles::iterator it=begin(); it!=end(); ++it) {
 			if(!(*it)->GetBoundary()) {
 				double b=(*it)->GetB();
-				// (*it)->SetP(0);
+				 (*it)->SetP(0);
 				(*it)->SetR(0);
 				(*it)->SetRprec(b);
 				for(Voisin::iterator it2=m_neighbour.begin(); it2!=m_neighbour.end(); ++it2) {
@@ -150,9 +150,10 @@ void Particles::Add(Particle part){
 				}
 			}
 		}
+
 	}
 
-	void Particles::CalculateBetaPart(double &num,bool &b,double alpha){
+	void Particles::CalculateBetaPart(double &num,double alpha,bool &b){
 
 
 		for(Particles::iterator it=begin(); it!=end(); ++it) {
@@ -166,8 +167,8 @@ void Particles::Add(Particle part){
 					}
 				}
 				(*it)->SetZ((*it)->GetR());
-				b=(*it)->OKR()&&b;
 				num+=(*it)->MultRZ();
+				b=b&&(*it)->OKR();
 			}
 		}
 	}
@@ -397,3 +398,63 @@ void Particles::SetToMeanMass() {
 		(*it)->SetToMeanMass();
 	}
 }
+
+void Particles::CorrectPosition(){
+	for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->CorrectPosition();
+	}
+};
+
+void Particles::CorrectSpeed(){
+	for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->CorrectSpeed();
+	}	
+};
+void Particles::PrepareSpeed(){
+		for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->PrepareSpeed();
+	}
+};
+
+	void Particles::WritePressuresPos(fstream & out)const{
+		for(Particles::const_iterator it=begin(); it!=end(); it++) {
+		(*it)->WritePressuresPos(out);
+	}
+	}
+	void Particles::WritePressuresSpeed(fstream &out)const{
+		for(Particles::const_iterator it=begin(); it!=end(); it++) {
+		(*it)->WritePressuresSpeed(out);
+	}
+	}
+	
+	void Particles::WriteNbItPos(fstream &out)const{
+		for(Particles::const_iterator it=begin(); it!=end(); it++) {
+		(*it)->WriteNbItPos(out);
+	}
+	}
+	void Particles::WriteNbItSpeed(fstream &out)const{
+		for(Particles::const_iterator it=begin(); it!=end(); it++) {
+		(*it)->WriteNbItSpeed(out);
+	}
+	}
+	
+	double Particles::TestSpeedOK(bool &b){
+		double ret=100000;
+		for(Particles::iterator it=begin(); it!=end(); it++) {
+		double temp=(*it)->TestSpeedOK(b);
+		if(temp<ret){
+			ret=temp;
+		}
+	}
+	return ret;
+	};
+	double Particles::TestPositionOK(bool &b){
+		double ret=100000;
+		for(Particles::iterator it=begin(); it!=end(); it++) {
+		double temp=(*it)->TestPositionOK(b);
+		if(temp<ret){
+			ret=temp;
+		}
+	}
+	return ret;
+	};

@@ -416,6 +416,12 @@ void Particles::PrepareSpeed(){
 	}
 };
 
+void Particles::PreparePos(){
+		for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->PreparePos();
+	}
+};
+
 	void Particles::WritePressuresPos(fstream & out)const{
 		for(Particles::const_iterator it=begin(); it!=end(); it++) {
 		(*it)->WritePressuresPos(out);
@@ -438,6 +444,11 @@ void Particles::PrepareSpeed(){
 	}
 	}
 	
+	void Particles::WriteDiv(fstream &out)const{
+		for(Particles::const_iterator it=begin(); it!=end(); it++) {
+		(*it)->WriteDiv(out);
+	}
+	}
 	double Particles::TestSpeedOK(bool &b){
 		double ret=100000;
 		for(Particles::iterator it=begin(); it!=end(); it++) {
@@ -458,3 +469,10 @@ void Particles::PrepareSpeed(){
 	}
 	return ret;
 	};
+	
+
+void Particles::Store0PosAndSpeed(){
+		for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->Store0PosAndSpeed();
+	}
+};	

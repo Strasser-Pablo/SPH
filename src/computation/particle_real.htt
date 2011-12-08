@@ -150,18 +150,11 @@
 				m_speed+=m_force*dt/2;
 				m_pos+=m_speed*dt;
 				m_speed+=m_force*dt/2;
-				m_pos0=m_pos;
-				m_speed0=m_speed;
 				m_nb_itv=0;
 				m_nb_itx=0;
-				m_b=log(m_density0/m_density)/m_density/2;
 				if(GetBoundary()) {
-					m_converged=true;
 					return false;
 				}
-				m_p=0;
-				m_pv=0;
-				m_px=0;
 				return true;
 			}
 
@@ -378,27 +371,32 @@
 				}
 			}
 			rap*=m_1_over_m*1/m_density;
+			cout<<"speed rap "<<rap<<endl;
 			if(!GetBoundary()){
-				bool ret=rap>0.0000000001;
+				bool ret=abs(rap)>0.0000000001;
 				if(ret){
 					m_nb_itv++;
 				}
 			b=b||ret;
 			}
-			return rap;
+			return abs(rap);
 		 }
 		 double ParticleReal::TestPositionOK(bool &b){
 			double rap=(m_density-m_density0)/m_density0;
+			cout<<"rap "<<rap<<endl;
 			if(!GetBoundary()){
-				bool ret=rap>0.0000000001;
+				bool ret=abs(rap)>0.0000000001;
 				if(!ret){
 					m_nb_itx++;
 				}
 			b=b||ret;
 			} 
-			return rap;
+			return abs(rap);
 		 }
-		
+		void ParticleReal::Store0PosAndSpeed(){
+			m_pos0=m_pos;
+			m_speed0=m_speed;
+		}
 		void ParticleReal::CorrectPosition(){
 			m_px=m_p;
 			physvector<DIM> temp;
@@ -408,12 +406,11 @@
 					temp-=m_1_over_m*Kernel_grad_spline5(r,h)*(m_1_over_density_2+(*it)->m_1_over_density_2)*(GetMass()*GetDensity()*((*it)->GetP())+(*it)->GetMass()*(*it)->GetDensity()*(GetP()))/(GetMass()*GetDensity()+(*it)->GetMass()*(*it)->GetDensity());
 				}
 			}
-			m_force_pres=temp;
+			//m_force_pres=temp;
+			cout<<"pos before "<<m_pos0<<endl;
 			m_pos=m_pos0+temp;
-			if(temp.Norm()>1E2){
-			cout<<"pos "<<temp<<endl;
-			assert(false);
-			}
+			cout<<"pos after "<<m_pos<<endl;
+			cout<<"pos correct "<<temp<<endl;
 		}
 		void ParticleReal::CorrectSpeed(){
 			m_pv=m_p;
@@ -424,12 +421,8 @@
 			}
 			//m_force_pres=temp;
 			//if(!GetBoundary()){
+			m_force_pres=temp;
 			m_speed=m_speed0+temp;
-			if(temp.Norm()>1E2){
-			cout<<"speed "<<temp<<endl;
-			cout<<"m_p "<<temp<<endl;
-
-			}
 			//}
 		}
 		void ParticleReal::PrepareSpeed(){
@@ -443,13 +436,16 @@
 				}
 			}
 			m_b=m_1_over_m*1/m_density*ret;
+			m_div=m_b;
 			m_p=0;
+		}
+		void ParticleReal::PreparePos(){
+		m_b=log(m_density0/m_density)/m_density/2;
+		cout<<"m_b pos "<<m_b<<endl;
 		}
     #endif
 	void ParticleReal::GetVoisin( Voisin & voisin) const {
-		cout<<"pointeur "<<m_voisin<<endl;
 		voisin=*m_voisin;
-		cout<<"after dereferencing"<<endl;
 	}
     #ifdef PRESSURE_LAPLACIEN
 		bool ParticleReal::OKR() const {
@@ -771,6 +767,9 @@
 	
 	void ParticleReal::WritePressuresPos(fstream &out)const {
 		out<<m_px<<endl;
+	}
+	void ParticleReal::WriteDiv(fstream &out)const {
+		out<<m_div<<endl;
 	}
 	void ParticleReal::WritePressuresSpeed(fstream &out) const{
 		out<<m_pv<<endl;

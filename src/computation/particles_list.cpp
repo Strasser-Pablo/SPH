@@ -79,13 +79,11 @@ void Particles_List::Dump() {
 			double num=0;
 			bool b=false;
 			double alpha=CalculateAlpha(num,b);
-			cout<<"alpha "<<alpha<<endl;
 			if(b) {
 				return true;
 			}
 			bool blucky;
 			double beta=CalculateBeta(num,alpha,blucky);
-			cout<<"beta "<<beta<<endl;	
 			if(blucky){
 				return true;
 			}
@@ -160,6 +158,7 @@ void Particles_List::Calculate0Density(){
 			//it->second.SetToMeanMass();
 		}
    #endif
+ //  CorrectDensity();
 }
 
 
@@ -622,9 +621,20 @@ void Particles_List::Compute(double &dt)
 			it->second.CorrectSpeed();
 	}
 	}
+	void Particles_List::Store0PosAndSpeed(){
+		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.Store0PosAndSpeed();
+	}
+	}
 	void Particles_List::PrepareSpeed(){
 		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 			it->second.PrepareSpeed();
+	}
+	}
+	
+	void Particles_List::PreparePos(){
+		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.PreparePos();
 	}
 	}
 

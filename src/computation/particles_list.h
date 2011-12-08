@@ -145,8 +145,10 @@ protected:
 	  **/
 	  //@{
 	  void CorrectPosition();
+	 void Store0PosAndSpeed();
 	void CorrectSpeed();
 	void PrepareSpeed();
+	void PreparePos();
 	double TestPositionOK(bool &b);
 	double TestSpeedOK(bool &b);
 	  /**

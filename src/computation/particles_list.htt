@@ -5,6 +5,7 @@
 #include "debug.h"
 #include <fstream>
 #include <string>
+#include <float.h>
 /**
  * @brief Class used for parallel assignement of all mass to the MEAN_MASS
  **/
@@ -251,6 +252,12 @@ out<< "<DataArray type=\"Int32\" Name=\"NB_it_V\" format=\"ascii\">"<<endl;
 	}
 	out<< "</DataArray>"<<endl;
 	
+	out<< "<DataArray type=\"Float64\" Name=\"Div\" format=\"ascii\">"<<endl;
+	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.WriteDiv(out);
+	}
+	out<< "</DataArray>"<<endl;
+	
 	out<< "<DataArray type=\"Int32\" Name=\"NB_it_X\" format=\"ascii\">"<<endl;
 	for (map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 		it->second.WriteNbItPos(out);
@@ -341,27 +348,31 @@ out<< "<DataArray type=\"Int32\" Name=\"NB_it_V\" format=\"ascii\">"<<endl;
 
 
 
-void Particles_List::CorrectDensity(){
+void Particles_List::CorrectDensity(){	
 	bool totit=true;
-	double arcondpos=100000;
-	double arcondspeed=100000;
+	double arcondpos=DBL_MAX ;
+	double arcondspeed=DBL_MAX ;
 	while(totit){
+		Store0PosAndSpeed();
 	int i=0;
+	for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+				it->second.ComputeDensity();
+			}
+	PreparePos();
 	InitializeCG();
 	bool bcont=true;
 	while(bcont) {
 		bcont=false;
 		bool b=ConjugateGradiantOneiter();
 		CorrectPosition();
+			for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+				it->second.ComputeDensity();
+			}
 		if(b){
 			break;
 		}
-		for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
-				it->second.ComputeDensity();
-			}
 		TestPositionOK(bcont);
 	}
-	 
 		PrepareSpeed();
 		InitializeCG();
 		bcont=true;
@@ -376,6 +387,7 @@ void Particles_List::CorrectDensity(){
 	}
 	totit=false;
 	double arcondpos2=TestPositionOK(totit);
+	cout<<"arcond "<<arcondpos2<<" "<<arcondpos<<endl;
 	if(arcondpos2>=arcondpos){
 		totit=false;
 	}
@@ -384,6 +396,8 @@ void Particles_List::CorrectDensity(){
 	}
 	if(!totit){
 		double arcondspeed2=TestSpeedOK(totit);
+		cout<<"speed it "<<totit<<" "<<(arcondspeed2>=arcondspeed)<<endl;
+		cout<<"arcond speed "<<arcondspeed2<<" "<<arcondspeed<<endl;
 		if(arcondspeed2>=arcondspeed){
 		totit=false;
 	}

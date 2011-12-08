@@ -160,11 +160,14 @@ public:
 	 **/
 	 	
 	void CorrectPosition();
+	void Store0PosAndSpeed();
 	void CorrectSpeed();
 	double TestSpeedOK(bool &b);
 	double TestPositionOK(bool &b);
 	void PrepareSpeed();
+	void PreparePos();
 	void WritePressuresPos(fstream &out)const;
+	void WriteDiv(fstream &out)const;
 	void WritePressuresSpeed(fstream & out)const;
 	void WriteNbItPos(fstream &out)const;
 	void WriteNbItSpeed(fstream &out)const;

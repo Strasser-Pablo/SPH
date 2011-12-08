@@ -52,6 +52,7 @@
 	 * @brief Position
 	 **/
 	physvector<DIM> m_pos;
+	double m_div;
 	/**
 	 * @brief Position at halfstep;
 	 **/
@@ -407,8 +408,10 @@ public:
 	  //Used for conjugate gradient
    #ifdef PRESSURE_LAPLACIEN
    		inline void CorrectPosition();
+		inline void Store0PosAndSpeed();
 		inline void CorrectSpeed();
 		inline void PrepareSpeed();
+		inline void PreparePos();
 		inline double TestSpeedOK(bool &b);
 		inline double TestPositionOK(bool &b);
 		inline double GetB() const;
@@ -474,6 +477,8 @@ public:
 	 * @param out Output to write.
 	 **/
 	 inline void WritePressuresPos(fstream &out) const;
+	 inline void WriteDiv(fstream &out) const;
+	 
 	 inline void WritePressuresSpeed(fstream &out) const;
 	inline void WritePos(fstream& out) const;
 	

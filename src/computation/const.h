@@ -63,12 +63,12 @@
 	/**
 	 * @brief Distance after witch kernel is 0.
 	 **/
-	const double h = 0.006;
+	const double h = 1;
 
 	/**
 	 * @brief Time step size.
 	 **/
-	const double DT = 0.1;
+	const double DT = 1;
 
 #endif // CONST_H
 
@@ -90,7 +90,7 @@
 			/**
 			 * @brief Vector G for gravity. It's value is \f$ -9.81 e_y \f$ .
 			 **/
-			const physvector < DIM > G = physvector < DIM > (0, -9.81, 0);
+			const physvector < DIM > G = physvector < DIM > (0, 0, 0);
 	#endif
 
 	#if DIM_DEF==2

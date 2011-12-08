@@ -41,7 +41,7 @@
 		}else{
 			ret=0;
 		}
-		ret=ret*27/(120*M_PI*pow(h_,3));
+		ret=ret/(120*M_PI*pow(h_,3));
 		return ret;
 	}
 //@}
@@ -81,7 +81,7 @@
 		}else{
 			ret=0;
 		}
-		physvector<DIM> rret=ret*27/(40*M_PI*pow(h_,4))*vect/vect.Norm();
+		physvector<DIM> rret=ret/(40*M_PI*pow(h_,4))*vect/vect.Norm();
 		return rret;
 	}
 
@@ -116,7 +116,7 @@
 		}else{
 			ret=0;
 		}
-		return ret*27/(40*M_PI*pow(h_,4));
+		return ret/(40*M_PI*pow(h_,4));
 
 	}
 
@@ -155,7 +155,7 @@
 		}else{
 			ret=0;
 		}
-		return ret*27/(40*M_PI*pow(h_,4));
+		return ret/(40*M_PI*pow(h_,4));
 
 	}
 //@}

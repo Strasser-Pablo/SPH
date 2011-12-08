@@ -18,8 +18,8 @@ trapfpe ()
 int main() {
 
 	/* World_test w;
-	w.Do();
-	 */
+	w.Do();*/
+	 
 	World_timing W;
 	   W.Do();
 }

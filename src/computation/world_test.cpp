@@ -11,7 +11,7 @@ World_test::World_test()
 
 void World_test::Do()
 {
-	double uy=55;
+	double uy=1;
 	/*
 	   int Nx=10;
 	   int Ny=10;
@@ -34,9 +34,9 @@ void World_test::Do()
 	   }
 	 */
 	
-	int Nx=3;
+	int Nx=2;
 	int Ny=3;
-	int Nz=3;
+	int Nz=2;
 	vector<vector<Particle> > listvect(Ny);
 	vector<int> yloop(Nx*Nz);
 	for(int j=0; j<Ny; j++) {
@@ -57,7 +57,8 @@ void World_test::Do()
 		}
 		listvect[j]=begvect;
 	}
-cout<<"bound true "<<listvect[0][1].Get()<<endl;
+//cout<<"bound true "<<listvect[0][1].Get()<<endl;
+ 
 listvect[0][0]->SetBoundary(true);
 
 	m_list.Calculate0Density();
@@ -67,8 +68,8 @@ listvect[0][0]->SetBoundary(true);
 		double dt;
 		m_list.Compute(dt);
 		m_list.write(dt);
-	}
-	/*	for(int i=0; i<Nx; i++) {
+		exit(0);
+		for(int i=0; i<Nx; i++) {
 
 			for(int k=0; k<Nz; k++) {
 				vector<Particle> & begvect=listvect[yloop[i+k*Nz]];
@@ -97,7 +98,6 @@ listvect[0][0]->SetBoundary(true);
 			}
 		}
 	
-		
 	}
 	 
 	

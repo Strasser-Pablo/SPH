@@ -63,7 +63,7 @@
 	/**
 	 * @brief Distance after witch kernel is 0.
 	 **/
-	const double h = 1;
+	const double h = 3;
 
 	/**
 	 * @brief Time step size.

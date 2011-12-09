@@ -154,11 +154,11 @@ void Particles_List::Calculate0Density(){
 		MEAN_MASS=m;
 		DIV_MEAN_MASS=1/MEAN_MASS;
 
-		for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
-			//it->second.SetToMeanMass();
-		}
+		/*for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.SetToMeanMass();
+		}*/
    #endif
- //  CorrectDensity();
+   CorrectDensity();
 }
 
 

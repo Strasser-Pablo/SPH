@@ -120,11 +120,11 @@ void Particles::Add(Particle part){
 #ifdef PRESSURE_LAPLACIEN
 	void Particles::InitializeCG(){
 		for(Particles::iterator it=begin(); it!=end(); ++it) {
-			if(!(*it)->GetBoundary()) {
-				double b=(*it)->GetB();
-				 (*it)->SetP(0);
+			double b=(*it)->GetB();
 				(*it)->SetR(0);
 				(*it)->SetRprec(b);
+			if(!(*it)->GetBoundary()) {
+				
 				for(Voisin::iterator it2=m_neighbour.begin(); it2!=m_neighbour.end(); ++it2) {
 					if(!(*it2)->GetBoundary()) {
 						(*it)->AddRprec(-(*it)->CalculateA(*it2)*(*it2)->GetP());
@@ -135,13 +135,13 @@ void Particles::Add(Particle part){
 
 			}
 		}
+
 	}
 
 	void Particles::CalculateAlphaPart(double &num,double &denom){
 		for(Particles::iterator it=begin(); it!=end(); ++it) {
 			if(!(*it)->GetBoundary()) {
 				num+=(*it)->MultRZprec();
-
 				double p=(*it)->GetP1();
 				for(Voisin::iterator it2=m_neighbour.begin(); it2!=m_neighbour.end(); ++it2) {
 					if(!(*it2)->GetBoundary()) {

@@ -25,7 +25,7 @@ public:
  *
  **/
 	void operator() ( const blocked_range<Particles_Deque_List::size_type>&r ) const {
-		for(Particles_Deque_List::size_type i=r.begin(); i!=r.end(); i++) {
+ 		for(Particles_Deque_List::size_type i=r.begin(); i!=r.end(); i++) {
 			Particles * part=m_vect[i];
 			if(part!=0) {
 				part->SetToMeanMass();
@@ -349,9 +349,12 @@ out<< "<DataArray type=\"Int32\" Name=\"NB_it_V\" format=\"ascii\">"<<endl;
 
 
 void Particles_List::CorrectDensity(){	
-	bool totit=true;
+	write(0);
+
 	double arcondpos=DBL_MAX ;
 	double arcondspeed=DBL_MAX ;
+	for(int jil=0;jil<100;jil++){
+			bool totit=true;
 	while(totit){
 		Store0PosAndSpeed();
 	int i=0;
@@ -373,12 +376,14 @@ void Particles_List::CorrectDensity(){
 		}
 		TestPositionOK(bcont);
 	}
+		write(0);
 		PrepareSpeed();
 		InitializeCG();
 		bcont=true;
 	while(bcont) {
 		bcont=false;
 		bool b=ConjugateGradiantOneiter();
+		write(0);
 		CorrectSpeed();
 		if(b){
 			break;
@@ -387,7 +392,6 @@ void Particles_List::CorrectDensity(){
 	}
 	totit=false;
 	double arcondpos2=TestPositionOK(totit);
-	cout<<"arcond "<<arcondpos2<<" "<<arcondpos<<endl;
 	if(arcondpos2>=arcondpos){
 		totit=false;
 	}
@@ -396,8 +400,6 @@ void Particles_List::CorrectDensity(){
 	}
 	if(!totit){
 		double arcondspeed2=TestSpeedOK(totit);
-		cout<<"speed it "<<totit<<" "<<(arcondspeed2>=arcondspeed)<<endl;
-		cout<<"arcond speed "<<arcondspeed2<<" "<<arcondspeed<<endl;
 		if(arcondspeed2>=arcondspeed){
 		totit=false;
 	}
@@ -406,6 +408,8 @@ void Particles_List::CorrectDensity(){
 	}
 	}
 	}
+	}
+	write(0);
 }
 
 

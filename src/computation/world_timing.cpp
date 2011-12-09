@@ -59,15 +59,18 @@ void World_timing_elem::Do(int N,fstream & out)
 Particle part;
 Add(ParticleReal(physvector< 3  >(0,0,0),physvector< 3  >(1,0,0),water),part);
 				part->SetBoundary(true);
-				Particle part2;
-Add(ParticleReal(physvector< 3  >(0,h/3,0),physvector< 3  >(-1,0,0),water),part2);
-			
+Add(ParticleReal(physvector< 3  >(0,h/3,0),physvector< 3  >(0,1,0),water));
+
+Add(ParticleReal(physvector< 3  >(h/3,0,0),physvector< 3  >(1,0,0),water));
+
+
+
 	m_list.Calculate0Density();
 	m_list.write(0.00);
 	ProfilerFlush();
 	struct tms ti;
 	long deb=times(&ti);
-	for(int i=0; i<500; ++i) {
+	for(int i=0; i<0; ++i) {
 		double dt;
 		m_list.Compute(dt);
 		m_list.write(dt);

@@ -19,3 +19,50 @@ void World::Add ( ParticleReal part,Particle & partic ) {
 
 
 }
+
+physvector<DIM> World::DivFactor(ParticleReal& i,ParticleReal& j)
+	 {
+		return j.m_m*Kernel_grad_spline5(i.GetPos()-j.GetPos(),h)/(i.m_density*i.m_m);
+	 }
+	 physvector<DIM> World::GradFactor(ParticleReal& i,ParticleReal& j)
+	 {
+			return i.GetDensity()*((i.m_1_over_density_2+j.m_1_over_density_2)*0.5)*Kernel_grad_spline5(i.GetPos()-j.GetPos(),h);
+	 }
+	 double World::Matrice(int i,int j)
+	 {
+		 double temp=0;
+		 int n=m_particle_real_list.size();
+		 if(i!=j)
+		 {
+			  physvector<DIM> temp1;
+			 for(Voisin::iterator it=m_particle_real_list[i].m_voisin->begin();it!=m_particle_real_list[i].m_voisin->end();++it)
+			 {
+				temp1-=DivFactor(m_particle_real_list[i],**it);
+			 }
+			 temp+=temp1*GradFactor(m_particle_real_list[i],m_particle_real_list[j]);
+			 temp1.To0();
+			 
+			  for(Voisin::iterator it=m_particle_real_list[j].m_voisin->begin();it!=m_particle_real_list[j].m_voisin->end();++it)
+			 {
+				temp1+=GradFactor(m_particle_real_list[j],**it);
+			 }
+				temp+=temp1*DivFactor(m_particle_real_list[i],m_particle_real_list[j]);
+			 	  for(Voisin::iterator it=m_particle_real_list[i].m_voisin->begin();it!=m_particle_real_list[i].m_voisin->end();++it)
+			 {
+				temp+=DivFactor(m_particle_real_list[i],**it)*GradFactor(**it,m_particle_real_list[j]);
+			 }
+		 }
+		 else
+		 {
+			  physvector<DIM> temp1;
+			  physvector<DIM> temp2;
+			 for(Voisin::iterator it=m_particle_real_list[i].m_voisin->begin();it!=m_particle_real_list[i].m_voisin->end();++it)
+			 {
+				temp1-=DivFactor(m_particle_real_list[i],**it);
+				temp2+=GradFactor(m_particle_real_list[i],**it);
+				temp+=DivFactor(m_particle_real_list[i],**it)*GradFactor(**it,m_particle_real_list[i]);
+			 }
+			 temp+=temp1*temp2;
+		 }
+		 return temp;
+	 }	

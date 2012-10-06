@@ -7,10 +7,11 @@
 	#include "key.h"
 	#include "tbb/tbb.h"
 	#include <sys/times.h>
+	class World;
 	/**
 	 * @brief Preprocessor variable if defined we use parallel method for calculation
 	 **/
-	#undef PARALLEL
+	#define PARALLEL
 	/**
 	 * @brief Preprocessor variable if defined we output information on timing of all calculation
 	 * Usefull for profiling.
@@ -31,7 +32,7 @@
 	class Particles_List
 	{
 private:
-
+	World *m_w;
 	/**
 	 * @brief Used in the parallel version. Object passed to all parallel_for,
 	 * Parallel_Reduce, this allow to have the calculation done in the same physical processor.
@@ -63,7 +64,7 @@ public:
 	 * @brief Create a empty list of particles.
 	 *
 	 **/
-	Particles_List();
+	Particles_List(World * w);
 	
 	/**
 	 * @name Public Interface
@@ -144,13 +145,26 @@ protected:
 	  * @name Conjugate Gradient
 	  **/
 	  //@{
+	  #ifdef PRESSURE_LAPLACIEN
+	 inline void CalculatePressureGradiant();
+	 inline void CalculatePressureLaplacian();
+	 public:
+	 inline void CalculatePressForConjugateGradiant();
+protected:
+	  void GetMaxCGGradCorrection(double &corect);
 	  void CorrectPosition();
+	  void SolveLinearSystem();
+	  void OutputB(fstream &out);
+	  void SetPToP1();
 	 void Store0PosAndSpeed();
 	void CorrectSpeed();
 	void PrepareSpeed();
 	void PreparePos();
 	double TestPositionOK(bool &b);
-	double TestSpeedOK(bool &b);
+	double TestSpeedOK(bool &b);;
+	void TestPositionOKShort(bool &b);
+	void TestSpeedOKShort(bool &b);;
+	void To0Pos();
 	  /**
 	 * @brief Used for incompressible sph. Initialize for conjugate gradient.
 	 * using the matrice and value store by the particles.
@@ -172,7 +186,7 @@ protected:
 	 * @param b Return true if we have converged.
 	 * @param alpha Value of alpha used to calculate beta.
 	 **/
-	double CalculateBeta(double &denom,double alpha, bool &b);
+	double CalculateBeta(double &denom,double alpha,double &rmax);
 	
 	/**
 	 * @brief Last step for conjugate gradient using beta.
@@ -184,8 +198,8 @@ protected:
 	/**
 	 * @brief Calculate the conjugate gradient for the incompressible sph step.
 	 **/
-	//void ConjugateGradiant();
-	bool ConjugateGradiantOneiter();
+	void ConjugateGradiant(fstream &out);
+	bool ConjugateGradiantOneiter(double &rmax);
 	/**
 	 * @brief Use incompressible correction algorithm to correct position and speed
 	 *
@@ -204,6 +218,9 @@ protected:
 	 * @param b True if not converged.
 	 **/
 	void PreparePosition(bool &b);
+	
+	void TestCGSolution(double &R);
+	#endif
 	  //@}
 	
 	

@@ -7,6 +7,7 @@
 
 #include "pressure.h"
 #include <cassert>
+#include <iomanip>
 #include "voisin.h"
 //Because of include loop we need to include 2 times.
 #ifndef VOISIN_ITERATOR_H
@@ -274,8 +275,8 @@
 				//force-=0.5*(r*(GetSpeed()-(*it)->GetSpeed())*norm_sur1/DT_ACT)*r*norm_sur1;
 				//cout<<" speed prject "<<0.5*(r*(GetSpeed()-(*it)->GetSpeed())*norm_sur1/DT_ACT)*r*norm_sur1<<endl;
 			}
-		//	force+=0.001*A*norm_sur1*(GetSpeed()-(*it)->GetSpeed());
-		//	m_force_viscious+=0.001*A*norm_sur1*(GetSpeed()-(*it)->GetSpeed());
+			force+=0.001*A*norm_sur1*(GetSpeed()-(*it)->GetSpeed());
+			m_force_viscious+=0.001*A*norm_sur1*(GetSpeed()-(*it)->GetSpeed());
 		//	force-=0.5*B*(m_sub_grid+(*it)->m_sub_grid)*r*norm_sur1;
 		//	m_force_turbulence-=0.5*B*(m_sub_grid+(*it)->m_sub_grid)*r*norm_sur1;
 		}
@@ -363,35 +364,32 @@
 		
 		 double ParticleReal::TestSpeedOK(bool &b){
 			double rap=0;
-			for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
-				if(!Equal(*it)) {
-					physvector<DIM> r=GetPos()-(*it)->GetPos();
-					double norm=r.Norm();
-					double v=((*it)->GetSpeed()-GetSpeed())*r/norm;
-					rap+=(*it)->m_m*Kernel_grad_spline5_dir(norm,h)*v;
-				}
-			}
-			rap*=m_1_over_m*m_1_over_density_2;
-			cout<<"rap speed "<<rap<<endl;
+		for (Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+			rap+=(*it)->m_m*((*it)->m_speed-m_speed)*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h);
+		}
+		rap*=1/(m_density*m_m);
 			if(!GetBoundary()){
-				bool ret=abs(rap)>0.0000000001;
+				bool ret=abs(rap)>0;
 				if(ret){
 					m_nb_itv++;
 				}
 			b=b||ret;
-			}
 			return abs(rap);
+			}
+			return 0;
 		 }
 		 double ParticleReal::TestPositionOK(bool &b){
 			double rap=(m_density-m_density0)/m_density0;
 			if(!GetBoundary()){
-				bool ret=abs(rap)>0.0000000001;
+				bool ret=abs(rap)>0;
 				if(!ret){
 					m_nb_itx++;
 				}
 			b=b||ret;
-			} 
 			return abs(rap);
+			} 
+			
+			return 0;
 		 }
 		void ParticleReal::Store0PosAndSpeed(){
 			m_pos0=m_pos;
@@ -399,89 +397,73 @@
 		}
 		void ParticleReal::CorrectPosition(){
 			m_px=m_p;
+			m_p1=m_p;
 			physvector<DIM> temp;
+			if(!GetConstSpeed()){
 			for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
 				if(!Equal(*it)) {
 					physvector<DIM> r=GetPos()-(*it)->GetPos();
-					temp-=m_1_over_m*Kernel_grad_spline5(r,h)*(m_1_over_density_2+(*it)->m_1_over_density_2)*(GetMass()*GetDensity()*((*it)->GetP())+(*it)->GetMass()*(*it)->GetDensity()*(GetP()))/(GetMass()*GetDensity()+(*it)->GetMass()*(*it)->GetDensity());
+					//0.5 is to make convergence possible
+					temp+=m_density*Kernel_grad_spline5(r,h)*(m_1_over_density_2+(*it)->m_1_over_density_2)*((*it)->GetP()+GetP())*0.5;
 				}
 			}
-			//m_force_pres=temp;
-			cout<<"cor pos "<<temp<<" "<<h/3<<endl;
-			m_pos=m_pos0+temp;
+			}
+			m_force_pres=-temp;
+			m_pos-=temp;
 		}
 		void ParticleReal::CorrectSpeed(){
 			m_pv=m_p;
-			physvector<DIM> temp;
-			for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
-				physvector<DIM> r=GetPos()-(*it)->GetPos();
-				temp-=m_1_over_m*Kernel_grad_spline5(r,h)*(m_1_over_density_2+(*it)->m_1_over_density_2)*(GetMass()*GetDensity()*((*it)->GetP())+(*it)->GetMass()*(*it)->GetDensity()*(GetP()))/(GetMass()*GetDensity()+(*it)->GetMass()*(*it)->GetDensity());
+			m_p1=m_p;
+			physvector<3> temp;
+			if(!GetConstSpeed()){
+			for (Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+			if((*it)->GetBoundary()){
+				continue;
 			}
+			temp+=((m_1_over_density_2+(*it)->m_1_over_density_2)*(m_p+(*it)->m_p)*0.5)*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h);
+		}
+		temp*=GetDensity();
 			//m_force_pres=temp;
 			//if(!GetBoundary()){
-			m_force_pres=temp;
-			m_speed=m_speed0+temp;
-			cout<<this<<" cor speed "<<temp <<" pres "<<m_p<<endl;
+			//m_force_pres=temp;
+		}
+			m_speed-=temp;
 			//}
 		}
 		void ParticleReal::PrepareSpeed(){
-			double ret=0;
-			for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
-				if(!Equal(*it)) {
-					physvector<DIM> r=GetPos()-(*it)->GetPos();
-					double norm=r.Norm();
-					double v=((*it)->GetSpeed()-GetSpeed())*r/norm;
-					ret+=(*it)->m_m*Kernel_grad_spline5_dir(norm,h)*v;
-				}
-			}
-			m_b=m_1_over_m*m_1_over_density_2*ret;
-			cout<<this<<" m_b speed "<<m_b<<endl;
+				m_b=0;
+		for (Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+			m_b+=(*it)->m_m*((*it)->m_speed-m_speed)*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h);
+		}
+			m_b*=1/(m_density*m_m);
 			m_div=m_b;
 			m_p=0;
 		}
 		void ParticleReal::PreparePos(){
-		m_b=log(m_density0/m_density)/m_density/2;
-		cout<<"m_b pos "<<m_b<<endl;
+		m_b=0;
+		m_b=log(m_density0/m_density);
 		m_p=0;
+		}
+		void ParticleReal::To0Pos(){
+			m_pos=m_pos0;
 		}
     #endif
 	void ParticleReal::GetVoisin( Voisin & voisin) const {
 		voisin=*m_voisin;
 	}
     #ifdef PRESSURE_LAPLACIEN
-		bool ParticleReal::OKR() const {
-			return abs(m_r)<0.000000001;
+		bool ParticleReal::OKR(double & rmax) const {
+			if(rmax<abs(m_r)){
+				rmax=abs(m_r);
+			}
+			return abs(m_r)<0.0;
 		}
     #endif
 
-	double ParticleReal::CalculateA(const Particle& B) const {
-		double ret=0;
-		if(Equal(B)) {
-			for(Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
-				ret+=CalculateABas(*it);
-			}
-		}else{
-			ret=-CalculateABas(B);
-		}
-		cout<<"A "<<this<<" "<<B.Get()<<" "<<ret<<endl;
-		return ret;
+	double ParticleReal::CalculateA() const {
+		return m_lap_p;
 	}
 
-	double ParticleReal::CalculateABas(const Particle& B) const {
-		if(Equal(B)) {
-			return 0;
-		}
-		physvector<DIM> r=GetPos()-B->GetPos();
-		double norm=r.Norm();
-		double ret=(m_1_over_density_2+B->m_1_over_density_2)*Kernel_grad_spline5_dir(norm,h)/norm/(GetMass()*GetDensity()+B->GetMass()*B->GetDensity());
-
-		if(isnan(ret)) {
-			//cout<<"PPPPPPPPPPPPRRRRRROB NAN"<<endl;
-			ret=0;
-		}
-
-		return ret;
-	}
     #ifdef PRESSURE_LAPLACIEN
 		void ParticleReal::SetB_Speed() {
 			m_px=m_p;
@@ -625,7 +607,7 @@
 			if(c<h){
 				c=h;
 			}
-			if(!m_const_speed) {
+			/*if(!m_const_speed) {
 				for(Voisin::const_iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
 					if(Equal(*it)) {
 						continue;
@@ -636,10 +618,10 @@
 					}
 				}
 				temp=h/(c+temp);
-			}
-			else{
+			}*/
+			//else{
 				temp=h/c;
-			}
+			//}
 			if(dt>temp) {
 				dt=temp;
 			}
@@ -766,21 +748,77 @@
 		m_density0=1000*DIV_MEAN_MASS;
 		m_1_over_m=DIV_MEAN_MASS;
 	}
-	
+	#ifdef PRESSURE_LAPLACIEN
 	void ParticleReal::WritePressuresPos(fstream &out)const {
 		out<<m_px<<endl;
 	}
+		#endif
 	void ParticleReal::WriteDiv(fstream &out)const {
 		out<<m_div<<endl;
 	}
+	#ifdef PRESSURE_LAPLACIEN
 	void ParticleReal::WritePressuresSpeed(fstream &out) const{
 		out<<m_pv<<endl;
 	}
-	
+	#endif
 	void ParticleReal::WriteNbItPos(fstream &out) const{
 			out<<m_nb_itx<<endl;
 		}
 	void ParticleReal::WriteNbItSpeed(fstream &out) const{
 			out<<m_nb_itv<<endl;
 		}
+
+#ifdef PRESSURE_LAPLACIEN
+	void ParticleReal::CalculatePressureGradiant(){
+		m_grad_p.To0();
+		for (Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+			if((*it)->GetBoundary()){
+				continue;
+			}
+			m_grad_p+=((m_1_over_density_2+(*it)->m_1_over_density_2)*(m_p1+(*it)->m_p1)*0.5)*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h);
+		}
+		m_grad_p*=GetDensity();
+	}
+	void ParticleReal::CalculatePressureLaplacian(){
+		m_lap_p=0;
+		for (Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+			if((*it)->GetBoundary()){
+				continue;
+			}
+			m_lap_p+=(*it)->m_m*((*it)->m_grad_p-m_grad_p)*Kernel_grad_spline5(GetPos()-(*it)->GetPos(),h);
+		}
+		m_lap_p*=1/(m_density*m_m);
+		//m_lap_p-=2*m_p1;
+		/*for (Voisin::iterator it=m_voisin->begin(); it!=m_voisin->end(); ++it) {
+			
+				if(Equal(*it)){
+					continue;
+				}
+				m_lap_p+=(*it)->m_p1;
+			}*/
+	}
+	
+ void ParticleReal::TestCGSolution(double &R){
+	double temp=abs(m_lap_p-m_b);
+	if(R<temp){
+		R=temp;
+	}
+}
+void ParticleReal::SetPToP1(){
+	m_p1=m_p;
+}
+void ParticleReal::OutputB(fstream &out){
+	out<<m_b<<" ";
+}
+
+double ParticleReal::GetLapP(){
+	return m_lap_p;
+}
+
+void ParticleReal::GetMaxCGGradCorrection(double &correct){
+	if(m_grad_p.Norm2()>correct){
+		correct=m_grad_p.Norm2();
+	}
+}
+#endif
 #endif

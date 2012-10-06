@@ -101,6 +101,8 @@
 	double m_b;
 	
 	bool m_once_calculate0Dens;
+	physvector<DIM> m_grad_p;
+	double m_lap_p;
    #ifdef PRESSURE_LAPLACIEN
    	//Variable used for conjugate gradient.
 		/**
@@ -403,20 +405,25 @@ public:
 	  **/
 	  
 	  //@{
-	  
-	  
+	  inline void GetMaxCGGradCorrection(double &correct);
+	  inline void CalculatePressureGradiant();
+	  inline void CalculatePressureLaplacian();
 	  //Used for conjugate gradient
    #ifdef PRESSURE_LAPLACIEN
    		inline void CorrectPosition();
 		inline void Store0PosAndSpeed();
+		inline void TestCGSolution(double &R);
+		inline void SetPToP1();
+		inline void OutputB(fstream &out);
 		inline void CorrectSpeed();
 		inline void PrepareSpeed();
 		inline void PreparePos();
+		inline void To0Pos();
 		inline double TestSpeedOK(bool &b);
 		inline double TestPositionOK(bool &b);
 		inline double GetB() const;
 		inline void SetB(double val);
-
+		inline double GetLapP();
 		inline double GetR() const;
 		inline void SetR(double val);
 
@@ -448,7 +455,7 @@ public:
 
 		inline void UpdateRZ();
 		inline void PreparePosition(bool &b);
-		inline bool OKR() const;
+		inline bool OKR(double & rmax) const;
    #endif
 	  
 	    
@@ -456,7 +463,7 @@ public:
 	/**
 	 * @brief Calculate the A matrice for Gradient conjugate
 	 **/
-	inline double CalculateA(const Particle& B) const;
+	inline double CalculateA() const;
 
 	
 	/**
@@ -476,12 +483,15 @@ public:
 	 *
 	 * @param out Output to write.
 	 **/
+	 #ifdef PRESSURE_LAPLACIEN
 	 inline void WritePressuresPos(fstream &out) const;
+	 #endif
 	 inline void WriteDiv(fstream &out) const;
 	 
+	 #ifdef PRESSURE_LAPLACIEN
 	 inline void WritePressuresSpeed(fstream &out) const;
+	 	#endif
 	inline void WritePos(fstream& out) const;
-	
 	inline void WriteSpeed(fstream & out) const;
 	inline void WriteErf(fstream & out,double t) const;
 
@@ -590,6 +600,7 @@ public:
 private:
 
 	friend class Test_Particles_List;
+	friend class World;
 
 	};
 #endif // PARTICLE_REAL_CLASS

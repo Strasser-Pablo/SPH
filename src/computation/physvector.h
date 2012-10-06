@@ -378,7 +378,6 @@ public:
 	};
 
 
-
 	#define VECTOR_FINISH //Used in const.h to assure that physvector is enterely defined.
 #include "physvector.htt"
 

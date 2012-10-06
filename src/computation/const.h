@@ -24,12 +24,12 @@
 	/**
 	 * @brief Boolean saying if we use an equation of state for Pressure
 	 **/
-	const bool presure_eq_state = false;
+	const bool presure_eq_state = true;
 
 	/**
 	 * @brief Boolenan saying if we calculate the laplacien for incompressible sph
 	 **/
-	const bool presure_laplacien = true;
+	const bool presure_laplacien = false;
 	#define PRESSURE_LAPLACIEN
 	/**
 	 * @brief Boolean saying if in incompressible sph we guess the pressure.
@@ -57,13 +57,13 @@
 	/**
 	 * @brief Preprocessore variable, if defined the equation of state will be used.
 	 **/
-	#define PRESSURE_EQ_STATE
+	//#define PRESSURE_EQ_STATE
 	//#define PRESSURE_LAPLACIEN
 
 	/**
 	 * @brief Distance after witch kernel is 0.
 	 **/
-	const double h = 3;
+	const double h = 0.03;
 
 	/**
 	 * @brief Time step size.
@@ -90,7 +90,7 @@
 			/**
 			 * @brief Vector G for gravity. It's value is \f$ -9.81 e_y \f$ .
 			 **/
-			const physvector < DIM > G = physvector < DIM > (0, 0, 0);
+			const physvector < DIM > G = physvector < DIM > (0, -9.81, 0);
 	#endif
 
 	#if DIM_DEF==2

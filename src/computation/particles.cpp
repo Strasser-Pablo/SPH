@@ -12,7 +12,7 @@
 #include "particles_list.h"
 #include "debug.h"
 #include <algorithm>
-
+#include <iomanip>
 using namespace std;
 
 
@@ -122,14 +122,9 @@ void Particles::Add(Particle part){
 		for(Particles::iterator it=begin(); it!=end(); ++it) {
 			double b=(*it)->GetB();
 				(*it)->SetR(0);
-				(*it)->SetRprec(b);
+				(*it)->SetRprec(b-(*it)->GetLapP());
 			if(!(*it)->GetBoundary()) {
-				
-				for(Voisin::iterator it2=m_neighbour.begin(); it2!=m_neighbour.end(); ++it2) {
-					if(!(*it2)->GetBoundary()) {
-						(*it)->AddRprec(-(*it)->CalculateA(*it2)*(*it2)->GetP());
-					}
-				}
+		
 				(*it)->SetZprec((*it)->GetRprec());
 				(*it)->SetP1((*it)->GetRprec());
 
@@ -143,32 +138,24 @@ void Particles::Add(Particle part){
 			if(!(*it)->GetBoundary()) {
 				num+=(*it)->MultRZprec();
 				double p=(*it)->GetP1();
-				for(Voisin::iterator it2=m_neighbour.begin(); it2!=m_neighbour.end(); ++it2) {
-					if(!(*it2)->GetBoundary()) {
-						denom+=(*it)->CalculateA(*it2)*p*(*it2)->GetP1();
-					}
+				
+						denom+=p*(*it)->CalculateA();
 				}
 			}
 		}
 
-	}
 
-	void Particles::CalculateBetaPart(double &num,double alpha,bool &b){
-
+	void Particles::CalculateBetaPart(double &num,double alpha,double & rmax){
 
 		for(Particles::iterator it=begin(); it!=end(); ++it) {
 			if(!(*it)->GetBoundary()) {
 				double p=(*it)->GetP1();
 				(*it)->AddP(alpha*p);
 				(*it)->SetR((*it)->GetRprec());
-				for(Voisin::iterator it2=m_neighbour.begin(); it2!=m_neighbour.end(); ++it2) {
-					if(!(*it2)->GetBoundary()) {
-						(*it)->AddR(-alpha*(*it)->CalculateA(*it2)*(*it2)->GetP1());
-					}
-				}
+				(*it)->AddR(-alpha*(*it)->CalculateA());
 				(*it)->SetZ((*it)->GetR());
 				num+=(*it)->MultRZ();
-				b=b&&(*it)->OKR();
+				(*it)->OKR(rmax);
 			}
 		}
 	}
@@ -398,7 +385,7 @@ void Particles::SetToMeanMass() {
 		(*it)->SetToMeanMass();
 	}
 }
-
+   #ifdef PRESSURE_LAPLACIEN
 void Particles::CorrectPosition(){
 	for(Particles::iterator it=begin(); it!=end(); it++) {
 		(*it)->CorrectPosition();
@@ -432,7 +419,7 @@ void Particles::PreparePos(){
 		(*it)->WritePressuresSpeed(out);
 	}
 	}
-	
+   #endif	
 	void Particles::WriteNbItPos(fstream &out)const{
 		for(Particles::const_iterator it=begin(); it!=end(); it++) {
 		(*it)->WriteNbItPos(out);
@@ -449,30 +436,94 @@ void Particles::PreparePos(){
 		(*it)->WriteDiv(out);
 	}
 	}
+	   #ifdef PRESSURE_LAPLACIEN
 	double Particles::TestSpeedOK(bool &b){
-		double ret=100000;
+		double ret=0;
 		for(Particles::iterator it=begin(); it!=end(); it++) {
 		double temp=(*it)->TestSpeedOK(b);
-		if(temp<ret){
+		if(temp>ret){
 			ret=temp;
 		}
 	}
 	return ret;
 	};
 	double Particles::TestPositionOK(bool &b){
-		double ret=100000;
+		double ret=0;
 		for(Particles::iterator it=begin(); it!=end(); it++) {
 		double temp=(*it)->TestPositionOK(b);
-		if(temp<ret){
+		if(temp>ret){
 			ret=temp;
 		}
 	}
 	return ret;
 	};
 	
+	void Particles::TestSpeedOKShort(bool &b){
+		if(b){
+			return;
+		}
+		for(Particles::iterator it=begin(); it!=end(); it++) {
+		 (*it)->TestSpeedOK(b);
+		 if(b){
+			 return;
+		 }
+	}
+	};
+	void Particles::TestPositionOKShort(bool &b){
+		if(b){
+			return;
+		}
+		for(Particles::iterator it=begin(); it!=end(); it++) {
+			(*it)->TestPositionOK(b);
+			if(b){
+				return;
+			}
+	}
+	};
+
+	void Particles::To0Pos(){
+		for(Particles::iterator it=begin(); it!=end(); it++) {
+			(*it)->To0Pos();
+		}
+	}
 
 void Particles::Store0PosAndSpeed(){
 		for(Particles::iterator it=begin(); it!=end(); it++) {
 		(*it)->Store0PosAndSpeed();
 	}
 };	
+
+void Particles::CalculatePressureGradiant(){
+	for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->CalculatePressureGradiant();
+	}
+}
+void Particles::CalculatePressureLaplacian(){
+	for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->CalculatePressureLaplacian();
+	}
+}
+
+void Particles::TestCGSolution(double &R){
+	for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->TestCGSolution(R);
+	}
+}
+
+void Particles::SetPToP1(){
+	for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->SetPToP1();
+	}
+}
+void Particles::OutputB(fstream &out){
+	for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->OutputB(out);
+	}
+}
+
+void Particles::GetMaxCGGradCorrection(double & correct){
+	for(Particles::iterator it=begin(); it!=end(); it++) {
+		(*it)->GetMaxCGGradCorrection(correct);
+	}
+}
+	#endif

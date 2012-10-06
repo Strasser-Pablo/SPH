@@ -1,11 +1,11 @@
 #include "particles_list.h"
 #include "const.h"
+#include "world.h"
 double MEAN_MASS=1;
 double DIV_MEAN_MASS=1;
 double DT_ACT=DT;
-Particles_List::Particles_List() : m_t(0),m_n(0)
+Particles_List::Particles_List(World *w) : m_t(0),m_n(0),m_w(w)
 {
-
 }
 
 void Particles_List::Dump() {
@@ -36,15 +36,11 @@ void Particles_List::Dump() {
 		return num/denom;
 	}
 
-	double Particles_List::CalculateBeta(double &denom,double alpha,bool & b){
+	double Particles_List::CalculateBeta(double &denom,double alpha,double &rmax){
 		double num=0;
-		b=true;
+		rmax=0;
 		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
-			it->second.CalculateBetaPart(num,alpha,b);
-		}
-		if(denom<=0.000001){
-			b=true;
-			return 0;
+			it->second.CalculateBetaPart(num,alpha,rmax);
 		}
 		return num/denom;
 	}
@@ -55,43 +51,91 @@ void Particles_List::Dump() {
 		}
 	}
 
-	/*void Particles_List::ConjugateGradiant(){
+	void Particles_List::ConjugateGradiant(fstream &out){
+		double rs1=DBL_MAX;
+		double rs2=DBL_MAX;
+		while(true){
+		SetPToP1();
+		CalculatePressForConjugateGradiant();
 		InitializeCG();
-		bool bcont=false;
-		bool b;
 		int j=0;
-		while(!bcont) {
+		double r1=0;
+		double r2=DBL_MAX;
+		out<<"begin"<<endl;
+		while(true) {
 			double num=0;
-			cout<<"loop"<<endl;
-			double alpha=CalculateAlpha(num,b);
-			if(b) {
-				break;
-			}
-			double beta=CalculateBeta(num,bcont,alpha);
-			CalculateP1(beta);
-			j++;
-			cout<<"end loop"<<endl;
-		}
-		cout<<"conjugate gradient nb it "<<j<<endl;
-	}*/
-	
-	bool Particles_List::ConjugateGradiantOneiter(){
-			double num=0;
+			double r=0;
+			CalculatePressForConjugateGradiant();
 			bool b=false;
 			double alpha=CalculateAlpha(num,b);
+			if(b) {
+				out<<"denom0_ALPHA"<<endl;
+				break;
+			}
+			double beta=CalculateBeta(num,alpha,r);
+			
+			
+			if(r>r1){
+				r1=r;
+			}
+			j++;
+			out<<j<<" "<<alpha<<" "<<beta<<" "<<r<<" "<<r1<<" "<<r2<<endl;
+			if(j%10==0&&j>0){
+				if(5.0*r1>r2){
+					out<<"restart "<<r1<<" "<<r2<<endl;
+					break;
+				}
+				if(r1<1E-30){
+					out<<"restart end"<<r1<<endl;
+					break;
+				}
+				r2=r1;
+				r1=0;
+			}
+			CalculateP1(beta);
+		}
+		double r=0;
+		SetPToP1();
+		CalculatePressForConjugateGradiant();
+		TestCGSolution(r);
+		double corect=0;
+		GetMaxCGGradCorrection(corect);
+		out<<"max_correct "<<sqrt(corect)<<endl;
+		rs2=rs1;
+		rs1=r;
+		if(rs1>=rs2){
+			out<<"end "<<rs1<<" "<<rs2<<endl;
+			break;
+		}
+		if(rs1<1E-30){
+			out<<"endglob "<<rs1<<endl;
+			break;
+		}
+		}
+	}
+	/*
+	bool Particles_List::ConjugateGradiantOneiter(double &rmax){
+		cout<<"conjugate grad one iter"<<endl;
+		  
+			double num=0;
+			bool b=false;
+			CalculatePressForConjugateGradiant();
+			 double alpha=CalculateAlpha(num,b);
 			if(b) {
 				return true;
 			}
 			bool blucky;
-			double beta=CalculateBeta(num,alpha,blucky);
+			double beta=CalculateBeta(num,alpha,blucky,rmax);
 			if(blucky){
 				return true;
 			}
 			CalculateP1(beta);
-
+			
 			return false;
+			 
+			 return true;
 		}
-
+*/
 
 	void Particles_List::SetB_Speed(){
 		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); it++) {
@@ -158,7 +202,9 @@ void Particles_List::Calculate0Density(){
 			it->second.SetToMeanMass();
 		}*/
    #endif
-   CorrectDensity();
+   #ifdef PRESSURE_LAPLACIEN
+   //CorrectDensity();
+   #endif
 }
 
 
@@ -188,12 +234,18 @@ void Particles_List::predictor_corrector_compute(double DT){
    #ifdef PARALLEL
 		parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplypreComputeMove_predictor(m_vect,DT),m_af);
 		bool b=true;
+		int i=0;
 		while(b) {
 			parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyComputeDensity(m_vect),m_af);
 			UpdateForce();
 			ApplyComputeMove_predictor ap(m_vect,DT);
 			parallel_reduce(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE),ap,m_af);
 			b=ap.GetB();
+			++i;
+			if(i>10)
+			{
+				break;
+			}
 		}
 		parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyDoMove_predictor(m_vect),m_af);
    #else
@@ -364,19 +416,24 @@ double Particles_List::NextTimeStep() const {
 		double dt=DT;
 		UpdateForce();
 		ApplyNextCourantVisciousTimeStep courvis(m_vect);
-		ApplyNextForceTimeStep force(m_vect);
+		//ApplyNextForceTimeStep force(m_vect);
 		parallel_reduce(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE),courvis,m_af);
-		parallel_reduce(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE),force,m_af);
+		//parallel_reduce(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE),force,m_af);
 		double dta=courvis.GetDt();
-		double dtb=force.GetDt();
+		/*double dtb=force.GetDt();
 		if(dta>dtb) {
 			dt=dtb;
 		}
 		else{
 			dt=dta;
 		}
-		DT_ACT=0.25*dt;
-		return 0.25*dt;
+		 */
+		if(dt>dta)
+		{
+			dt=dta;
+		}
+		DT_ACT=1/3.*dt;
+		return 1/3.*dt;
    #else
 
 
@@ -388,7 +445,7 @@ double Particles_List::NextTimeStep() const {
 		for(map<Key<DIM>,Particles>::const_iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 			it->second.NextForceTimeStep(dt);
 		}
-		return 0.25*dt;
+		return 0.25*dt; 
    #endif
 }
 
@@ -470,6 +527,7 @@ void Particles_List::Compute(double &dt)
 			outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
 		#pragma GCC diagnostic pop
    #endif
+   #ifdef PRESSURE_LAPLACIEN
 		if(presure_laplacien) {
 			bool ret=false;
 			for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
@@ -479,11 +537,10 @@ void Particles_List::Compute(double &dt)
 				CorrectDensity();
 			}
 		}
-
+		#endif
 		if(presure_eq_state) {
 			//euler
-			/*
-			   for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+			  /* for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 			   it->second.ComputeMove(DT);
 			   }
 			 */
@@ -546,7 +603,7 @@ void Particles_List::Compute(double &dt)
 			outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
 		#pragma GCC diagnostic pop
    #endif
-
+	#ifdef PRESSURE_LAPLACIEN
 		if(presure_laplacien) {
 			bool ret=false;
 			for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
@@ -556,7 +613,7 @@ void Particles_List::Compute(double &dt)
 				CorrectDensity();
 			}
 		}
-
+#endif
 		if(presure_eq_state) {
 			//euler
 			/*
@@ -610,7 +667,7 @@ void Particles_List::Compute(double &dt)
 		p.Update(this);
    #endif  //DOXYGEN
 }
-
+#ifdef PRESSURE_LAPLACIEN
 	void Particles_List::CorrectPosition(){
 		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 			it->second.CorrectPosition();
@@ -639,10 +696,10 @@ void Particles_List::Compute(double &dt)
 	}
 
 double Particles_List::TestPositionOK(bool &b){
-	double ret=1000000;
+	double ret=0;
 	for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 		double temp=it->second.TestPositionOK(b);
-		if(temp<ret){
+		if(temp>ret){
 			ret=temp;
 		}
 	}
@@ -650,12 +707,70 @@ double Particles_List::TestPositionOK(bool &b){
 }
 	
 double Particles_List::TestSpeedOK(bool &b){
-	double ret=1000000;
+	double ret=0;
 	for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 			double temp=it->second.TestSpeedOK(b);
-			if(temp<ret){
+			if(temp>ret){
 			ret=temp;
 		}
 	}
 	return ret;
 }
+
+void Particles_List::TestPositionOKShort(bool &b){
+	for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+		it->second.TestPositionOK(b);
+		if(b){
+			return;
+		}
+	}
+}
+	
+void Particles_List::TestSpeedOKShort(bool &b){
+	for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.TestSpeedOK(b);
+			if(b){
+			return;
+		}
+	}
+}
+
+void Particles_List::To0Pos(){
+	for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.To0Pos();
+		}
+	}
+	
+void Particles_List::TestCGSolution(double &R){
+		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.TestCGSolution(R);
+		}
+}
+
+void Particles_List::SetPToP1(){
+	for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.SetPToP1();
+		}
+}
+
+void Particles_List::OutputB(fstream &out){
+		for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.OutputB(out);
+		}
+}
+
+void Particles_List::GetMaxCGGradCorrection(double &corect){
+	for (map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+			it->second.GetMaxCGGradCorrection(corect);
+		}
+}
+
+	
+void Particles_List::SolveLinearSystem(){
+	m_w->SolveMatrix();
+	CalculatePressForConjugateGradiant();
+	double r=0;
+	TestCGSolution(r);
+	cout<<"r linear system "<<r<<endl;
+}
+#endif

@@ -66,7 +66,7 @@
 	 * @return physvector< 3 >
 	 **/
 	inline physvector<DIM> Kernel_grad_spline5(physvector<DIM> vect,double h_ ){
-		double d=(3/h_*vect).Norm();
+		double d=(3./h_*vect).Norm();
 		if(vect.Norm()==0) {
 			return physvector< DIM>(0,0,0);
 		}

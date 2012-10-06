@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <float.h>
+#include <google/profiler.h>
 /**
  * @brief Class used for parallel assignement of all mass to the MEAN_MASS
  **/
@@ -164,6 +165,12 @@ void Particles_List::AddNeighbour(Key< 3 > k)
 void Particles_List::Update(list< Particle >::iterator& it, Particles* part)
 {
 	Key<DIM> key=(*it)->GetPos().ToKey(h);
+		if(key.GetY()<-5)
+	{
+		--m_n;
+		part->erase(it);
+		return;
+	}
 	if (m_list.count(key)==0)
 	{
 		//We moved in a new particles
@@ -347,74 +354,53 @@ out<< "<DataArray type=\"Int32\" Name=\"NB_it_V\" format=\"ascii\">"<<endl;
 
 
 
-
+#ifdef PRESSURE_LAPLACIEN
 void Particles_List::CorrectDensity(){	
-	write(0);
-
-	double arcondpos=DBL_MAX ;
-	double arcondspeed=DBL_MAX ;
-	for(int jil=0;jil<100;jil++){
-			bool totit=true;
-	while(totit){
-		Store0PosAndSpeed();
-	int i=0;
+	
+	static fstream out ("../cg.csv", fstream::out);
+	/* PreparePos();
+	out<<"pos"<<endl;
+	ConjugateGradiant(out);
+	CorrectPosition();
 	for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
 				it->second.ComputeDensity();
-			}
-	PreparePos();
-	InitializeCG();
-	bool bcont=true;
-	while(bcont) {
-		bcont=false;
-		bool b=ConjugateGradiantOneiter();
-		CorrectPosition();
-			for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
-				it->second.ComputeDensity();
-			}
-		if(b){
-			break;
 		}
-		TestPositionOK(bcont);
-	}
-		write(0);
-		PrepareSpeed();
-		InitializeCG();
-		bcont=true;
-	while(bcont) {
-		bcont=false;
-		bool b=ConjugateGradiantOneiter();
-		write(0);
-		CorrectSpeed();
-		if(b){
-			break;
-		}
-		TestSpeedOK(bcont);
-	}
-	totit=false;
-	double arcondpos2=TestPositionOK(totit);
-	if(arcondpos2>=arcondpos){
-		totit=false;
-	}
-	else{
-		arcondpos=arcondpos2;
-	}
-	if(!totit){
-		double arcondspeed2=TestSpeedOK(totit);
-		if(arcondspeed2>=arcondspeed){
-		totit=false;
-	}
-	else{
-		arcondspeed=arcondspeed2;
-	}
-	}
-	}
-	}
-	write(0);
+	*/
+	//cout<<"speed correct"<<endl;
+	PrepareSpeed();
+	out<<"speed"<<endl;
+	//ConjugateGradiant(out);
+	//write(0);
+	SolveLinearSystem();
+	CorrectSpeed();
+	PrepareSpeed();
+	//cout<<"end correct"<<endl;
 }
 
-
+#endif
 
 
 double Particles_List::GetTime() const {
 	return m_t;
 }
+#ifdef PRESSURE_LAPLACIEN
+void Particles_List::CalculatePressureGradiant(){
+	for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+				it->second.CalculatePressureGradiant();
+		}
+}
+
+void Particles_List::CalculatePressureLaplacian(){
+	for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+				it->second.CalculatePressureLaplacian();
+		}
+}
+void Particles_List::CalculatePressForConjugateGradiant(){
+	for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+				it->second.CalculatePressureGradiant();
+		}
+	for(map<Key<DIM>,Particles>::iterator it=m_list.begin(); it!=m_list.end(); ++it) {
+				it->second.CalculatePressureLaplacian();
+		}
+}
+#endif

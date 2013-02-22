@@ -512,7 +512,7 @@ void Particles_List::Compute(double &dt)
 			outtim<<(end-deb)/nb<<" "<<(tf.tms_utime-ti.tms_utime)/nb<<" "<<(tf.tms_stime-ti.tms_stime)/nb<<" ";
 		#pragma GCC diagnostic pop
    #endif
-		parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyCalculateSubGridTens(m_vect),m_af);
+		//parallel_for(blocked_range<Particles_Deque_List::size_type>(0,m_vect.size(),CHUNK_SIZE), ApplyCalculateSubGridTens(m_vect),m_af);
 		//dt=DT;
    #ifdef OUTPUT_PART_TIMING
 			end=times(&tf);
@@ -540,12 +540,12 @@ void Particles_List::Compute(double &dt)
 		#endif
 		if(presure_eq_state) {
 			//euler
-			  /* for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
+			   for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 			   it->second.ComputeMove(DT);
 			   }
-			 */
+			 
 			//predictor corrector
-			predictor_corrector_compute(dt);
+		//	predictor_corrector_compute(dt);
 			// beeman_compute(dt);
 			// predictor_corrector_compute(dt);
    #ifdef OUTPUT_PART_TIMING
@@ -616,13 +616,13 @@ void Particles_List::Compute(double &dt)
 #endif
 		if(presure_eq_state) {
 			//euler
-			/*
+			
 			   for (map<Key<DIM> ,Particles>::iterator it=m_list.begin();it!=m_list.end();++it) {
 			   it->second.ComputeMove(DT);
 			   }
-			 */
+			 
 			//predictor corrector
-			predictor_corrector_compute(dt);
+			//predictor_corrector_compute(dt);
 			// beeman_compute(dt);
 			//predictor_corrector_compute(dt);
    #ifdef OUTPUT_PART_TIMING

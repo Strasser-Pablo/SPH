@@ -34,9 +34,10 @@ void World_test::Do()
 	   }
 	 */
 	
-	int Nx=10;
+	int Nx=100;
 	int Ny=3;
-	int Nz=10;
+	int Nz=100;
+	cout<<"Nx "<<Nx<<" Nz "<<Nz<<endl;
 	vector<vector<Particle> > listvect(Ny);
 	vector<int> yloop(Nx*Nz);
 	for(int j=0; j<Ny; j++) {
@@ -47,7 +48,7 @@ void World_test::Do()
 				double x=i*h/3-Nx/2.*h/3+h/12;
 				double y=k*h/3-Nz/2.*h/3+h/12;
 				double r2=pow(x,2)+pow(y,2);
-				if(r2>pow(0.05,2)) {
+				if(r2>pow(0.5,2)) {
 					continue;
 				}
 				double Uyrel=uy/pow(0.05,2)*(pow(0.05,2)-r2);
@@ -67,7 +68,8 @@ void World_test::Do()
 	while(true) {
 		double dt;
 		m_list.Compute(dt);
-		m_list.write(dt);
+		cout<<"etape "<<endl;
+		//m_list.write(dt);
 		for(int i=0; i<Nx; i++) {
 
 			for(int k=0; k<Nz; k++) {
